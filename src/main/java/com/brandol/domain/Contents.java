@@ -22,4 +22,8 @@ public class Contents extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String file;
+
+    private String title; // 2014-01-19 누락 필드 추가
+
+    private String content; // 2014-01-19 누락 필드 추가
 }
