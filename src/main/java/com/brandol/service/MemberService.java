@@ -4,9 +4,7 @@ import com.brandol.domain.Brand;
 import com.brandol.domain.Member;
 import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.repository.BrandRepository;
-import com.brandol.repository.MemberBrandRepository;
-import com.brandol.repository.MemberRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +20,22 @@ public class MemberService {
     private final BrandRepository brandRepository;
     private final MemberBrandRepository memberBrandRepository;
 
+    @Transactional(readOnly = true)
     public Member findOneById(Long memberId){
-        return memberRepository.findOneById(memberId);
+        Member result = memberRepository.findOneById(memberId);
+        if(result == null) {throw new RuntimeException("멤버 조회실패");}
+        return result;
     } //멤버 Id로 멤버를 찾오는 함수
+
 
     public Long addMemberBrandList(Long memberId, Long brandId){ //멤버가 멤버브랜드리스트에 브랜드를 추가 하는 함수
 
-        Member member= memberRepository.findOneById(memberId);
-        Brand brand = brandRepository.findByOneId(brandId);
+        //Member member= JPQLMemberRepository.findOneById(memberId);
+        Member member = memberRepository.findOneById(memberId);
+        if(member == null){throw new RuntimeException("멤버 조회 실패");}
+        //Brand brand = JPQLBrandRepository.findByOneId(brandId);
+        Brand brand = brandRepository.findOneById(brandId);
+        if(brand == null){throw new RuntimeException("브랜드 조회 실패");}
 
         MemberBrandList memberBrandEntity = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)
@@ -37,10 +43,15 @@ public class MemberService {
                 .brand(brand)
                 .build();
 
-        return memberBrandRepository.addMemberBrandList(memberBrandEntity);
+        //return JPQLMemberBrandRepository.addMemberBrandList(memberBrandEntity);
+        memberBrandRepository.save(memberBrandEntity);
+        return memberBrandEntity.getId();
     }
 
+
+    @Transactional(readOnly = true)
     public List<Brand> findAllBrandByMemberId(Long memberId){ // 멤버가 멤버브랜드리스트에 추가한 브랜드들의 리스트를 가져오는 함수
+        //return JPQLMemberBrandRepository.findAllBrandByMemberId(memberId);
         return memberBrandRepository.findAllBrandByMemberId(memberId);
     }
 }
