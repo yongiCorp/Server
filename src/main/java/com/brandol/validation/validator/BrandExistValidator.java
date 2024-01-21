@@ -26,10 +26,9 @@ public class BrandExistValidator implements ConstraintValidator<ExistBrand, Long
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext context) {
 
-        boolean result = brandService.isExistBrand(id);
+        boolean result = brandService.isExistBrand(id); // 해당 브랜드 id가 존재하면 true
 
-
-        if (!result){
+        if (!result){ //해당 브랜드 아이디가 존재하지 않는 경우
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(ErrorStatus._NOT_EXIST_BRAND.getMessage()).addConstraintViolation();
             return false;

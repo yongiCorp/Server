@@ -82,7 +82,7 @@ public class BrandRepository {
     }
 
     @Transactional(readOnly = true)
-    public Boolean isExistBrand(Long id){
+    public Boolean isExistBrand(Long id){ // 해당 브랜드 아이디가 DB에 존재하면 True/ 없는 경우 False
         List<Brand> brands = em.createQuery("select b from Brand b where b.id =: id", Brand.class)
                 .setParameter("id",id).getResultList();
         int len = brands.size();
