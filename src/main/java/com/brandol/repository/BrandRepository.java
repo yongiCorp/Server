@@ -30,7 +30,7 @@ public class BrandRepository {
         int len = brands.size();
 
         if( len == 0|| len >1){
-            throw new RuntimeException("멤버 조회 중 문제가 발생했습니다.");
+            throw new RuntimeException("브랜드 조회 중 문제가 발생했습니다.");
         }
         return brands.get(0);
     }
@@ -79,6 +79,18 @@ public class BrandRepository {
 
 
         return brands.get(0);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isExistBrand(Long id){
+        List<Brand> brands = em.createQuery("select b from Brand b where b.id =: id", Brand.class)
+                .setParameter("id",id).getResultList();
+        int len = brands.size();
+
+        if(len >= 1 ){
+            return true;
+        }
+        return false;
     }
 
 

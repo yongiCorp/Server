@@ -73,5 +73,9 @@ public class BrandService {
 
     }
 
+    public boolean isExistBrand(Long id){
+        return brandRepository.isExistBrand(id);
+    }
+
 
 }

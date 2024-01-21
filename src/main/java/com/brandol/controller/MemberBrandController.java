@@ -16,6 +16,7 @@ import com.brandol.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class MemberBrandController {
     private final ContentsService contentsService;
 
     @PostMapping("users/my-board-list/new") // 멤버 브랜드 리스트 추가 처리
-    public ApiResponse<String> addMemberBrandList(@RequestParam Long memberId, @RequestBody AddMemberBrandRequest request){
+    public ApiResponse<String> addMemberBrandList(@RequestParam Long memberId, @RequestBody @Valid AddMemberBrandRequest request){
         Brand targetBrand = brandService.findOneById(request.getBrandId());
         Member targetMember = memberService.findOneById(memberId);
         memberService.addMemberBrandList(targetMember.getId(), targetBrand.getId());
