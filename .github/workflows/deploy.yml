@@ -30,11 +30,11 @@ jobs:
         id: current-time
         with:
             format: YYYY-MM-DDTHH-mm-ss
-            utcOffset: "+09:00"# (8).build시점의 시간확보
+            utcOffset: "+09:00"
 
       - name: Show Current Time
         run: echo "CurrentTime=$"
-        shell: bash# (9).확보한 시간 보여주기
+        shell: bash
 
       - name: Generate deployment package
         run: |
