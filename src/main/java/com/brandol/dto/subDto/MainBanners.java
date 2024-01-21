@@ -17,9 +17,16 @@ public class MainBanners {
     //MemberMainPageResponse 필드 종속
      /*
     createMainBanners의 리턴형 =>
-    main-banner0 : {이미지0 URL},
-    main-banner1 : {이미지1 URL},
-    main-banner2 : {이미지2 URL}
+        "mainBanners": {
+            "main-banner0": {
+                "brand-id": 1,
+                "banner-profile": "링크"
+            },
+            "main-banner1": {
+                "brand-id": 6,
+                "banner-profile": "URL"
+            }
+        }
      */
     public static Map<String,Object> createMainBanners(List<Brand>brandList){
         Map<String,Object> result = new LinkedHashMap<>(); // 리턴 변수 생성
@@ -29,12 +36,15 @@ public class MainBanners {
             throw new RuntimeException("브랜드 리스트가 비정상 입니다.");
         }
 
-        for(int i =0 ; i< arrayLen; i++){ //리턴 변수 생성 영역
-            String profileImage = brandList.get(i).getProfileImage();
-            result.put("main-banner"+i,profileImage);
-            System.out.println("profileImage = " + profileImage);
-        }
 
+        for(int i =0 ; i< arrayLen; i++){
+            String key = "main-banner" +i;
+            Map<String,Object> bannerData = new LinkedHashMap<>();
+            Brand target = brandList.get(i);
+            bannerData.put("brand-id",target.getId());
+            bannerData.put("banner-profile", target.getProfileImage());
+            result.put(key,bannerData);
+        }
 
         return result;
 

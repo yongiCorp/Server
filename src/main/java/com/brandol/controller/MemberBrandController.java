@@ -41,9 +41,7 @@ public class MemberBrandController {
         List<Brand> mainBannerBrands = brandService.getMainBannerBrands();
         Map<String, Object> mainBanner = MainBanners.createMainBanners(mainBannerBrands);
 
-        //서브 배너 넣는거 이어서 해야함 + 멤버브랜드리스트에 값추가 해야함
-
-        List<Contents> subBannersContents = contentsService.findRecentBrands(5);
+        List<Contents> subBannersContents = contentsService.findRecentEvents(10); // 서브배너 최대 개수 10개 제한
 
         Map<String,Object> subBanner = SubBanners.createSubBanners(subBannersContents);
 

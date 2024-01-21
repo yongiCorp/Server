@@ -27,8 +27,13 @@ public class SubBanners {
             throw new RuntimeException("브랜드 이벤트 리스트가 비정상 입니다.");
         }
 
-        for(int i =0 ; i< arrayLen; i++){ //리턴 변수 생성 영역
-            result.put("sub-banner"+i,contentsEventList.get(i).getFile());
+        for(int i =0 ; i< arrayLen; i++){
+            String key = "sub-banner" +i;
+            Map<String,Object> bannerData = new LinkedHashMap<>();
+            Contents target = contentsEventList.get(i);
+            bannerData.put("contents-id",target.getId());
+            bannerData.put("banner-img", target.getFile());
+            result.put(key,bannerData);
         }
 
         return result;
