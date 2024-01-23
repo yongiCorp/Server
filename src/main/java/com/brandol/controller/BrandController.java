@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class BrandController {
-
     private final BrandService brandService;
-
     @PostMapping(value = "/brands/new") // 브랜드 신규 등록 함수
     private ApiResponse<Brand> addNewBrand(AddBrandRequest request){
         Brand brand = brandService.createBrand(request);

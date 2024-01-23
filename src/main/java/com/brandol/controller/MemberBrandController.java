@@ -25,9 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberBrandController {
 
-    private final BrandService brandService;
     private final MemberService memberService;
-    private final ContentsService contentsService;
     private final MemberBrandService memberBrandService;
 
     @PostMapping("users/my-board-list/new") // 멤버 브랜드 리스트 추가 처리
@@ -36,34 +34,10 @@ public class MemberBrandController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), null);
     }
 
-
     @GetMapping("/users/main")
     public ApiResponse<MemberMainPageResponse> memberMain(@RequestParam Long memberId) {
         MemberMainPageResponse response = memberBrandService.createMemberMainPage(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), response);
     }
 
-        /*
-    @GetMapping("/users/main") // 유저 메인페이지 응답
-    public ApiResponse<MemberMainPageResponse> memberMain(@RequestParam Long memberId) {
-
-        List<Brand> mainBannerBrands = brandService.getMainBannerBrands();
-        Map<String, Object> mainBanner = MainBanners.createMainBanners(mainBannerBrands);
-
-        List<Contents> subBannersContents = contentsService.findRecentEvents(10); // 서브배너 최대 개수 10개 제한
-        Map<String,Object> subBanner = SubBanners.createSubBanners(subBannersContents);
-
-        List<Brand> memberBrandList = memberService.findAllBrandByMemberId(memberId);
-        Map<String, Object> brandList = BrandList.createBrandList(memberBrandList);
-
-        MemberMainPageResponse result = MemberMainPageResponse.builder()
-                .mainBanners(mainBanner)
-                .subBanners(subBanner)
-                .brandList(brandList)
-                .build();
-
-        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), result);
-    }
-
-     */
 }

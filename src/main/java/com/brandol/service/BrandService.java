@@ -23,13 +23,6 @@ public class BrandService {
     private final BrandRepository brandRepository;
     private final AmazonS3Manager s3Manager;
 
-    /*
-    @Transactional(readOnly = true)
-    public Brand findOneById(Long brandId){
-        return JPQLBrandRepository.findByOneId(brandId);
-    } // 브랜드 Id로 브랜드 엔티티 조회
-     */
-
     public Brand findOneById(Long brandId){
         Optional<Brand> optionalBrand = brandRepository.findById(brandId);
         if (optionalBrand.isEmpty()){
@@ -38,37 +31,11 @@ public class BrandService {
         return optionalBrand.get();
     }
 
-    /*
-    @Transactional(readOnly = true)
-    public List<Brand>findRecentBrands(int cnt){
-        return JPQLBrandRepository.findRecentBrands(cnt);
-    } // 최근 등록 브랜드 cnt개를 조회
-
-     */
-
     @Transactional(readOnly = true)
     public List<Brand>findRecentBrands(int cnt){
         return brandRepository.findRecentBrands(cnt);
     }
 
-    /*
-    @Transactional(readOnly = true)
-    public List<Brand> getMainBannerBrands(){ // 페이지 1 메인배너에 들어갈 브랜드 5개를가져오는 함수
-        List<Brand> result = new ArrayList<>();
-        Brand brandol = JPQLBrandRepository.findBrandByName("brandol"); //운영 방침상 브랜돌은 항상 첫번째 배너에 들어가야함 PM 운영 지침
-        result.add(brandol);
-        List<Brand> brandList = JPQLBrandRepository.findRecentBrandsExceptForBrandol(4); // 브랜돌을 제외한 나머지 최신 4개 브랜드 추가
-
-        int len = brandList.size();
-        for(int i=0; i<len; i++){
-            result.add(brandList.get(i));
-        }
-
-        return result;
-
-    }
-
-     */
     @Transactional(readOnly = true)
     public List<Brand> getMainBannerBrands(){
         List<Brand> result = new ArrayList<>();
@@ -87,9 +54,6 @@ public class BrandService {
         return result;
 
     }
-
-
-
 
     @Transactional(readOnly = true)
     public List<Brand> findRecentBrandsExceptForBrandol(int cnt){ // 브랜돌을 제외한 초신 등록 브랜드 cnt개를 가져오는 함수
@@ -116,20 +80,11 @@ public class BrandService {
         String backgroundURL = s3Manager.uploadFile(backgroundUUID, request.getBackgroundImage());
 
         brand.addImages(profileURL,backgroundURL); // 프로필, 배경 이미지의 url 주소를 엔티티에 할당
-        //Long savedBrandId = JPQLBrandRepository.save(brand);
         brandRepository.save(brand);
         Long savedBrandId = brand.getId();
 
-        //return JPQLBrandRepository.findByOneId(savedBrandId); // 디비에 저장
         return brandRepository.findOneById(savedBrandId);
     }
-
-    /*
-    @Transactional(readOnly = true)
-    public boolean isExistBrand(Long id){
-        return JPQLBrandRepository.isExistBrand(id);
-    }
-     */
 
     @Transactional(readOnly = true)
     public boolean isExistBrand(Long id){

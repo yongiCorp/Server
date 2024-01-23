@@ -15,19 +15,6 @@ public class MainBanners {
 
 
     //MemberMainPageResponse 필드 종속
-     /*
-    createMainBanners의 리턴형 =>
-        "mainBanners": {
-            "main-banner0": {
-                "brand-id": 1,
-                "banner-profile": "링크"
-            },
-            "main-banner1": {
-                "brand-id": 6,
-                "banner-profile": "URL"
-            }
-        }
-     */
     public static Map<String,Object> createMainBanners(List<Brand>brandList){
         Map<String,Object> result = new LinkedHashMap<>(); // 리턴 변수 생성
         Integer arrayLen = brandList.size(); // 브랜드 리스트 len

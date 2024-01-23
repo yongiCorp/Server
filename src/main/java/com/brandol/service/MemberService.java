@@ -6,6 +6,7 @@ import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,20 +31,26 @@ public class MemberService {
 
     public Long addMemberBrandList(Long memberId, Long brandId){ //멤버가 멤버브랜드리스트에 브랜드를 추가 하는 함수
 
-        //Member member= JPQLMemberRepository.findOneById(memberId);
         Member member = memberRepository.findOneById(memberId);
         if(member == null){throw new RuntimeException("멤버 조회 실패");}
-        //Brand brand = JPQLBrandRepository.findByOneId(brandId);
+
         Brand brand = brandRepository.findOneById(brandId);
         if(brand == null){throw new RuntimeException("브랜드 조회 실패");}
+
+
+        Long fanCount=1L;
+
+        List<MemberBrandList> memberBrandLists = memberBrandRepository.getBrandJoinedFanCount(brandId, PageRequest.of(0,1));
+        if(memberBrandLists.size() != 0){ fanCount = memberBrandLists.get(0).getSequence()+1;}
 
         MemberBrandList memberBrandEntity = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)
                 .member(member)
                 .brand(brand)
+                .sequence(fanCount)
                 .build();
 
-        //return JPQLMemberBrandRepository.addMemberBrandList(memberBrandEntity);
+
         memberBrandRepository.save(memberBrandEntity);
         return memberBrandEntity.getId();
     }

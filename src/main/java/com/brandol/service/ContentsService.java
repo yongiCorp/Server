@@ -14,7 +14,6 @@ import java.util.List;
 public class ContentsService {
 
     private final ContentsRepository contentsRepository;
-
     @Transactional(readOnly = true)
     public List<Contents> findRecentEvents(int cnt){//최근 등록 콘텐츠 cnt개를 가져오는 함수
         //return JPQLContentsRepository.findRecentEvents(cnt);
