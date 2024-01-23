@@ -8,11 +8,15 @@ spring:
 
   jpa : #jpa ??
     hibernate:
-      ddl-auto : create-drop
+      ddl-auto : update
     properties:
       hibernate :
         #show_sql : true #??? ??? ??
         format_sql : true #??? ??
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 logging.level:
   org.hibernate.SQL: debug #??? ???? ??? ??? ??.
