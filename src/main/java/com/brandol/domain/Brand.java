@@ -27,4 +27,9 @@ public class Brand extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String backgroundImage;
+
+    public void addImages(String profileImage, String backgroundImage){
+        this.profileImage = profileImage;
+        this.backgroundImage = backgroundImage;
+    }
 }

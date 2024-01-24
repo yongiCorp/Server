@@ -18,9 +18,11 @@ public class ApiResponse<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
-    public static <T> ApiResponse<T> onSuccess(T result){
-        return new ApiResponse<>(true, SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),result);
+    // 2024-01-19 수정 "onSuccess" 가 "of" 기능을 흡수 함에 따라 파라미터 수정
+    public static <T> ApiResponse<T> onSuccess(String code,String message,T data){
+        return new ApiResponse<>(true, code,message,data);
     }
+
 
     public static <T> ApiResponse<T> onFailure(String code, String message, T data){
         return new ApiResponse<>(false,code,message,data);
