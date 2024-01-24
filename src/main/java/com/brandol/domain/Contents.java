@@ -26,4 +26,8 @@ public class Contents extends BaseEntity {
     private String title; // 2014-01-19 누락 필드 추가
 
     private String content; // 2014-01-19 누락 필드 추가
+
+    public void addFile(String fileURL){
+        this.file = fileURL;
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 @Getter
-@Setter
+@Setter //멀티파트 파일 처리시 필수
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
