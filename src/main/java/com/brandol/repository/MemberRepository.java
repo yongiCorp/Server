@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member,Long> {
-
     @Query(value = "select m from Member m WHERE m.id = :id")
     Member findOneById(@Param("id") Long id);
 }

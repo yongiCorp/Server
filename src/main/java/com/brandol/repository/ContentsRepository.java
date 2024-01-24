@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ContentsRepository extends JpaRepository<Contents,Long> {
-
     @Query(value = "select * from contents c order by created_at desc LIMIT :cnt ",nativeQuery = true)
     List<Contents> findRecentBrands(@Param("cnt") int cnt);
 }

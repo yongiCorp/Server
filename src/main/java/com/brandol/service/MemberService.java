@@ -37,11 +37,25 @@ public class MemberService {
         Brand brand = brandRepository.findOneById(brandId);
         if(brand == null){throw new RuntimeException("브랜드 조회 실패");}
 
+        List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
+        int len = memberBrandLists.size();
+
+        //기존에 구독 취소했던 브랜드를 다시 구독하는 경우
+        if(len == 1){
+            MemberBrandList memberBrandList=memberBrandLists.get(0);
+            if(memberBrandList.getMemberListStatus() == MemberListStatus.UNSUBSCRIBED){
+            memberBrandList.changeMemberListStatus(MemberListStatus.SUBSCRIBED);
+            return memberBrandList.getId();
+            }
+        }
+
 
         Long fanCount=1L;
+        // 기존에 구독했던 적이 없는 경우
 
-        List<MemberBrandList> memberBrandLists = memberBrandRepository.getBrandJoinedFanCount(brandId, PageRequest.of(0,1));
-        if(memberBrandLists.size() != 0){ fanCount = memberBrandLists.get(0).getSequence()+1;}
+        //가장 마지막으로 구독했던 사람의 sequence 가져오기
+        List<MemberBrandList> recentJoinedMemberBrandList = memberBrandRepository.getBrandJoinedFanCount(brandId, PageRequest.of(0,1));
+        if(!recentJoinedMemberBrandList.isEmpty()){ fanCount = memberBrandLists.get(0).getSequence()+1;}
 
         MemberBrandList memberBrandEntity = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)
@@ -53,12 +67,5 @@ public class MemberService {
 
         memberBrandRepository.save(memberBrandEntity);
         return memberBrandEntity.getId();
-    }
-
-
-    @Transactional(readOnly = true)
-    public List<Brand> findAllBrandByMemberId(Long memberId){ // 멤버가 멤버브랜드리스트에 추가한 브랜드들의 리스트를 가져오는 함수
-        //return JPQLMemberBrandRepository.findAllBrandByMemberId(memberId);
-        return memberBrandRepository.findAllBrandByMemberId(memberId);
     }
 }

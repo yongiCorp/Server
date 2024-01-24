@@ -2,6 +2,7 @@ package com.brandol.service;
 
 import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
+import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.response.MemberMainPageResponse;
 import com.brandol.dto.subDto.BrandList;
@@ -28,7 +29,6 @@ public class MemberBrandService {
     private final ContentsRepository contentsRepository;
     private final MemberBrandRepository memberBrandRepository;
 
-
     public MemberMainPageResponse createMemberMainPage(Long memberId){
 
         // 메인배너
@@ -42,16 +42,29 @@ public class MemberBrandService {
         Map<String,Object> mainBanners = MainBanners.createMainBanners(mainBannerBrands);
 
         //서브배너
-        List<Contents> subBannersCotents = contentsRepository.findRecentBrands(10);
-        if(subBannersCotents == null){ throw new RuntimeException("서브배너 탐색 실패");}
-        Map<String,Object> subBanners = SubBanners.createSubBanners(subBannersCotents);
+        List<Contents> subBannersContents = contentsRepository.findRecentBrands(10);
+        if(subBannersContents == null){ throw new RuntimeException("서브배너 탐색 실패");}
+        Map<String,Object> subBanners = SubBanners.createSubBanners(subBannersContents);
 
         // 브랜드 리스트
-        List<MemberBrandList>memberBrandList = memberBrandRepository.findAllByMemberId(memberId);
+        List<MemberBrandList>memberBrandList = memberBrandRepository.findAllSubscribedByMemberId(memberId); // 현재 구독중인 브랜드의 리스트만 가져옴
         Map<String,Object> brandList = BrandList.createBrandList(memberBrandList);
 
         return MemberMainPageResponse.makeMainPage(mainBanners,subBanners,brandList);
 
     }
 
+    public MemberBrandList MemberBrandListStatusToUnsubscribed(Long memberId,Long brandId){
+
+        List<MemberBrandList> searchResult = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
+        int size = searchResult.size();
+        if(size >1 || size ==0 ){
+            throw  new RuntimeException("'멤버-브랜드-리스트'조회 실패");
+        }
+        MemberBrandList target = searchResult.get(0);
+        target.changeMemberListStatus(MemberListStatus.UNSUBSCRIBED); //더티 체킹
+
+        return target;
+
+    }
 }

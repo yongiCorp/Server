@@ -5,6 +5,7 @@ import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Member;
+import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.AddMemberBrandRequest;
 import com.brandol.dto.response.MemberMainPageResponse;
 import com.brandol.dto.subDto.BrandList;
@@ -28,10 +29,16 @@ public class MemberBrandController {
     private final MemberService memberService;
     private final MemberBrandService memberBrandService;
 
-    @PostMapping("users/my-board-list/new") // 멤버 브랜드 리스트 추가 처리
+    @PostMapping("users/my-board-list/subscribe") // 멤버 브랜드 리스트 추가 처리
     public ApiResponse<String> addMemberBrandList(@RequestParam Long memberId, @RequestBody @Valid AddMemberBrandRequest request){
         memberService.addMemberBrandList(memberId, request.getBrandId());
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), null);
+    }
+
+    @PostMapping("users/my-board-list/unsubscribe/{brandId}")
+    public ApiResponse<String> MemberBrandListStatusToUnsubscribed(@RequestParam Long memberId,@PathVariable("brandId")Long brandId){
+        MemberBrandList memberBrandList = memberBrandService.MemberBrandListStatusToUnsubscribed(memberId,brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._CREATED.getMessage(), "처리 성공");
     }
 
     @GetMapping("/users/main")

@@ -50,9 +50,7 @@ public class BrandService {
         for(int i=0; i<len; i++){
             result.add(brands.get(i));
         }
-
         return result;
-
     }
 
     @Transactional(readOnly = true)
