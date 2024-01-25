@@ -55,7 +55,7 @@ public class MemberService {
 
         //가장 마지막으로 구독했던 사람의 sequence 가져오기
         List<MemberBrandList> recentJoinedMemberBrandList = memberBrandRepository.getBrandJoinedFanCount(brandId, PageRequest.of(0,1));
-        if(!recentJoinedMemberBrandList.isEmpty()){ fanCount = memberBrandLists.get(0).getSequence()+1;}
+        if(!recentJoinedMemberBrandList.isEmpty()){ fanCount = recentJoinedMemberBrandList.get(0).getSequence()+1;}
 
         MemberBrandList memberBrandEntity = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)

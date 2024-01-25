@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @ToString
+@Transactional(readOnly = true)
 public class BrandService {
 
     private final BrandRepository brandRepository;
@@ -31,12 +31,12 @@ public class BrandService {
         return optionalBrand.get();
     }
 
-    @Transactional(readOnly = true)
+
     public List<Brand>findRecentBrands(int cnt){
         return brandRepository.findRecentBrands(cnt);
     }
 
-    @Transactional(readOnly = true)
+
     public List<Brand> getMainBannerBrands(){
         List<Brand> result = new ArrayList<>();
         Brand brandol = brandRepository.findOneByName("brandol");
@@ -53,7 +53,7 @@ public class BrandService {
         return result;
     }
 
-    @Transactional(readOnly = true)
+
     public List<Brand> findRecentBrandsExceptForBrandol(int cnt){ // 브랜돌을 제외한 초신 등록 브랜드 cnt개를 가져오는 함수
         //return JPQLBrandRepository.findRecentBrandsExceptForBrandol(cnt);
         List<Brand> brands = brandRepository.findRecentBrandsExceptForOne("brandol",cnt);
@@ -62,6 +62,7 @@ public class BrandService {
     }
 
 
+    @Transactional
     public Brand createBrand(AddBrandRequest request){ // 브랜드 등록 함수
 
         Brand brand = AddBrandRequest.toEntity(request); // dto에서 이름,설명 데이터만 우선으로 엔티티로 변환
@@ -84,7 +85,6 @@ public class BrandService {
         return brandRepository.findOneById(savedBrandId);
     }
 
-    @Transactional(readOnly = true)
     public boolean isExistBrand(Long id){
         return brandRepository.existsById(id);
     }
