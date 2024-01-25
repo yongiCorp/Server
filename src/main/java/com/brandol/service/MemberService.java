@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -21,7 +21,6 @@ public class MemberService {
     private final BrandRepository brandRepository;
     private final MemberBrandRepository memberBrandRepository;
 
-    @Transactional(readOnly = true)
     public Member findOneById(Long memberId){
         Member result = memberRepository.findOneById(memberId);
         if(result == null) {throw new RuntimeException("멤버 조회실패");}
@@ -29,6 +28,7 @@ public class MemberService {
     } //멤버 Id로 멤버를 찾오는 함수
 
 
+    @Transactional
     public Long addMemberBrandList(Long memberId, Long brandId){ //멤버가 멤버브랜드리스트에 브랜드를 추가 하는 함수
 
         Member member = memberRepository.findOneById(memberId);

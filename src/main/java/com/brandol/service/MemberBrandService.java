@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @ToString
 public class MemberBrandService {
@@ -29,6 +29,7 @@ public class MemberBrandService {
     private final ContentsRepository contentsRepository;
     private final MemberBrandRepository memberBrandRepository;
 
+    @Transactional
     public MemberMainPageResponse createMemberMainPage(Long memberId){
 
         // 메인배너
@@ -54,6 +55,7 @@ public class MemberBrandService {
 
     }
 
+    @Transactional
     public MemberBrandList MemberBrandListStatusToUnsubscribed(Long memberId,Long brandId){
 
         List<MemberBrandList> searchResult = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
