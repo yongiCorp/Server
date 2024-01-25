@@ -1,5 +1,7 @@
 package com.brandol.service;
 
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.enums.MemberListStatus;
@@ -35,16 +37,16 @@ public class MemberBrandService {
         // 메인배너
         List<Brand> mainBannerBrands = new ArrayList<>();
         Brand brandol = brandRepository.findOneByName("brandol");
-        if(brandol == null){ throw new RuntimeException("brandol brand 탐색 실패");}
+        if(brandol == null){ throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_BRANDOL_MAIN_BANNER);}
         mainBannerBrands.add(brandol);
         List<Brand> brands = brandRepository.findRecentBrandsExceptForOne("brandol",4);
-        if(brands == null){ throw new RuntimeException("메인 배너 탐색 실패");}
+        if(brands == null){ throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_MAIN_BANNER);}
         mainBannerBrands.addAll(brands);
         Map<String,Object> mainBanners = MainBanners.createMainBanners(mainBannerBrands);
 
         //서브배너
         List<Contents> subBannersContents = contentsRepository.findRecentBrands(10);
-        if(subBannersContents == null){ throw new RuntimeException("서브배너 탐색 실패");}
+        if(subBannersContents == null){ throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_SUB_BANNER);}
         Map<String,Object> subBanners = SubBanners.createSubBanners(subBannersContents);
 
         // 브랜드 리스트

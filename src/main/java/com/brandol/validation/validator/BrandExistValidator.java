@@ -27,7 +27,7 @@ public class BrandExistValidator implements ConstraintValidator<ExistBrand, Long
 
         if (!result){ //해당 브랜드 아이디가 존재하지 않는 경우
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ErrorStatus._NOT_EXIST_BRAND.getMessage()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ErrorStatus._NOT_EXIST_BRAND.toString()).addConstraintViolation();
             return false;
         }
         return true;

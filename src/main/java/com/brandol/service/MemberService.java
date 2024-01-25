@@ -1,5 +1,7 @@
 package com.brandol.service;
 
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.domain.Brand;
 import com.brandol.domain.Member;
 import com.brandol.domain.enums.MemberListStatus;
@@ -35,7 +37,8 @@ public class MemberService {
         if(member == null){throw new RuntimeException("멤버 조회 실패");}
 
         Brand brand = brandRepository.findOneById(brandId);
-        if(brand == null){throw new RuntimeException("브랜드 조회 실패");}
+        if(brand == null){
+            throw new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND);}
 
         List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
         int len = memberBrandLists.size();
@@ -67,5 +70,6 @@ public class MemberService {
 
         memberBrandRepository.save(memberBrandEntity);
         return memberBrandEntity.getId();
+
     }
 }
