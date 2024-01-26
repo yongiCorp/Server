@@ -16,6 +16,9 @@ public enum ErrorStatus implements BaseCode {
     //브랜드
     _NOT_EXIST_BRAND(HttpStatus.BAD_REQUEST,"BRAND400","존재하지 않는 브랜드입니다."),
 
+    //멤버 브랜드 리스트
+    _ALREADY_EXIST_MEMBERM_BRAND_LIST(HttpStatus.BAD_REQUEST,"MEMBER-BRAND-LIST400","이미 구독중인 브랜드 입니다."),
+
     //메인 배너
     _CANNOT_LOAD_MAIN_BANNER(HttpStatus.NOT_FOUND,"MAIN-BANNER404","메인배너 조회에 실패했습니다."),
     _CANNOT_LOAD_BRANDOL_MAIN_BANNER(HttpStatus.NOT_FOUND,"MAIN-BANNER4004","시스템 기본값인 BRANDOL이 존재하지 않습니다."),
@@ -28,6 +31,9 @@ public enum ErrorStatus implements BaseCode {
 
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
+
+    //DB
+    _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),
 
     //파일
     _FILE_NAME_ERROR(HttpStatus.BAD_REQUEST,"FILE400","잘못된 파일 형식명입니다.");

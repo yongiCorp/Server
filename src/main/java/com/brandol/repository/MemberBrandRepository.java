@@ -1,10 +1,6 @@
 package com.brandol.repository;
 
-import com.brandol.domain.Brand;
-import com.brandol.domain.Member;
-import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.dto.subDto.BrandList;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +22,6 @@ public interface MemberBrandRepository extends JpaRepository<MemberBrandList,Lon
     @Query("select mbl from MemberBrandList mbl where mbl.brand.id = :id order by mbl.sequence")
     List<MemberBrandList> getBrandJoinedFanCount(@Param("id")Long id, Pageable pageable);
 
+    @Query("select count(mbl) from MemberBrandList mbl where mbl.memberListStatus = com.brandol.domain.enums.MemberListStatus.SUBSCRIBED")
+    int getRecentSubscriberCount();
 }

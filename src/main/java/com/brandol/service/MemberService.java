@@ -34,7 +34,7 @@ public class MemberService {
     public Long addMemberBrandList(Long memberId, Long brandId){ //멤버가 멤버브랜드리스트에 브랜드를 추가 하는 함수
 
         Member member = memberRepository.findOneById(memberId);
-        if(member == null){throw new RuntimeException("멤버 조회 실패");}
+        if(member == null){throw new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER);}
 
         Brand brand = brandRepository.findOneById(brandId);
         if(brand == null){
@@ -43,12 +43,16 @@ public class MemberService {
         List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
         int len = memberBrandLists.size();
 
-        //기존에 구독 취소했던 브랜드를 다시 구독하는 경우
+        //기존에 구독했던 기록이 존재하는 경우
         if(len == 1){
             MemberBrandList memberBrandList=memberBrandLists.get(0);
-            if(memberBrandList.getMemberListStatus() == MemberListStatus.UNSUBSCRIBED){
+
+            if(memberBrandList.getMemberListStatus() == MemberListStatus.UNSUBSCRIBED){ // 구독을 취소한 경우
             memberBrandList.changeMemberListStatus(MemberListStatus.SUBSCRIBED);
             return memberBrandList.getId();
+            }
+            else { //중복 구독을 신청한 경우
+                throw new ErrorHandler(ErrorStatus._ALREADY_EXIST_MEMBERM_BRAND_LIST);
             }
         }
 

@@ -15,10 +15,12 @@ import com.brandol.service.BrandService;
 import com.brandol.service.ContentsService;
 import com.brandol.service.MemberBrandService;
 import com.brandol.service.MemberService;
+import com.brandol.validation.annotation.ExistBrand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class MemberBrandController {
 
     private final MemberService memberService;
@@ -45,7 +48,7 @@ public class MemberBrandController {
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @Parameter(name = "brandId",description = "삭제 대상 브랜드의 ID")
     @PostMapping("users/my-board-list/unsubscribe/{brandId}")
-    public ApiResponse<String> MemberBrandListStatusToUnsubscribed(@RequestParam Long memberId,@PathVariable("brandId")Long brandId){
+    public ApiResponse<String> MemberBrandListStatusToUnsubscribed(@RequestParam Long memberId,@ExistBrand @PathVariable("brandId")Long brandId){
         MemberBrandList memberBrandList = memberBrandService.MemberBrandListStatusToUnsubscribed(memberId,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._CREATED.getMessage(), "처리 성공");
     }
