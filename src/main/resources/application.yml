@@ -6,7 +6,7 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASS}
 
-  jpa : #jpa ??
+  jpa :
     hibernate:
       ddl-auto : update
     properties:
@@ -19,5 +19,5 @@ spring:
       max-request-size: 100MB
 
 logging.level:
-  org.hibernate.SQL: debug #??? ???? ??? ??? ??.
-  org.hibernate.type : trace #???? ?????? ? ? ?
+  org.hibernate.SQL: debug
+  org.hibernate.type : trace
