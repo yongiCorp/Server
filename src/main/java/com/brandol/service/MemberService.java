@@ -52,7 +52,7 @@ public class MemberService {
             return memberBrandList.getId();
             }
             else { //중복 구독을 신청한 경우
-                throw new ErrorHandler(ErrorStatus._ALREADY_EXIST_MEMBERM_BRAND_LIST);
+                throw new ErrorHandler(ErrorStatus._ALREADY_EXIST_MEMBER_BRAND_LIST);
             }
         }
 

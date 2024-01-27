@@ -26,7 +26,7 @@ import java.util.Map;
 @ToString
 public class MemberBrandService {
 
-
+    private final MemberRepository memberRepository;
     private final BrandRepository brandRepository;
     private final ContentsRepository contentsRepository;
     private final MemberBrandRepository memberBrandRepository;
@@ -34,6 +34,7 @@ public class MemberBrandService {
     @Transactional
     public MemberMainPageResponse createMemberMainPage(Long memberId){
 
+        if(memberRepository.findOneById(memberId)==null){throw new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER);}
         // 메인배너
         List<Brand> mainBannerBrands = new ArrayList<>();
         Brand brandol = brandRepository.findOneByName("brandol");
@@ -63,7 +64,8 @@ public class MemberBrandService {
         List<MemberBrandList> searchResult = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
         int size = searchResult.size();
         if(size >1 || size ==0 ){
-            throw  new RuntimeException("'멤버-브랜드-리스트'조회 실패");
+            if(size >1){throw  new ErrorHandler(ErrorStatus._DUPLICATE_DATABASE_ERROR);} //중복 조회 케이스
+            throw new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER_BRAND_LIST); //조회 실패
         }
         MemberBrandList target = searchResult.get(0);
         target.changeMemberListStatus(MemberListStatus.UNSUBSCRIBED); //더티 체킹

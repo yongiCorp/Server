@@ -48,7 +48,7 @@ public class MemberBrandController {
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @Parameter(name = "brandId",description = "삭제 대상 브랜드의 ID")
     @PostMapping("users/my-board-list/unsubscribe/{brandId}")
-    public ApiResponse<String> MemberBrandListStatusToUnsubscribed(@RequestParam Long memberId,@ExistBrand @PathVariable("brandId")Long brandId){
+    public ApiResponse<String> MemberBrandListStatusToUnsubscribed(@RequestParam Long memberId,@PathVariable("brandId")Long brandId){
         MemberBrandList memberBrandList = memberBrandService.MemberBrandListStatusToUnsubscribed(memberId,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._CREATED.getMessage(), "처리 성공");
     }

@@ -19,7 +19,7 @@ public interface MemberBrandRepository extends JpaRepository<MemberBrandList,Lon
     @Query("select mbl from MemberBrandList mbl where mbl.member.id = :memberId and mbl.brand.id = :brandId")
     List<MemberBrandList> findOneByMemberIdAndBrandId(@Param("memberId")Long memberId,@Param("brandId") Long brandId);
 
-    @Query("select mbl from MemberBrandList mbl where mbl.brand.id = :id order by mbl.sequence")
+    @Query("select mbl from MemberBrandList mbl where mbl.brand.id = :id order by mbl.sequence desc ")
     List<MemberBrandList> getBrandJoinedFanCount(@Param("id")Long id, Pageable pageable);
 
     @Query("select count(mbl) from MemberBrandList mbl where mbl.memberListStatus = com.brandol.domain.enums.MemberListStatus.SUBSCRIBED")

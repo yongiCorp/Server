@@ -15,23 +15,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
-@Validated //PathVariable Valid 필수 설정
 public class BrandController {
 
     private final BrandService brandService;
 
+
     @Operation(summary = "브랜드 등록",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수" )
-    @Parameters({
-            @Parameter(name="name",description = "브랜드 이름"),
-            @Parameter(name = "description" , description = "브랜드 소개"),
-            @Parameter(name = "profileImage", description = "프로필 이미지 파일"),
-            @Parameter(name = "backgroundImage",description = "배경 이미지 파일")
-    })
     @PostMapping(value = "/brands/new",consumes = "multipart/form-data") // 브랜드 신규 등록 함수
     private ApiResponse<Brand> addNewBrand(@ModelAttribute AddBrandRequest request){
-        System.out.println("************************ -1-");
         Brand brand = brandService.createBrand(request);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), brand);
     }
@@ -40,8 +35,7 @@ public class BrandController {
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
     @GetMapping(value = "/brands/{brandId}/header")
-    public ApiResponse<BrandCommonHeaderResponse> showBrandHeader(@ExistBrand @PathVariable("brandId")Long brandId, @RequestParam("memberId")Long memberId){
-
+    public ApiResponse<BrandCommonHeaderResponse> showBrandHeader(@PathVariable("brandId")Long brandId, @RequestParam("memberId")Long memberId){
         BrandCommonHeaderResponse brandCommonHeaderResponse = brandService.makeBrandCommonHeader(brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), brandCommonHeaderResponse);
     }

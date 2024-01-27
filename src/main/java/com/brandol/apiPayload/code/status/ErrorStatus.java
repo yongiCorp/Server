@@ -17,7 +17,8 @@ public enum ErrorStatus implements BaseCode {
     _NOT_EXIST_BRAND(HttpStatus.BAD_REQUEST,"BRAND400","존재하지 않는 브랜드입니다."),
 
     //멤버 브랜드 리스트
-    _ALREADY_EXIST_MEMBERM_BRAND_LIST(HttpStatus.BAD_REQUEST,"MEMBER-BRAND-LIST400","이미 구독중인 브랜드 입니다."),
+    _ALREADY_EXIST_MEMBER_BRAND_LIST(HttpStatus.BAD_REQUEST,"MEMBER-BRAND-LIST400","이미 구독중인 브랜드 입니다."),
+    _NOT_EXIST_MEMBER_BRAND_LIST(HttpStatus.BAD_REQUEST,"MEMBER-BRAND-LIST404","멤버-브랜드-리스트 조회 실패"),
 
     //메인 배너
     _CANNOT_LOAD_MAIN_BANNER(HttpStatus.NOT_FOUND,"MAIN-BANNER404","메인배너 조회에 실패했습니다."),
