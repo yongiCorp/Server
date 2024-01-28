@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
-//서치리스폰스필드만들구 클래스안에다가 dto넣기. 필드는오브젝트타입으로, 그안에 dto
+
 
 @Getter
 @Builder
