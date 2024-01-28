@@ -4,6 +4,7 @@ import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.domain.Brand;
 import com.brandol.domain.Fandom;
+import com.brandol.domain.FandomImage;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.AddBrandRequest;
@@ -12,6 +13,7 @@ import com.brandol.dto.response.BrandFandomBodyResponse;
 import com.brandol.dto.subDto.BrandFandomBody;
 import com.brandol.dto.subDto.BrandHeader;
 import com.brandol.repository.BrandRepository;
+import com.brandol.repository.FandomImageRepository;
 import com.brandol.repository.FandomRepository;
 import com.brandol.repository.MemberBrandRepository;
 import com.brandol.aws.AmazonS3Manager;
@@ -21,9 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,7 @@ public class BrandService {
     private final BrandRepository brandRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
+    private final FandomImageRepository fandomImageRepository;
     private final AmazonS3Manager s3Manager;
 
     @Transactional
@@ -98,6 +100,24 @@ public class BrandService {
         // 팬덤 노티스 리스트
         List<Fandom> fandomNoticeList = fandomRepository.getSomeRecentFandomNotices(brandId, PageRequest.of(0,2));
 
+
+        List<Long> fandomCultureIdList = fandomCultureList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 컬처의 팬덤 아이디 추출
+        Map<Integer,Object> fandomCultureImages=new LinkedHashMap<>();
+        for(Integer i=0;i<fandomCultureIdList.size();i++){
+           List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomCultureIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
+           List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
+           fandomCultureImages.put(i,imageResult);
+        }
+
+        List<Long> fandomNoticeIdList = fandomNoticeList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 아나운스먼트의 펜덤 아이디 추출
+        Map<Integer,Object> fandomNoticeImages = new LinkedHashMap<>();
+        for(Integer i=0;i<fandomNoticeIdList.size();i++){
+            List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomNoticeIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
+            List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
+            fandomNoticeImages.put(i,imageResult);
+        }
+
+
         /*더미 데이터*/
         //어드민 멤버
         Member adminMember = Member.builder()
@@ -105,7 +125,7 @@ public class BrandService {
                 .avatar(targetBrand.getBackgroundImage())
                 .build();
 
-        Map<String,Object> body = BrandFandomBody.createFandomBody(fandomCultureList,fandomNoticeList,adminMember);
+        Map<String,Object> body = BrandFandomBody.createFandomBody(fandomCultureList,fandomNoticeList,fandomCultureImages,fandomNoticeImages,adminMember);
         return BrandFandomBodyResponse.makeBrandBody(body);
     }
 
