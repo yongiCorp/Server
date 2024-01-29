@@ -2,14 +2,17 @@ package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
+import com.brandol.converter.BrandConverter;
 import com.brandol.domain.Brand;
 import com.brandol.domain.Fandom;
 import com.brandol.domain.FandomImage;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.AddBrandRequest;
+import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandCommonHeaderResponse;
 import com.brandol.dto.response.BrandFandomBodyResponse;
+import com.brandol.dto.response.BrandResponseDto;
 import com.brandol.dto.subDto.BrandFandomBody;
 import com.brandol.dto.subDto.BrandHeader;
 import com.brandol.repository.BrandRepository;
@@ -39,10 +42,12 @@ public class BrandService {
     private final AmazonS3Manager s3Manager;
 
     @Transactional
-    public Brand createBrand(AddBrandRequest request){ // 브랜드 등록 함수
+    public Brand createBrand(BrandRequestDto.addBrand request){ // 브랜드 등록 함수
 
-        Brand brand = AddBrandRequest.toEntity(request); // dto에서 이름,설명 데이터만 우선으로 엔티티로 변환
-
+        //Brand brand = AddBrandRequest.toEntity(request); // dto에서 이름,설명 데이터만 우선으로 엔티티로 변환
+        Brand brand = request.toEntity();
+        System.out.println(brand.getName());
+        System.out.println(brand.getDescription());
         String profileName = request.getProfileImage().getOriginalFilename(); // dto에 담긴 포로필 파일명 추출
         if(profileName==null){ throw new ErrorHandler(ErrorStatus._FILE_NAME_ERROR);}
         String profileUUID = s3Manager.createFileName(profileName);
@@ -66,7 +71,7 @@ public class BrandService {
         return brandRepository.existsById(id);
     }
 
-    public BrandCommonHeaderResponse makeBrandCommonHeader(Long brandId, Long memberId){
+    public BrandResponseDto.BrandHeaderDto makeBrandCommonHeader(Long brandId, Long memberId){
 
         //브랜드
         Brand targetBrand = brandRepository.findOneById(brandId);
@@ -86,9 +91,11 @@ public class BrandService {
         //현재 팬 숫자
         int recentSubscriberCount = memberBrandRepository.getRecentSubscriberCount();
         // 헤더 생성
-        Map<String,Object> header= BrandHeader.createBrandFandomHeader(targetBrand,memberBrandList,recentSubscriberCount);
 
-        return BrandCommonHeaderResponse.makeBrandHeader(header);
+        Map<String,Object> header= BrandHeader.createBrandFandomHeader(targetBrand,memberBrandList,recentSubscriberCount);
+        BrandResponseDto.BrandPreviewDto brandPreviewDto = BrandConverter.toBrandPreviewDto(targetBrand, recentSubscriberCount);
+        BrandResponseDto.BrandUserStatus brandUserStatus = BrandConverter.toUserStatusFromUser(memberBrandList);
+        return BrandConverter.toBrandHeaderDto(brandPreviewDto,brandUserStatus);
     }
 
     public BrandFandomBodyResponse makeBrandFandomBody(Long brandId){
