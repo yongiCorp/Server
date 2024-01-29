@@ -4,7 +4,6 @@ import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Items;
 import com.brandol.domain.Member;
-import com.brandol.domain.mapping.ContentsLikes;
 import com.brandol.dto.response.SearchResponse;
 import com.brandol.dto.subDto.SearchAvatarstoreList;
 import com.brandol.dto.subDto.SearchBrandList;
@@ -36,7 +35,7 @@ public class SearchService {
 
 
     @Transactional
-    public SearchResponse Makesearchpage(Long contentId){
+    public SearchResponse Makesearchpage(){
 
 
 
@@ -45,24 +44,25 @@ public class SearchService {
         Map<String,Object> brandList = SearchBrandList.createsearchBrandList(searchbrandList);
 
         // 멤버 리스트
-        List<Member> searchuserList = sur.findAll();
+        List<Member> searchuserList = sur.findThreeByRandom();
         Map<String,Object> memberList = SearchUserList.createsearchuserList(searchuserList);
 
         // 컨텐츠 리스트
-        List<Contents> searchcontentsList = scr.findAll();
-        //Long searchcontentsLikesList = scr.countBycontents_id(contentId);
         Map<String,Object> contentList = new LinkedHashMap<>();
         List<Contents> targetContentsList = scr.findAll();
         for(int i = 0; i < 3; i++) {
-            contentList.put("contents" + i, SearchContentsList.createsearchcontentsList(targetContentsList.get(i)
-            , scr.countBycontents_id(targetContentsList.get(i).getId())));
+            contentList.put("searchcontents" + i
+                    , SearchContentsList.createsearchcontentsList(targetContentsList.get(i)
+                    , scr.countLikesByContents_id(targetContentsList.get(i).getId())
+                    , scr.countCommentsByContents_id(targetContentsList.get(i).getId())
+                    ));
 
         }
 
 
 
         // 아바타스토어 리스트
-        List<Items> searchavatarstoreList = sar.findAll();
+        List<Items> searchavatarstoreList = sar.findThreeByRandom();
         Map<String,Object> avatarstoreList = SearchAvatarstoreList.createsearchavatarstorelist(searchavatarstoreList);
 
         return SearchResponse.MainPage(brandList,memberList,contentList,avatarstoreList);

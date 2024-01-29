@@ -20,9 +20,9 @@ public class SearchController {
     }
 
 
-    @GetMapping(value = "/search/main/{contentId}") // 검색페이지 - 랜덤 3개씩 간략 조회
-    public ApiResponse<SearchResponse> searchMain(@PathVariable("contentId") Long contents_id) {
-        SearchResponse searchmainresponse = searchService.Makesearchpage(contents_id);
+    @GetMapping(value = "/search/main") // 검색페이지 - 랜덤 3개씩 간략 조회
+    public ApiResponse<SearchResponse> searchMain() {
+        SearchResponse searchmainresponse = searchService.Makesearchpage();
 
         return ApiResponse.onSuccess(searchmainresponse);
     }
