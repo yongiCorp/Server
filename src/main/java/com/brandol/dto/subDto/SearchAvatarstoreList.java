@@ -1,16 +1,16 @@
 package com.brandol.dto.subDto;
 
-import com.brandol.domain.Brand;
-import com.brandol.domain.Items;
-import com.brandol.domain.mapping.MemberBrandList;
 
-import java.util.ArrayList;
+import com.brandol.domain.Items;
+
+
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SearchAvatarstoreList {
-    private List<Items> searchavatarstorelist = new ArrayList<>();
+
 
 
     public static Map<String,Object> createsearchavatarstorelist(List<Items>searchavatarstorelist){
@@ -28,6 +28,7 @@ public class SearchAvatarstoreList {
             searchavatarstoreData.put("brand-name",target.getBrand().getName());
             searchavatarstoreData.put("items-image",target.getImage());
             searchavatarstoreData.put("items-description",target.getDescription());
+            searchavatarstoreData.put("items-point",target.getPrice());
             result.put(key,searchavatarstoreData);
         }
 
