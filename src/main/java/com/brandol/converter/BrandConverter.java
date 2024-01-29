@@ -1,6 +1,9 @@
 package com.brandol.converter;
 
 import com.brandol.domain.Brand;
+import com.brandol.domain.Fandom;
+import com.brandol.domain.FandomImage;
+import com.brandol.domain.Member;
 import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
@@ -8,6 +11,9 @@ import com.brandol.dto.response.BrandResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -41,6 +47,50 @@ public class BrandConverter {
         return BrandResponseDto.BrandHeaderDto.builder()
                 .brandPreviewDto(brandPreviewDto)
                 .brandUserStatus(brandUserStatus)
+                .build();
+    }
+
+    public static BrandResponseDto.BrandFandomCultureDto toBrandFandomCultureDto(
+            Fandom fandom,
+            List<String>fandomCultureImages,
+            Member member){
+        return BrandResponseDto.BrandFandomCultureDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .title(fandom.getTitle())
+                .content(fandom.getContent())
+                .images(fandomCultureImages)
+                .likeCount(fandom.getLikes())
+                .commentCount(fandom.getComments())
+                .writtenDate(fandom.getCreatedAt())
+                .build();
+
+    }
+
+    public static BrandResponseDto.BrandFandomAnnouncementDto toBrandFandomAnnouncementDto(
+            Fandom fandom,
+            List<String>fandomAnnouncementImages,
+            Member member){
+        return BrandResponseDto.BrandFandomAnnouncementDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .title(fandom.getTitle())
+                .content(fandom.getContent())
+                .images(fandomAnnouncementImages)
+                .likeCount(fandom.getLikes())
+                .commentCount(fandom.getComments())
+                .writtenDate(fandom.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandFandomDto toBrandFandomDto(
+            List<BrandResponseDto.BrandFandomCultureDto> brandFandomCultureDtoList,
+            List<BrandResponseDto.BrandFandomAnnouncementDto> brandFandomAnnouncementDtoList){
+        return BrandResponseDto.BrandFandomDto.builder()
+                .brandFandomCultureDtoList(brandFandomCultureDtoList)
+                .brandFandomAnnouncementDtoList(brandFandomAnnouncementDtoList)
                 .build();
     }
 }

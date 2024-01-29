@@ -8,13 +8,8 @@ import com.brandol.domain.Fandom;
 import com.brandol.domain.FandomImage;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.dto.request.AddBrandRequest;
 import com.brandol.dto.request.BrandRequestDto;
-import com.brandol.dto.response.BrandCommonHeaderResponse;
-import com.brandol.dto.response.BrandFandomBodyResponse;
 import com.brandol.dto.response.BrandResponseDto;
-import com.brandol.dto.subDto.BrandFandomBody;
-import com.brandol.dto.subDto.BrandHeader;
 import com.brandol.repository.BrandRepository;
 import com.brandol.repository.FandomImageRepository;
 import com.brandol.repository.FandomRepository;
@@ -92,38 +87,19 @@ public class BrandService {
         int recentSubscriberCount = memberBrandRepository.getRecentSubscriberCount();
         // 헤더 생성
 
-        Map<String,Object> header= BrandHeader.createBrandFandomHeader(targetBrand,memberBrandList,recentSubscriberCount);
         BrandResponseDto.BrandPreviewDto brandPreviewDto = BrandConverter.toBrandPreviewDto(targetBrand, recentSubscriberCount);
         BrandResponseDto.BrandUserStatus brandUserStatus = BrandConverter.toUserStatusFromUser(memberBrandList);
         return BrandConverter.toBrandHeaderDto(brandPreviewDto,brandUserStatus);
     }
 
-    public BrandFandomBodyResponse makeBrandFandomBody(Long brandId){
+    public BrandResponseDto.BrandFandomDto makeBrandFandomBody(Long brandId){
 
         Brand targetBrand = brandRepository.findOneById(brandId);
         if(targetBrand==null){throw new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND);}
         //팬덤 컬처 리스트
         List<Fandom> fandomCultureList = fandomRepository.getSomeRecentFandomCultures(brandId, PageRequest.of(0,2));
         // 팬덤 노티스 리스트
-        List<Fandom> fandomNoticeList = fandomRepository.getSomeRecentFandomNotices(brandId, PageRequest.of(0,2));
-
-
-        List<Long> fandomCultureIdList = fandomCultureList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 컬처의 팬덤 아이디 추출
-        Map<Integer,Object> fandomCultureImages=new LinkedHashMap<>();
-        for(Integer i=0;i<fandomCultureIdList.size();i++){
-           List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomCultureIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
-           List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
-           fandomCultureImages.put(i,imageResult);
-        }
-
-        List<Long> fandomNoticeIdList = fandomNoticeList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 아나운스먼트의 펜덤 아이디 추출
-        Map<Integer,Object> fandomNoticeImages = new LinkedHashMap<>();
-        for(Integer i=0;i<fandomNoticeIdList.size();i++){
-            List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomNoticeIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
-            List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
-            fandomNoticeImages.put(i,imageResult);
-        }
-
+        List<Fandom> fandomAnnouncementList = fandomRepository.getSomeRecentFandomNotices(brandId, PageRequest.of(0,2));
 
         /*더미 데이터*/
         //어드민 멤버
@@ -132,8 +108,26 @@ public class BrandService {
                 .avatar(targetBrand.getBackgroundImage())
                 .build();
 
-        Map<String,Object> body = BrandFandomBody.createFandomBody(fandomCultureList,fandomNoticeList,fandomCultureImages,fandomNoticeImages,adminMember);
-        return BrandFandomBodyResponse.makeBrandBody(body);
+
+        // 팬덤컬처 dto 응답 생성부
+        List<BrandResponseDto.BrandFandomCultureDto> fandomCultureDtoList=new ArrayList<>();
+        for(int i=0; i<fandomCultureList.size();i++){
+            List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(fandomCultureList.get(i).getId());
+            List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandFandomCultureDto dto = BrandConverter.toBrandFandomCultureDto(fandomCultureList.get(i),fandomImageUrlList,adminMember);
+            fandomCultureDtoList.add(dto);
+        }
+
+        // 팬덤아나운스먼트 dto 응답 생성부
+        List<BrandResponseDto.BrandFandomAnnouncementDto> fandomAnnouncementDtoList =new ArrayList<>();
+        for(int i=0; i<fandomAnnouncementList.size();i++){
+            List<FandomImage>fandomImages = fandomImageRepository.findFandomImages(fandomAnnouncementList.get(i).getId());
+            List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandFandomAnnouncementDto dto = BrandConverter.toBrandFandomAnnouncementDto(fandomAnnouncementList.get(i),fandomImageUrlList,adminMember);
+            fandomAnnouncementDtoList.add(dto);
+        }
+
+        return BrandConverter.toBrandFandomDto(fandomCultureDtoList,fandomAnnouncementDtoList);
     }
 
 }
