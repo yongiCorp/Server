@@ -16,16 +16,13 @@ import com.brandol.repository.BrandRepository;
 import com.brandol.repository.FandomImageRepository;
 import com.brandol.repository.FandomRepository;
 import com.brandol.repository.MemberBrandRepository;
-import com.brandol.storagy.AmazonS3Manager;
+import com.brandol.aws.AmazonS3Manager;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,15 +45,13 @@ public class BrandService {
 
         String profileName = request.getProfileImage().getOriginalFilename(); // dto에 담긴 포로필 파일명 추출
         if(profileName==null){ throw new ErrorHandler(ErrorStatus._FILE_NAME_ERROR);}
-        String profileIMGExtension = profileName.substring(profileName.lastIndexOf(".")+1); // 프로필 파일명에서 확자자 추출 (jpg/png)
-        String profileUUID = UUID.randomUUID()+"."+profileIMGExtension; //uuid + . + 확장자 => 파일명 생성
+        String profileUUID = s3Manager.createFileName(profileName);
         String profileURL = s3Manager.uploadFile(profileUUID, request.getProfileImage()); // S3 해당 파일명으로 파일 업로드
 
 
         String backgroundName = request.getBackgroundImage().getOriginalFilename();
         if(backgroundName==null){ throw new ErrorHandler(ErrorStatus._FILE_NAME_ERROR);}
-        String backgroundExtension = backgroundName.substring(profileName.lastIndexOf(".")+1);
-        String backgroundUUID = UUID.randomUUID()+"."+backgroundExtension;
+        String backgroundUUID = s3Manager.createFileName(backgroundName);
         String backgroundURL = s3Manager.uploadFile(backgroundUUID, request.getBackgroundImage());
 
         brand.addImages(profileURL,backgroundURL); // 프로필, 배경 이미지의 url 주소를 엔티티에 할당
