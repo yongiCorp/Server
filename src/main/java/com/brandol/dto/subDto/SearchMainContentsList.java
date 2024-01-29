@@ -1,14 +1,15 @@
 package com.brandol.dto.subDto;
 
 
+import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
-
+import com.brandol.domain.Member;
 
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SearchContentsList {
+public class SearchMainContentsList {
 
 
 
@@ -16,7 +17,10 @@ public class SearchContentsList {
             (
              Contents searchContents,
              Long ContentsLikes,
-             Long ContentsComments
+             Long ContentsComments,
+             Brand searchBrand,
+             Member searchMember
+
              ){
         Map<String,Object> result = new LinkedHashMap<>();
 
@@ -32,7 +36,9 @@ public class SearchContentsList {
             searchcontentsData.put("contents-createdAt",searchContents.getCreatedAt());
             searchcontentsData.put("contents-numberofLikes", ContentsLikes);
             searchcontentsData.put("contents-numberofComments",ContentsComments);
-            //더 추가필요(작성자명,작성자프로필,브랜드이름)
+            searchcontentsData.put("contents-brandName",searchBrand.getName());
+            searchcontentsData.put("contents-writerName",searchMember.getName());
+            searchcontentsData.put("contents-writerProfile",searchMember.getAvatar());
             result = searchcontentsData;
         }
 

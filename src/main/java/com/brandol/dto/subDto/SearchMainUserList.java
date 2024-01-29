@@ -1,16 +1,14 @@
 package com.brandol.dto.subDto;
 
-import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Member;
-import com.brandol.domain.mapping.MemberBrandList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SearchUserList {
+public class SearchMainUserList {
     private List<Contents> searchuserList = new ArrayList<>();
 
 
