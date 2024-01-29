@@ -71,6 +71,5 @@ public class MemberBrandService {
         target.changeMemberListStatus(MemberListStatus.UNSUBSCRIBED); //더티 체킹
 
         return target;
-
     }
 }

@@ -2,20 +2,16 @@ package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
-import com.brandol.domain.Brand;
-import com.brandol.domain.Fandom;
-import com.brandol.domain.FandomImage;
-import com.brandol.domain.Member;
+import com.brandol.domain.*;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.AddBrandRequest;
 import com.brandol.dto.response.BrandCommonHeaderResponse;
+import com.brandol.dto.response.BrandContentsBodyResponse;
 import com.brandol.dto.response.BrandFandomBodyResponse;
+import com.brandol.dto.subDto.BrandContentsBody;
 import com.brandol.dto.subDto.BrandFandomBody;
 import com.brandol.dto.subDto.BrandHeader;
-import com.brandol.repository.BrandRepository;
-import com.brandol.repository.FandomImageRepository;
-import com.brandol.repository.FandomRepository;
-import com.brandol.repository.MemberBrandRepository;
+import com.brandol.repository.*;
 import com.brandol.aws.AmazonS3Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +32,8 @@ public class BrandService {
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
     private final FandomImageRepository fandomImageRepository;
+    private final ContentsRepository contentsRepository;
+    private final ContentImageRepository contentImageRepository;
     private final AmazonS3Manager s3Manager;
 
     @Transactional
@@ -127,6 +125,52 @@ public class BrandService {
 
         Map<String,Object> body = BrandFandomBody.createFandomBody(fandomCultureList,fandomNoticeList,fandomCultureImages,fandomNoticeImages,adminMember);
         return BrandFandomBodyResponse.makeBrandBody(body);
+    }
+
+    public BrandContentsBodyResponse makeBrandContentsBody(Long brandId){
+
+        Brand targetBrand = brandRepository.findOneById(brandId);
+        if(targetBrand==null){throw new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND);}
+
+        //콘텐츠 이벤트 리스트
+        List<Contents> eventList = contentsRepository.getSomeRecentEvents(brandId, PageRequest.of(0,2));
+        //콘텐츠 카드뉴스 리스트
+        List<Contents> cardNewsList = contentsRepository.getSomeRecentCardNews(brandId, PageRequest.of(0,2));
+        // 콘텐츠 영상 리스트
+        List<Contents>videoList = contentsRepository.getSomeRecentVideos(brandId, PageRequest.of(0,2));
+
+        List<Long> contentEventIdList = eventList.stream().map(Contents::getId).collect(Collectors.toList()); // 콘텐츠 이벤트의 콘텐츠 아이디 추출
+        Map<Integer,Object> contentsEventsImages=new LinkedHashMap<>();
+        for(Integer i=0;i<contentEventIdList.size();i++){
+            List<ContentsImage> reslutList = new ArrayList<>(contentImageRepository.findContentsImages(contentEventIdList.get(i))); //콘텐츠 아이디로 해당 아이디로 등록된 콘텐츠 이미지를 전체 조회
+            List<String> imageResult = reslutList.stream().map(ci -> ci.getImage()).collect(Collectors.toList()); // 콘텐츠 이미지 엔티티에서 URL 데이터만 추출
+            contentsEventsImages.put(i,imageResult);
+        }
+
+        List<Long> contentCardNewsIdList = cardNewsList.stream().map(Contents::getId).collect(Collectors.toList()); // 콘텐츠 카드뉴스의 콘텐츠 아이디 추출
+        Map<Integer,Object> contentsCardNewsImages=new LinkedHashMap<>();
+        for(Integer i=0;i<contentCardNewsIdList.size();i++){
+            List<ContentsImage> reslutList = new ArrayList<>(contentImageRepository.findContentsImages(contentCardNewsIdList.get(i))); //콘텐츠 아이디로 해당 아이디로 등록된 콘텐츠 이미지를 전체 조회
+            List<String> imageResult = reslutList.stream().map(ci -> ci.getImage()).collect(Collectors.toList()); // 콘텐츠 이미지 엔티티에서 URL 데이터만 추출
+            contentsCardNewsImages.put(i,imageResult);
+        }
+
+        List<Long> contentVideosIdList = videoList.stream().map(Contents::getId).collect(Collectors.toList()); // 콘텐츠 비디오의 콘텐츠 아이디 추출
+        Map<Integer,Object> contentsVideoImages=new LinkedHashMap<>();
+        for(Integer i=0;i<contentVideosIdList.size();i++){
+            List<ContentsImage> reslutList = new ArrayList<>(contentImageRepository.findContentsImages(contentVideosIdList.get(i))); //콘텐츠 아이디로 해당 아이디로 등록된 콘텐츠 이미지를 전체 조회
+            List<String> imageResult = reslutList.stream().map(ci -> ci.getImage()).collect(Collectors.toList()); // 콘텐츠 이미지 엔티티에서 URL 데이터만 추출
+            contentsVideoImages.put(i,imageResult);
+        }
+
+        Member adminMember = Member.builder()
+                .name(targetBrand.getName()+"관리자")
+                .avatar(targetBrand.getBackgroundImage())
+                .build();
+
+        Map<String,Object> body = BrandContentsBody.makeCotentsBody(eventList,cardNewsList,videoList,contentsEventsImages,contentsCardNewsImages,contentsVideoImages,adminMember);
+        return BrandContentsBodyResponse.makeBrandContentBody(body);
+
     }
 
 }

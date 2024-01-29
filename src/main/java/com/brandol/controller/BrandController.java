@@ -5,6 +5,7 @@ import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.Brand;
 import com.brandol.dto.request.AddBrandRequest;
 import com.brandol.dto.response.BrandCommonHeaderResponse;
+import com.brandol.dto.response.BrandContentsBodyResponse;
 import com.brandol.dto.response.BrandFandomBodyResponse;
 import com.brandol.service.BrandService;
 import com.brandol.validation.annotation.ExistBrand;
@@ -42,9 +43,18 @@ public class BrandController {
     @Operation(summary = "브랜드 팬덤 조회",description ="브랜드 팬덤에 종속된 브랜드 컬처, 브랜드 공지사항 최신 2건을 조회" )
     @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
     @GetMapping(value = "/brands/{brandId}/fandom")
-    public ApiResponse<BrandFandomBodyResponse> showBrandBody(@ExistBrand @PathVariable("brandId")Long brandId) {
+    public ApiResponse<BrandFandomBodyResponse> showBrandFandomBody(@ExistBrand @PathVariable("brandId")Long brandId) {
         BrandFandomBodyResponse brandFandomBody = brandService.makeBrandFandomBody(brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandFandomBody);
     }
+
+    @Operation(summary = "브랜드 콘텐츠 조회",description ="브랜드 콘텐츠에 종속된 브랜드 이벤트, 브랜드 카드뉴스, 브랜드 비디오 최신 2건을 조회" )
+    @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
+    @GetMapping(value = "/brands/{brandId}/contents")
+    public ApiResponse<BrandContentsBodyResponse> showBrandContentsBody(@ExistBrand @PathVariable("brandId")Long brandId) {
+        BrandContentsBodyResponse brandContentsBody = brandService.makeBrandContentsBody(brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandContentsBody);
+    }
+
 
 }
