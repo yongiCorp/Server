@@ -40,7 +40,7 @@ public class BrandService {
     public Brand createBrand(BrandRequestDto.addBrand request){ // 브랜드 등록 함수
 
         //Brand brand = AddBrandRequest.toEntity(request); // dto에서 이름,설명 데이터만 우선으로 엔티티로 변환
-        Brand brand = request.toEntity();
+        Brand brand = BrandConverter.toBrandEntity(request);
         System.out.println(brand.getName());
         System.out.println(brand.getDescription());
         String profileName = request.getProfileImage().getOriginalFilename(); // dto에 담긴 포로필 파일명 추출

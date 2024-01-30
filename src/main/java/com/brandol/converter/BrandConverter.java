@@ -19,6 +19,18 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class BrandConverter {
+
+    public static Brand toBrandEntity(BrandRequestDto.addBrand dto){
+
+        return Brand.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .profileImage(null)
+                .backgroundImage(null)
+                .build();
+    }
+
+
     public static BrandResponseDto.BrandPreviewDto toBrandPreviewDto(Brand brand, int fans) {
         return BrandResponseDto.BrandPreviewDto.builder()
                 .brand_id(brand.getId())
