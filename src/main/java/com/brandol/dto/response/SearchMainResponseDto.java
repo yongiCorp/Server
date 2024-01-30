@@ -13,19 +13,19 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchMainResponse {
+public class SearchMainResponseDto {
     private Map<String,Object> searchbrandList = new HashMap<>();
     private Map<String,Object> searchuserList = new HashMap<>();
     private Map<String,Object> searchcontentsList = new HashMap<>();
     private Map<String,Object> searchavatarstorelist = new HashMap<>();//얘는 보이는데 안의 브랜드 네임 등이 안보임
 
 
-    public static SearchMainResponse mainPage(Map<String,Object> searchbrandList,
-                                              Map<String,Object> searchuserList,
-                                              Map<String,Object> searchcontents,
-                                              Map<String,Object> searchavatarstores
+    public static SearchMainResponseDto mainPage(Map<String,Object> searchbrandList,
+                                                 Map<String,Object> searchuserList,
+                                                 Map<String,Object> searchcontents,
+                                                 Map<String,Object> searchavatarstores
                                           ){
-        return  SearchMainResponse.builder()
+        return  SearchMainResponseDto.builder()
                 .searchbrandList(searchbrandList)
                 .searchuserList(searchuserList)
                 .searchcontentsList(searchcontents)

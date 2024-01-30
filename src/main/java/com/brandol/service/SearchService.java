@@ -4,7 +4,7 @@ import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Items;
 import com.brandol.domain.Member;
-import com.brandol.dto.response.SearchMainResponse;
+import com.brandol.dto.response.SearchMainResponseDto;
 import com.brandol.dto.subDto.SearchMainAvatarstoreList;
 import com.brandol.dto.subDto.SearchMainBrandList;
 import com.brandol.dto.subDto.SearchMainContentsList;
@@ -35,7 +35,7 @@ public class SearchService {
 
 
     @Transactional
-    public SearchMainResponse makeSearchpage(){
+    public SearchMainResponseDto makeSearchpage(){
 
 
 
@@ -71,7 +71,7 @@ public class SearchService {
         List<Items> searchavatarstoreList = sar.findThreeByRandom();
         Map<String,Object> avatarstoreList = SearchMainAvatarstoreList.createsearchavatarstorelist(searchavatarstoreList);
 
-        return SearchMainResponse.mainPage(brandList,memberList,contentList,avatarstoreList);
+        return SearchMainResponseDto.mainPage(brandList,memberList,contentList,avatarstoreList);
 
 
 
