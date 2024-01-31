@@ -57,6 +57,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long fandomId;
         private String title;
         private String content;
         private List<String> images;
@@ -74,6 +75,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long fandomId;
         private String title;
         private String content;
         private List<String> images;
@@ -103,6 +105,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long contentsId;
         private String title;
         private String content;
         private List<String> images;
@@ -120,6 +123,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long contentsId;
         private String title;
         private String content;
         private List<String> images;
@@ -137,6 +141,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long contentsId;
         private String title;
         private String content;
         private List<String> images;
