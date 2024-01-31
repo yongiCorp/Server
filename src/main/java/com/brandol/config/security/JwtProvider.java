@@ -2,6 +2,7 @@ package com.brandol.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,12 +37,14 @@ public class JwtProvider implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         byte[] secretKeyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(secretKeyBytes);
     }
 
     // 토큰 생성
+    // atk, rtk 각각 생성으로 변경하기
     @Transactional
     public TokenDto createToken(String email, Long id, String authorities){
-
+        System.out.println("createToken() 실행");
         Date now = new Date();
         Date atkExpiration = new Date(now.getTime() + accessTokenValidTime); // 액세스 토큰 만료 시간
         Date rtkExpiration = new Date(now.getTime() + refreshTokenValidTime); // 리프레쉬 토큰 만료 시간
@@ -50,7 +53,7 @@ public class JwtProvider implements InitializingBean {
                 .claim("email", email) // email
                 .claim("id", id) // member_id
                 .claim(AUTHORITIES_KEY, authorities) // role
-                //.setSubject("access-token") // tokenType을 만들어둘지?
+                .setSubject("atk") // access token
                 .setIssuedAt(now) // 토큰 발행 시간
                 .setExpiration(atkExpiration) // 토큰 만료 시간
                 .signWith(key, SignatureAlgorithm.HS256) // HS256알고리즘과 key로 Signature 생성
@@ -58,6 +61,7 @@ public class JwtProvider implements InitializingBean {
 
         String refreshToken = Jwts.builder()
                 .claim("email", email)
+                .setSubject("rtk") // refresh token
                 .setExpiration(rtkExpiration)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -67,6 +71,7 @@ public class JwtProvider implements InitializingBean {
 
     // HTTP Request 헤더로부터 토큰 추출
     public String resolveToken(HttpServletRequest httpServletRequest) {
+        System.out.println("Provider의 resolveToken() 실행");
         String bearerToken = httpServletRequest.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
