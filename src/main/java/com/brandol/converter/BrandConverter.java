@@ -1,9 +1,6 @@
 package com.brandol.converter;
 
-import com.brandol.domain.Brand;
-import com.brandol.domain.Fandom;
-import com.brandol.domain.FandomImage;
-import com.brandol.domain.Member;
+import com.brandol.domain.*;
 import com.brandol.domain.enums.MemberListStatus;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
@@ -13,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -103,6 +99,69 @@ public class BrandConverter {
         return BrandResponseDto.BrandFandomDto.builder()
                 .brandFandomCultureDtoList(brandFandomCultureDtoList)
                 .brandFandomAnnouncementDtoList(brandFandomAnnouncementDtoList)
+                .build();
+    }
+
+    public static BrandResponseDto.BrandContentsEventDto toBrandContentsEventDto(
+            Contents contents,
+            List<String> contentsImages,
+            Member member){
+        return BrandResponseDto.BrandContentsEventDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .title(contents.getTitle())
+                .content(contents.getContent())
+                .images(contentsImages)
+                .likeCount(contents.getLikeCount())
+                .commentCount(contents.getCommentCount())
+                .writtenDate(contents.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandContentsCardNewsDto toBrandContentsCardNewsDto(
+            Contents contents,
+            List<String> contentsImages,
+            Member member){
+        return BrandResponseDto.BrandContentsCardNewsDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .title(contents.getTitle())
+                .content(contents.getContent())
+                .images(contentsImages)
+                .likeCount(contents.getLikeCount())
+                .commentCount(contents.getCommentCount())
+                .writtenDate(contents.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandContentsVideoDto toBrandContentsVideoDto(
+            Contents contents,
+            List<String> contentsImages,
+            Member member){
+        return BrandResponseDto.BrandContentsVideoDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .title(contents.getTitle())
+                .content(contents.getContent())
+                .images(contentsImages)
+                .video(contents.getFile())
+                .likeCount(contents.getLikeCount())
+                .commentCount(contents.getCommentCount())
+                .writtenDate(contents.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandContentsDto toBrandContentsDto(
+            List<BrandResponseDto.BrandContentsEventDto> brandContentsEventDtoList,
+            List<BrandResponseDto.BrandContentsCardNewsDto> brandContentsCardNewsDtoList,
+            List<BrandResponseDto.BrandContentsVideoDto> brandContentsVideoDtoList){
+        return BrandResponseDto.BrandContentsDto.builder()
+                .brandContentsEventDtoList(brandContentsEventDtoList)
+                .brandContentsCardNewsDtoList(brandContentsCardNewsDtoList)
+                .brandContentsVideoDtoList(brandContentsVideoDtoList)
                 .build();
     }
 }
