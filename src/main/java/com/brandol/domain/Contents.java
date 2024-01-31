@@ -27,6 +27,10 @@ public class Contents extends BaseEntity {
 
     private String content; // 2014-01-19 누락 필드 추가
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id",nullable = false)
+    private Brand brand;
+
     public void addFile(String fileURL){
         this.file = fileURL;
     }

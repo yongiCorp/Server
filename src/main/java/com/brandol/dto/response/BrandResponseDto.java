@@ -5,6 +5,8 @@ import lombok.*;
 import org.joda.time.DateTime;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class BrandResponseDto {
@@ -39,5 +41,48 @@ public class BrandResponseDto {
         private Long fan_sequence;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandFandomDto{
+        public List<BrandFandomCultureDto> brandFandomCultureDtoList;
+        public List<BrandFandomAnnouncementDto> brandFandomAnnouncementDtoList;
+
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandFandomCultureDto{
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private String title;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandFandomAnnouncementDto{
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private String title;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+
+    }
 
 }

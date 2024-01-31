@@ -14,11 +14,5 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ContentsService {
-
     private final ContentsRepository contentsRepository;
-    public List<Contents> findRecentEvents(int cnt){//최근 등록 콘텐츠 cnt개를 가져오는 함수
-        List<Contents> contents = contentsRepository.findRecentBrands(cnt);
-        if(contents.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS);}
-        return contents;
-    }
 }
