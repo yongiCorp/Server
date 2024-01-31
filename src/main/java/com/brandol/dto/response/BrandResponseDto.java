@@ -1,8 +1,6 @@
 package com.brandol.dto.response;
 
-import com.brandol.domain.mapping.MemberBrandList;
 import lombok.*;
-import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,6 +57,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long fandomId;
         private String title;
         private String content;
         private List<String> images;
@@ -76,6 +75,7 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
+        private Long fandomId;
         private String title;
         private String content;
         private List<String> images;
@@ -83,6 +83,72 @@ public class BrandResponseDto {
         private int commentCount;
         private LocalDateTime writtenDate;
 
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandContentsDto{
+        private List<BrandContentsEventDto> brandContentsEventDtoList;
+        private List<BrandContentsCardNewsDto> brandContentsCardNewsDtoList;
+        private List<BrandContentsVideoDto> brandContentsVideoDtoList;
+    }
+
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandContentsEventDto {
+
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private Long contentsId;
+        private String title;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandContentsCardNewsDto {
+
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private Long contentsId;
+        private String title;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandContentsVideoDto {
+
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private Long contentsId;
+        private String title;
+        private String content;
+        private List<String> images;
+        private String video;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
     }
 
 }

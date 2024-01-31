@@ -3,17 +3,11 @@ package com.brandol.service;
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.BrandConverter;
-import com.brandol.domain.Brand;
-import com.brandol.domain.Fandom;
-import com.brandol.domain.FandomImage;
-import com.brandol.domain.Member;
+import com.brandol.domain.*;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
-import com.brandol.repository.BrandRepository;
-import com.brandol.repository.FandomImageRepository;
-import com.brandol.repository.FandomRepository;
-import com.brandol.repository.MemberBrandRepository;
+import com.brandol.repository.*;
 import com.brandol.aws.AmazonS3Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +28,8 @@ public class BrandService {
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
     private final FandomImageRepository fandomImageRepository;
+    private final ContentsRepository contentsRepository;
+    private final ContentImageRepository   contentImageRepository;
     private final AmazonS3Manager s3Manager;
 
     @Transactional
@@ -128,6 +124,51 @@ public class BrandService {
         }
 
         return BrandConverter.toBrandFandomDto(fandomCultureDtoList,fandomAnnouncementDtoList);
+    }
+
+    public BrandResponseDto.BrandContentsDto makeBrandContentsBody(Long brandId){
+
+        Brand targetBrand = brandRepository.findOneById(brandId);
+
+        //콘텐츠 이벤트 리스트
+        List<Contents> eventList = contentsRepository.findRecentEvents(brandId);
+        //콘텐츠 카드뉴스 리스트
+        List<Contents> cardNewsList = contentsRepository.findRecentCardNews(brandId);
+        // 콘텐츠 비디오 리스트
+        List<Contents> videoList = contentsRepository.findRecentVideos(brandId);
+
+        /*더미 데이터*/
+        //어드민 멤버
+        Member adminMember = Member.builder()
+                .name(targetBrand.getName()+"관리자")
+                .avatar(targetBrand.getBackgroundImage())
+                .build();
+
+        List<BrandResponseDto.BrandContentsEventDto> contentsEventsDtoList = new ArrayList<>();
+        for(int i=0; i<eventList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(eventList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsEventDto dto = BrandConverter.toBrandContentsEventDto(eventList.get(i),contentsImageUrlList,adminMember);
+            contentsEventsDtoList.add(dto);
+        }
+
+        List<BrandResponseDto.BrandContentsCardNewsDto> contentsCardNewsDtoList = new ArrayList<>();
+        for(int i=0; i<cardNewsList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(cardNewsList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsCardNewsDto dto = BrandConverter.toBrandContentsCardNewsDto(cardNewsList.get(i),contentsImageUrlList,adminMember);
+            contentsCardNewsDtoList.add(dto);
+        }
+
+        List<BrandResponseDto.BrandContentsVideoDto> contentsVideoDtoList = new ArrayList<>();
+        for(int i=0; i<videoList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(videoList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsVideoDto dto = BrandConverter.toBrandContentsVideoDto(videoList.get(i),contentsImageUrlList,adminMember);
+            contentsVideoDtoList.add(dto);
+        }
+
+        return BrandConverter.toBrandContentsDto(contentsEventsDtoList,contentsCardNewsDtoList,contentsVideoDtoList);
     }
 
 }
