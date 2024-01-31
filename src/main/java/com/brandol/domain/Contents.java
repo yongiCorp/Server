@@ -31,9 +31,9 @@ public class Contents extends BaseEntity {
     @JoinColumn(name = "brand_id",nullable = false)
     private Brand brand;
 
-    private int likeCount;
+    private int likes;
 
-    private int commentCount;
+    private int comments;
 
     public void addFile(String fileURL){
         this.file = fileURL;

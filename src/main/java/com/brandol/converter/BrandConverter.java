@@ -113,8 +113,8 @@ public class BrandConverter {
                 .title(contents.getTitle())
                 .content(contents.getContent())
                 .images(contentsImages)
-                .likeCount(contents.getLikeCount())
-                .commentCount(contents.getCommentCount())
+                .likeCount(contents.getLikes())
+                .commentCount(contents.getComments())
                 .writtenDate(contents.getCreatedAt())
                 .build();
     }
@@ -130,8 +130,8 @@ public class BrandConverter {
                 .title(contents.getTitle())
                 .content(contents.getContent())
                 .images(contentsImages)
-                .likeCount(contents.getLikeCount())
-                .commentCount(contents.getCommentCount())
+                .likeCount(contents.getLikes())
+                .commentCount(contents.getComments())
                 .writtenDate(contents.getCreatedAt())
                 .build();
     }
@@ -148,8 +148,8 @@ public class BrandConverter {
                 .content(contents.getContent())
                 .images(contentsImages)
                 .video(contents.getFile())
-                .likeCount(contents.getLikeCount())
-                .commentCount(contents.getCommentCount())
+                .likeCount(contents.getLikes())
+                .commentCount(contents.getComments())
                 .writtenDate(contents.getCreatedAt())
                 .build();
     }
