@@ -15,6 +15,9 @@ public enum ErrorStatus implements BaseCode {
 
     // Member 관련
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER400", "존재하지 않는 회원입니다."),
+    _MEMBER_NOT_FOUND_SIGNUP(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
+
+    _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
 
     // Jwt 관련
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "JWT400", "유효하지 않은 토큰입니다."),

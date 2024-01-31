@@ -7,7 +7,6 @@ import com.brandol.config.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,14 +27,17 @@ public class SecurityConfing {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    /*public WebSecurityCustomizer webSecurityCustomizer() {
+    public WebSecurityCustomizer webSecurityCustomizer() {
         // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web)
                 -> web
                 .ignoring()
-                //.antMatchers("/users/login/kakao");
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적 리소스들
-    }*/
+                .antMatchers("/swagger-ui/**")
+                .antMatchers("/auth/login/kakao")
+                .antMatchers("/auth/signup")
+                .antMatchers("/auth/nickname/exist");
+                //.requestMatchers(PathRequest.toStaticResources().atCommonLocations()); // 정적 리소스들
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,18 +58,9 @@ public class SecurityConfing {
 
                 .and()
                 .authorizeRequests()
-                //.antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/users/login/kakao","/swagger-ui/**").permitAll() // "/users/login/kakao" 엔드포인트에 대한 접근을 모든 사용자에게 허용
+                .antMatchers("/auth/login/kakao","/swagger-ui/**", "/auth/signup", "/auth/nickname/exist").permitAll() // url 접근을 모든 사용자에게 허용
                 .anyRequest().authenticated();// 나머지 요청은 모두 인증된 사용자만 접근 가능
 
-
-                /*.authorizeRequests() // ServletRequest를 사용하는 요청에 대한 접근 제한 설정(인증 필요)
-                .antMatchers("/api/mypage/**") // 마이페이지 인증 필요
-                .authenticated() // 인증을 완료해야 접근을 허용
-                .antMatchers("/api/admin/**").hasRole("ADMIN") // 관리자 페이지
-                //hasRole("권한"): 특정 레벨의 권한을 가진 사용자만 접근을 허용한다.(SecurityContext에 저장했던 Authentication 객체의 Authorities를 검사한다.)
-                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll() // 검증없이 이용가능 (POST 요청가능)
-                .anyRequest().permitAll()// 인증 없이 접근 허용*/
         return http.build();
     }
 
