@@ -31,4 +31,8 @@ public class MemberBrandList extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
+
+    public void changeMemberListStatus(MemberListStatus memberListStatus){
+        this.memberListStatus = memberListStatus;
+    }
 }

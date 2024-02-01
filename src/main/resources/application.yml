@@ -1,12 +1,10 @@
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASS}
-
-  jpa : #jpa ??
+  jpa :
     hibernate:
       ddl-auto : update
     properties:
@@ -17,7 +15,8 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-
+  profiles:
+    active: aws
 logging.level:
-  org.hibernate.SQL: debug #??? ???? ??? ??? ??.
-  org.hibernate.type : trace #???? ?????? ? ? ?
+  org.hibernate.SQL: debug
+  org.hibernate.type : trace

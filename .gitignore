@@ -36,3 +36,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### yml ###
+src/main/resources/application-local.yml
+src/main/resources/application-aws.yml
+### my test ###
+src/main/java/com/brandol/testAndDummy
