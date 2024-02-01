@@ -27,6 +27,13 @@ public class Contents extends BaseEntity {
 
     private String content; // 2014-01-19 누락 필드 추가
 
+    private int likes;
+
+    private int comments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public void addFile(String fileURL){
         this.file = fileURL;
