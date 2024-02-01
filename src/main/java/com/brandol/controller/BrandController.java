@@ -3,22 +3,15 @@ package com.brandol.controller;
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.Brand;
-import com.brandol.dto.request.AddBrandRequest;
 import com.brandol.dto.request.BrandRequestDto;
-import com.brandol.dto.response.BrandCommonHeaderResponse;
-import com.brandol.dto.response.BrandFandomBodyResponse;
 import com.brandol.dto.response.BrandResponseDto;
 import com.brandol.service.BrandService;
 import com.brandol.validation.annotation.ExistBrand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,11 +41,16 @@ public class BrandController {
     @Operation(summary = "브랜드 팬덤 조회",description ="브랜드 팬덤에 종속된 브랜드 컬처, 브랜드 공지사항 최신 2건을 조회" )
     @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
     @GetMapping(value = "/brands/{brandId}/fandom")
-    public ApiResponse<BrandFandomBodyResponse> showBrandBody(@ExistBrand @PathVariable("brandId")Long brandId) {
-        BrandFandomBodyResponse brandFandomBody = brandService.makeBrandFandomBody(brandId);
-        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandFandomBody);
+    public ApiResponse<BrandResponseDto.BrandFandomDto> showBrandFandom(@ExistBrand @PathVariable("brandId")Long brandId) {
+        BrandResponseDto.BrandFandomDto brandFandomDto = brandService.makeBrandFandomBody(brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandFandomDto);
     }
 
-
-
+    @Operation(summary = "브랜드 콘텐츠 조회",description = "브랜드 콘텐츠에 종속된 브랜드 이벤트, 브랜드 카드뉴스, 브랜드 비디오 최신 2건을 조회")
+    @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
+    @GetMapping(value = "/brands/{brandId}/contents")
+    public ApiResponse<BrandResponseDto.BrandContentsDto> showBrandContents(@ExistBrand @PathVariable("brandId")Long brandId){
+        BrandResponseDto.BrandContentsDto brandContentsDto = brandService.makeBrandContentsBody(brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandContentsDto);
+    }
 }

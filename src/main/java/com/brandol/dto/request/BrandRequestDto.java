@@ -28,14 +28,5 @@ public class BrandRequestDto {
         @NotNull
         private MultipartFile backgroundImage;
 
-        public Brand toEntity() {
-            return Brand.builder()
-                    .name(this.name)
-                    .description(this.description)
-                    .profileImage(null)
-                    .backgroundImage(null)
-                    .build();
-
-        }
     }
 }

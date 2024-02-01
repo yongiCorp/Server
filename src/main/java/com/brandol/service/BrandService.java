@@ -3,22 +3,11 @@ package com.brandol.service;
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.BrandConverter;
-import com.brandol.domain.Brand;
-import com.brandol.domain.Fandom;
-import com.brandol.domain.FandomImage;
-import com.brandol.domain.Member;
+import com.brandol.domain.*;
 import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.dto.request.AddBrandRequest;
 import com.brandol.dto.request.BrandRequestDto;
-import com.brandol.dto.response.BrandCommonHeaderResponse;
-import com.brandol.dto.response.BrandFandomBodyResponse;
 import com.brandol.dto.response.BrandResponseDto;
-import com.brandol.dto.subDto.BrandFandomBody;
-import com.brandol.dto.subDto.BrandHeader;
-import com.brandol.repository.BrandRepository;
-import com.brandol.repository.FandomImageRepository;
-import com.brandol.repository.FandomRepository;
-import com.brandol.repository.MemberBrandRepository;
+import com.brandol.repository.*;
 import com.brandol.aws.AmazonS3Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,13 +29,15 @@ public class BrandService {
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
     private final FandomImageRepository fandomImageRepository;
+    private final ContentsRepository contentsRepository;
+    private final ContentImageRepository   contentImageRepository;
     private final AmazonS3Manager s3Manager;
 
     @Transactional
     public Brand createBrand(BrandRequestDto.addBrand request){ // 브랜드 등록 함수
 
         //Brand brand = AddBrandRequest.toEntity(request); // dto에서 이름,설명 데이터만 우선으로 엔티티로 변환
-        Brand brand = request.toEntity();
+        Brand brand = BrandConverter.toBrandEntity(request);
         System.out.println(brand.getName());
         System.out.println(brand.getDescription());
         String profileName = request.getProfileImage().getOriginalFilename(); // dto에 담긴 포로필 파일명 추출
@@ -93,38 +84,59 @@ public class BrandService {
         int recentSubscriberCount = memberBrandRepository.getRecentSubscriberCount();
         // 헤더 생성
 
-        Map<String,Object> header= BrandHeader.createBrandFandomHeader(targetBrand,memberBrandList,recentSubscriberCount);
         BrandResponseDto.BrandPreviewDto brandPreviewDto = BrandConverter.toBrandPreviewDto(targetBrand, recentSubscriberCount);
         BrandResponseDto.BrandUserStatus brandUserStatus = BrandConverter.toUserStatusFromUser(memberBrandList);
         return BrandConverter.toBrandHeaderDto(brandPreviewDto,brandUserStatus);
     }
 
-    public BrandFandomBodyResponse makeBrandFandomBody(Long brandId){
+    public BrandResponseDto.BrandFandomDto makeBrandFandomBody(Long brandId){
 
         Brand targetBrand = brandRepository.findOneById(brandId);
         if(targetBrand==null){throw new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND);}
         //팬덤 컬처 리스트
         List<Fandom> fandomCultureList = fandomRepository.getSomeRecentFandomCultures(brandId, PageRequest.of(0,2));
         // 팬덤 노티스 리스트
-        List<Fandom> fandomNoticeList = fandomRepository.getSomeRecentFandomNotices(brandId, PageRequest.of(0,2));
+        List<Fandom> fandomAnnouncementList = fandomRepository.getSomeRecentFandomNotices(brandId, PageRequest.of(0,2));
+
+        /*더미 데이터*/
+        //어드민 멤버
+        Member adminMember = Member.builder()
+                .name(targetBrand.getName()+"관리자")
+                .avatar(targetBrand.getBackgroundImage())
+                .build();
 
 
-        List<Long> fandomCultureIdList = fandomCultureList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 컬처의 팬덤 아이디 추출
-        Map<Integer,Object> fandomCultureImages=new LinkedHashMap<>();
-        for(Integer i=0;i<fandomCultureIdList.size();i++){
-           List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomCultureIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
-           List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
-           fandomCultureImages.put(i,imageResult);
+        // 팬덤컬처 dto 응답 생성부
+        List<BrandResponseDto.BrandFandomCultureDto> fandomCultureDtoList=new ArrayList<>();
+        for(int i=0; i<fandomCultureList.size();i++){
+            List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(fandomCultureList.get(i).getId());
+            List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandFandomCultureDto dto = BrandConverter.toBrandFandomCultureDto(fandomCultureList.get(i),fandomImageUrlList,adminMember);
+            fandomCultureDtoList.add(dto);
         }
 
-        List<Long> fandomNoticeIdList = fandomNoticeList.stream().map(Fandom::getId).collect(Collectors.toList()); // 팬덤 아나운스먼트의 펜덤 아이디 추출
-        Map<Integer,Object> fandomNoticeImages = new LinkedHashMap<>();
-        for(Integer i=0;i<fandomNoticeIdList.size();i++){
-            List<FandomImage> reslutList = new ArrayList<>(fandomImageRepository.findFandomImages(fandomNoticeIdList.get(i))); //팬덤 아이디로 해당 아이디로 등록된 팬덤 이미지를 전체 조회
-            List<String> imageResult = reslutList.stream().map(fi -> fi.getImage()).collect(Collectors.toList()); // 팬덤 이미지 엔티티에서 URL 데이터만 추출
-            fandomNoticeImages.put(i,imageResult);
+        // 팬덤아나운스먼트 dto 응답 생성부
+        List<BrandResponseDto.BrandFandomAnnouncementDto> fandomAnnouncementDtoList =new ArrayList<>();
+        for(int i=0; i<fandomAnnouncementList.size();i++){
+            List<FandomImage>fandomImages = fandomImageRepository.findFandomImages(fandomAnnouncementList.get(i).getId());
+            List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandFandomAnnouncementDto dto = BrandConverter.toBrandFandomAnnouncementDto(fandomAnnouncementList.get(i),fandomImageUrlList,adminMember);
+            fandomAnnouncementDtoList.add(dto);
         }
 
+        return BrandConverter.toBrandFandomDto(fandomCultureDtoList,fandomAnnouncementDtoList);
+    }
+
+    public BrandResponseDto.BrandContentsDto makeBrandContentsBody(Long brandId){
+
+        Brand targetBrand = brandRepository.findOneById(brandId);
+
+        //콘텐츠 이벤트 리스트
+        List<Contents> eventList = contentsRepository.findRecentEvents(brandId);
+        //콘텐츠 카드뉴스 리스트
+        List<Contents> cardNewsList = contentsRepository.findRecentCardNews(brandId);
+        // 콘텐츠 비디오 리스트
+        List<Contents> videoList = contentsRepository.findRecentVideos(brandId);
 
         /*더미 데이터*/
         //어드민 멤버
@@ -134,8 +146,31 @@ public class BrandService {
                 .avatar(targetBrand.getBackgroundImage())
                 .build();
 
-        Map<String,Object> body = BrandFandomBody.createFandomBody(fandomCultureList,fandomNoticeList,fandomCultureImages,fandomNoticeImages,adminMember);
-        return BrandFandomBodyResponse.makeBrandBody(body);
+        List<BrandResponseDto.BrandContentsEventDto> contentsEventsDtoList = new ArrayList<>();
+        for(int i=0; i<eventList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(eventList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsEventDto dto = BrandConverter.toBrandContentsEventDto(eventList.get(i),contentsImageUrlList,adminMember);
+            contentsEventsDtoList.add(dto);
+        }
+
+        List<BrandResponseDto.BrandContentsCardNewsDto> contentsCardNewsDtoList = new ArrayList<>();
+        for(int i=0; i<cardNewsList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(cardNewsList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsCardNewsDto dto = BrandConverter.toBrandContentsCardNewsDto(cardNewsList.get(i),contentsImageUrlList,adminMember);
+            contentsCardNewsDtoList.add(dto);
+        }
+
+        List<BrandResponseDto.BrandContentsVideoDto> contentsVideoDtoList = new ArrayList<>();
+        for(int i=0; i<videoList.size();i++){
+            List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(videoList.get(i).getId());
+            List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandContentsVideoDto dto = BrandConverter.toBrandContentsVideoDto(videoList.get(i),contentsImageUrlList,adminMember);
+            contentsVideoDtoList.add(dto);
+        }
+
+        return BrandConverter.toBrandContentsDto(contentsEventsDtoList,contentsCardNewsDtoList,contentsVideoDtoList);
     }
 
 
