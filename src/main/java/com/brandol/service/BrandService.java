@@ -4,6 +4,8 @@ import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.BrandConverter;
 import com.brandol.domain.*;
+import com.brandol.domain.mapping.Community;
+import com.brandol.domain.mapping.CommunityImage;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
@@ -24,12 +26,15 @@ import java.util.stream.Collectors;
 @Validated
 public class BrandService {
 
+    private final MemberRepository memberRepository;
     private final BrandRepository brandRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
     private final FandomImageRepository fandomImageRepository;
     private final ContentsRepository contentsRepository;
     private final ContentImageRepository   contentImageRepository;
+    private final CommunityRepository communityRepository;
+    private final CommunityImageRepository communityImageRepository;
     private final AmazonS3Manager s3Manager;
 
     @Transactional
@@ -131,11 +136,11 @@ public class BrandService {
         Brand targetBrand = brandRepository.findOneById(brandId);
 
         //콘텐츠 이벤트 리스트
-        List<Contents> eventList = contentsRepository.findRecentEvents(brandId);
+        List<Contents> eventList = contentsRepository.findRecentEvents(brandId,PageRequest.of(0,2));
         //콘텐츠 카드뉴스 리스트
-        List<Contents> cardNewsList = contentsRepository.findRecentCardNews(brandId);
+        List<Contents> cardNewsList = contentsRepository.findRecentCardNews(brandId,PageRequest.of(0,2));
         // 콘텐츠 비디오 리스트
-        List<Contents> videoList = contentsRepository.findRecentVideos(brandId);
+        List<Contents> videoList = contentsRepository.findRecentVideos(brandId,PageRequest.of(0,2));
 
         /*더미 데이터*/
         //어드민 멤버
@@ -169,6 +174,68 @@ public class BrandService {
         }
 
         return BrandConverter.toBrandContentsDto(contentsEventsDtoList,contentsCardNewsDtoList,contentsVideoDtoList);
+    }
+
+    public BrandResponseDto.BrandCommunityDto makeCommunityBody(Long brandId){
+
+        Brand brand =brandRepository.findOneById(brandId);
+
+        List<Community> freeBoardList = communityRepository.findRecentFreeBoard(brandId,PageRequest.of(0,2));
+        List<Community> feedBackBoardList = communityRepository.findRecentFeedBackBoard(brandId,PageRequest.of(0,2));
+
+        // 커뮤니티 자유 게시판
+        List<BrandResponseDto.BrandCommunityFreeBoardDto> freeBoardDtoList = new ArrayList<>();
+        for(int i=0; i<freeBoardList.size();i++){
+            Member member = memberRepository.findOneById(freeBoardList.get(i).getMember().getId());
+            List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(freeBoardList.get(i).getId());
+            List<String> communityImageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandCommunityFreeBoardDto dto = BrandConverter.toBrandCommunityFreeBoardDto(freeBoardList.get(i),communityImageUrlList,member);
+            freeBoardDtoList.add(dto);
+        }
+
+        // 커뮤니티 피드백 게시판
+        List<BrandResponseDto.BrandCommunityFeedBackBoardDto> feedBackBoardDtoList = new ArrayList<>();
+        for(int i=0; i<feedBackBoardList.size();i++){
+            Member member =memberRepository.findOneById(feedBackBoardList.get(i).getMember().getId());
+            List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(feedBackBoardList.get(i).getId());
+            List<String> communityIageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
+            BrandResponseDto.BrandCommunityFeedBackBoardDto dto = BrandConverter.toBrandCommunityFeedBackBoardDto(feedBackBoardList.get(i),communityIageUrlList,member);
+            feedBackBoardDtoList.add(dto);
+        }
+
+        return BrandConverter.toBrandCommunityDto(freeBoardDtoList,feedBackBoardDtoList);
+    }
+
+    @Transactional
+    public Long createCommunity(BrandRequestDto.addCommunity communityDto,Long brandId,Long memberId){
+
+        Member member = memberRepository.findOneById(memberId);
+        if(member == null){throw  new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER);}
+        Brand brand = brandRepository.findOneById(brandId);
+
+        //커뮤니티 저장부
+        Community community = Community.builder()
+                .communityType(communityDto.getCommunityType())
+                .title(communityDto.getTitle())
+                .content(communityDto.getContent())
+                .brand(brand)
+                .member(member)
+                .build();
+        Community result= communityRepository.save(community);
+
+        // 커뮤니티 이미지 저장부
+        for(int i=0; i<communityDto.getImages().size();i++){
+            String fileName = communityDto.getImages().get(i).getOriginalFilename();
+            String fileUUID =s3Manager.createFileName(fileName);
+            String fileURL = s3Manager.uploadFile(fileUUID,communityDto.getImages().get(i));
+
+            CommunityImage communityImage = CommunityImage.builder()
+                    .community(community)
+                    .image(fileURL)
+                    .build();
+            communityImageRepository.save(communityImage);
+        }
+        return  result.getId();
     }
 
 }

@@ -2,6 +2,7 @@ package com.brandol.converter;
 
 import com.brandol.domain.*;
 import com.brandol.domain.enums.MemberListStatus;
+import com.brandol.domain.mapping.Community;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
@@ -167,6 +168,51 @@ public class BrandConverter {
                 .brandContentsEventDtoList(brandContentsEventDtoList)
                 .brandContentsCardNewsDtoList(brandContentsCardNewsDtoList)
                 .brandContentsVideoDtoList(brandContentsVideoDtoList)
+                .build();
+    }
+
+    public static BrandResponseDto.BrandCommunityFreeBoardDto toBrandCommunityFreeBoardDto(
+            Community community,
+            List<String> communityImages,
+            Member member){
+        return BrandResponseDto.BrandCommunityFreeBoardDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .communityId(community.getId())
+                .title(community.getTitle())
+                .content(community.getContent())
+                .images(communityImages)
+                .likeCount(community.getLikes())
+                .commentCount(community.getComments())
+                .writtenDate(community.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandCommunityFeedBackBoardDto toBrandCommunityFeedBackBoardDto(
+            Community community,
+            List<String> communityImages,
+            Member member){
+        return BrandResponseDto.BrandCommunityFeedBackBoardDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .communityId(community.getId())
+                .title(community.getTitle())
+                .content(community.getContent())
+                .images(communityImages)
+                .likeCount(community.getLikes())
+                .commentCount(community.getComments())
+                .writtenDate(community.getCreatedAt())
+                .build();
+    }
+
+    public static BrandResponseDto.BrandCommunityDto toBrandCommunityDto(
+            List<BrandResponseDto.BrandCommunityFreeBoardDto> brandCommunityFreeBoardDtoList,
+            List<BrandResponseDto.BrandCommunityFeedBackBoardDto> brandCommunityFeedBackBoardDtoList){
+        return BrandResponseDto.BrandCommunityDto.builder()
+                .brandCommunityFreeBoardDtoList(brandCommunityFreeBoardDtoList)
+                .brandCommunityFeedBackBoardDtoList(brandCommunityFeedBackBoardDtoList)
                 .build();
     }
 }

@@ -159,11 +159,10 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
-        private Long contentsId;
+        private Long communityId;
         private String title;
         private String content;
         private List<String> images;
-        private String video;
         private int likeCount;
         private int commentCount;
         private LocalDateTime writtenDate;
@@ -178,11 +177,10 @@ public class BrandResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
-        private Long contentsId;
+        private Long communityId;
         private String title;
         private String content;
         private List<String> images;
-        private String video;
         private int likeCount;
         private int commentCount;
         private LocalDateTime writtenDate;
