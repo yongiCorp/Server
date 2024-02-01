@@ -1,26 +1,18 @@
 package com.brandol.service;
 
-import com.brandol.domain.Brand;
-import com.brandol.domain.Contents;
-import com.brandol.domain.Items;
-import com.brandol.domain.Member;
+import com.brandol.aws.AmazonS3Manager;
+import com.brandol.converter.SearchMainConverter;
+import com.brandol.domain.*;
 import com.brandol.dto.response.SearchMainResponseDto;
-import com.brandol.dto.subDto.SearchMainAvatarstoreList;
-import com.brandol.dto.subDto.SearchMainBrandList;
-import com.brandol.dto.subDto.SearchMainContentsList;
-import com.brandol.dto.subDto.SearchMainUserList;
-import com.brandol.repository.SearchAvatarstoreRepository;
-import com.brandol.repository.SearchBrandRepository;
-import com.brandol.repository.SearchContentsRepository;
-import com.brandol.repository.SearchUserRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,51 +20,69 @@ import java.util.Map;
 @ToString
 public class SearchService {
 
-    private final SearchBrandRepository sbr;
-    private final SearchUserRepository sur;
-    private final SearchContentsRepository scr;
-    private final SearchAvatarstoreRepository sar;
+    private final AmazonS3Manager s3Manager;
+
+    private final BrandRepository brandRepository;
+    private final MemberRepository memberRepository;
+    private final ContentsRepository contentsRepository;
+    private final ItemsRepository itemsRepository;
+    private final ContentImageRepository contentImageRepository;
 
 
     @Transactional
-    public SearchMainResponseDto makeSearchpage(){
+    public SearchMainResponseDto.SearchMainAllDto makeSearchMainPage(){
 
 
 
         // 브랜드 리스트
-        List<Brand> searchbrandList = sbr.findThreeByRandom();
-        Map<String,Object> brandList = SearchMainBrandList.createsearchBrandList(searchbrandList);
+        List<Brand> searchmainbrandList = brandRepository.findThreeByRandom();
 
         // 멤버 리스트
-        List<Member> searchuserList = sur.findThreeByRandom();
-        Map<String,Object> memberList = SearchMainUserList.createsearchuserList(searchuserList);
+        List<Member> searchmainuserList = memberRepository.findThreeByRandom();
 
         // 컨텐츠 리스트
-        Map<String,Object> contentList = new LinkedHashMap<>();
-        List<Contents> targetContentsList = scr.findAll();
-        List<Member> targetMemberList = sur.findAll();
-        List<Brand> targetBrandList = sbr.findAll();
-        for(int i = 0; i < 3; i++) {
-            contentList.put("searchcontents" + i
-                    , SearchMainContentsList.createsearchcontentsList(targetContentsList.get(i)
-                    , scr.countLikesByContents_id(targetContentsList.get(i).getId())
-                    , scr.countCommentsByContents_id(targetContentsList.get(i).getId())
-                    ,targetBrandList.get(i)
-                    ,targetMemberList.get(i)
-                    ));
+        List<Contents> searchmaincontentList = contentsRepository.findThreeByRandom();
+
+
+        // 아바타스토어 리스트
+        List<Items> searchmainitemList = itemsRepository.findThreeByRandom();
 
 
 
+
+
+        List<SearchMainResponseDto.SearchMainBrandDto> searchMainBrandDtoList = new ArrayList<>();
+        for(int i=0; i< searchmainbrandList.size();i++){
+            SearchMainResponseDto.SearchMainBrandDto dto = SearchMainConverter.toSearchMainBrandDto(searchmainbrandList.get(i));
+            searchMainBrandDtoList.add(dto);
+        }
+
+        List<SearchMainResponseDto.SearchMainUserDto> searchMainUserDtoList = new ArrayList<>();
+        for(int i=0; i<searchmainuserList.size();i++){
+            SearchMainResponseDto.SearchMainUserDto dto = SearchMainConverter.toSearchMainUserDto(searchmainuserList.get(i));
+            searchMainUserDtoList.add(dto);
+        }
+
+        List<SearchMainResponseDto.SearchMainContentsDto> searchMainContentsDtoList = new ArrayList<>();
+        for(int i=0; i<searchmaincontentList.size();i++){
+            List<ContentsImage> searchcontentsImages = contentImageRepository.findAllByContentsId(searchmaincontentList.get(i).getId());
+            List<String> searchcontentsImageUrlList = searchcontentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            SearchMainResponseDto.SearchMainContentsDto dto = SearchMainConverter.toSearchMainContentsDto(searchmaincontentList.get(i),searchcontentsImageUrlList);
+            searchMainContentsDtoList.add(dto);
+        }
+
+        List<SearchMainResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList = new ArrayList<>();
+        for(int i=0; i<searchmainitemList.size();i++){
+            SearchMainResponseDto.SearchMainAvatarStoreDto dto = SearchMainConverter.toSearchMainAvatarStoreDto(searchmainitemList.get(i));
+            searchMainAvatarStoreDtoList.add(dto);
         }
 
 
 
-        // 아바타스토어 리스트
-        List<Items> searchavatarstoreList = sar.findThreeByRandom();
-        Map<String,Object> avatarstoreList = SearchMainAvatarstoreList.createsearchavatarstorelist(searchavatarstoreList);
 
-        return SearchMainResponseDto.mainPage(brandList,memberList,contentList,avatarstoreList);
 
+
+        return SearchMainConverter.tosearchMainAllDto(searchMainBrandDtoList,searchMainUserDtoList,searchMainContentsDtoList,searchMainAvatarStoreDtoList);
 
 
     }
