@@ -4,14 +4,11 @@ import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Items;
 import com.brandol.domain.Member;
-import com.brandol.domain.enums.MemberListStatus;
-import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.dto.response.BrandResponseDto;
 import com.brandol.dto.response.SearchMainResponseDto;
 
 import java.util.List;
 
-public class SearchMainConverter {
+public class SearchConverter {
     public static SearchMainResponseDto.SearchMainBrandDto toSearchMainBrandDto(Brand brand) {
         return SearchMainResponseDto.SearchMainBrandDto.builder()
                 .brandId(brand.getId())
