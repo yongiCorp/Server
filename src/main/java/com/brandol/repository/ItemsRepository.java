@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface SearchAvatarstoreRepository extends JpaRepository<Items, Long> {
+public interface ItemsRepository extends JpaRepository<Items, Long> {
     @Query(value = "SELECT * FROM Items  ORDER BY RAND() limit 3",nativeQuery = true)
     List<Items> findThreeByRandom();
 }
