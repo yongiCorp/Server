@@ -4,31 +4,31 @@ import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Items;
 import com.brandol.domain.Member;
-import com.brandol.dto.response.SearchMainResponseDto;
+import com.brandol.dto.response.SearchResponseDto;
 
 import java.util.List;
 
 public class SearchConverter {
-    public static SearchMainResponseDto.SearchMainBrandDto toSearchMainBrandDto(Brand brand) {
-        return SearchMainResponseDto.SearchMainBrandDto.builder()
+    public static SearchResponseDto.SearchMainBrandDto toSearchMainBrandDto(Brand brand) {
+        return SearchResponseDto.SearchMainBrandDto.builder()
                 .brandId(brand.getId())
                 .brandName(brand.getName())
                 .brandDescription(brand.getDescription())
                 .brandProfileImage(brand.getProfileImage())
                 .build();
     }
-    public static SearchMainResponseDto.SearchMainUserDto toSearchMainUserDto(Member member) {
-        return SearchMainResponseDto.SearchMainUserDto.builder()
+    public static SearchResponseDto.SearchMainUserDto toSearchMainUserDto(Member member) {
+        return SearchResponseDto.SearchMainUserDto.builder()
                 .userId(member.getId())
                 .userName(member.getName())
                 .userAvatar(member.getAvatar())
                 .build();
     }
-    public static SearchMainResponseDto.SearchMainContentsDto toSearchMainContentsDto(
+    public static SearchResponseDto.SearchMainContentsDto toSearchMainContentsDto(
             Contents contents,
             List<String> contentsImages
             ) {
-        return SearchMainResponseDto.SearchMainContentsDto.builder()
+        return SearchResponseDto.SearchMainContentsDto.builder()
                 .contentsId(contents.getId())
                 .contentsTitle(contents.getTitle())
                 .content(contents.getContent())
@@ -41,8 +41,8 @@ public class SearchConverter {
                 .createdDate(contents.getCreatedAt())
                 .build();
     }
-    public static SearchMainResponseDto.SearchMainAvatarStoreDto toSearchMainAvatarStoreDto(Items items) {
-        return SearchMainResponseDto.SearchMainAvatarStoreDto.builder()
+    public static SearchResponseDto.SearchMainAvatarStoreDto toSearchMainAvatarStoreDto(Items items) {
+        return SearchResponseDto.SearchMainAvatarStoreDto.builder()
                 .itemId(items.getId())
                 .itemsName(items.getName())
                 .itemDescription(items.getDescription())
@@ -53,12 +53,12 @@ public class SearchConverter {
                 .build();
     }
 
-    public static SearchMainResponseDto.SearchMainAllDto tosearchMainAllDto(
-            List<SearchMainResponseDto.SearchMainBrandDto> searchMainBrandDtoList,
-            List<SearchMainResponseDto.SearchMainUserDto> searchMainUserDtoList,
-            List<SearchMainResponseDto.SearchMainContentsDto> searchMainContentsDtoList,
-            List<SearchMainResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList){
-        return SearchMainResponseDto.SearchMainAllDto.builder()
+    public static SearchResponseDto.SearchMainAllDto tosearchMainAllDto(
+            List<SearchResponseDto.SearchMainBrandDto> searchMainBrandDtoList,
+            List<SearchResponseDto.SearchMainUserDto> searchMainUserDtoList,
+            List<SearchResponseDto.SearchMainContentsDto> searchMainContentsDtoList,
+            List<SearchResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList){
+        return SearchResponseDto.SearchMainAllDto.builder()
                 .searchMainBrandDto(searchMainBrandDtoList)
                 .searchMainUserDto(searchMainUserDtoList)
                 .searchMainContentsDto(searchMainContentsDtoList)

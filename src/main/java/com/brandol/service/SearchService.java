@@ -3,7 +3,7 @@ package com.brandol.service;
 import com.brandol.aws.AmazonS3Manager;
 import com.brandol.converter.SearchConverter;
 import com.brandol.domain.*;
-import com.brandol.dto.response.SearchMainResponseDto;
+import com.brandol.dto.response.SearchResponseDto;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -30,7 +30,7 @@ public class SearchService {
 
 
     @Transactional
-    public SearchMainResponseDto.SearchMainAllDto makeSearchMainPage(){
+    public SearchResponseDto.SearchMainAllDto makeSearchMainPage(){
 
 
 
@@ -51,29 +51,29 @@ public class SearchService {
 
 
 
-        List<SearchMainResponseDto.SearchMainBrandDto> searchMainBrandDtoList = new ArrayList<>();
+        List<SearchResponseDto.SearchMainBrandDto> searchMainBrandDtoList = new ArrayList<>();
         for(int i=0; i< searchmainbrandList.size();i++){
-            SearchMainResponseDto.SearchMainBrandDto dto = SearchConverter.toSearchMainBrandDto(searchmainbrandList.get(i));
+            SearchResponseDto.SearchMainBrandDto dto = SearchConverter.toSearchMainBrandDto(searchmainbrandList.get(i));
             searchMainBrandDtoList.add(dto);
         }
 
-        List<SearchMainResponseDto.SearchMainUserDto> searchMainUserDtoList = new ArrayList<>();
+        List<SearchResponseDto.SearchMainUserDto> searchMainUserDtoList = new ArrayList<>();
         for(int i=0; i<searchmainuserList.size();i++){
-            SearchMainResponseDto.SearchMainUserDto dto = SearchConverter.toSearchMainUserDto(searchmainuserList.get(i));
+            SearchResponseDto.SearchMainUserDto dto = SearchConverter.toSearchMainUserDto(searchmainuserList.get(i));
             searchMainUserDtoList.add(dto);
         }
 
-        List<SearchMainResponseDto.SearchMainContentsDto> searchMainContentsDtoList = new ArrayList<>();
+        List<SearchResponseDto.SearchMainContentsDto> searchMainContentsDtoList = new ArrayList<>();
         for(int i=0; i<searchmaincontentList.size();i++){
             List<ContentsImage> searchcontentsImages = contentImageRepository.findAllByContentsId(searchmaincontentList.get(i).getId());
             List<String> searchcontentsImageUrlList = searchcontentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
-            SearchMainResponseDto.SearchMainContentsDto dto = SearchConverter.toSearchMainContentsDto(searchmaincontentList.get(i),searchcontentsImageUrlList);
+            SearchResponseDto.SearchMainContentsDto dto = SearchConverter.toSearchMainContentsDto(searchmaincontentList.get(i),searchcontentsImageUrlList);
             searchMainContentsDtoList.add(dto);
         }
 
-        List<SearchMainResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList = new ArrayList<>();
+        List<SearchResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList = new ArrayList<>();
         for(int i=0; i<searchmainitemList.size();i++){
-            SearchMainResponseDto.SearchMainAvatarStoreDto dto = SearchConverter.toSearchMainAvatarStoreDto(searchmainitemList.get(i));
+            SearchResponseDto.SearchMainAvatarStoreDto dto = SearchConverter.toSearchMainAvatarStoreDto(searchmainitemList.get(i));
             searchMainAvatarStoreDtoList.add(dto);
         }
 

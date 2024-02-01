@@ -3,13 +3,10 @@ package com.brandol.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
-
-public class SearchMainResponseDto {
+public class SearchResponseDto {
 
 
 
