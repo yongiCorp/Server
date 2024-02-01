@@ -29,4 +29,8 @@ public class MyItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="items_id", nullable = false)
     private Items items;
+
+    public void updateIsWearing(Boolean isWearing) {
+        this.isWearing = isWearing;
+    }
 }
