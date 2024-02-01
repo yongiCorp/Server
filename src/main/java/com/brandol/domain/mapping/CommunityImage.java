@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CommunityImage extends BaseEntity {
-
+    // 누락 엔티티 생성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="community_image_id")
