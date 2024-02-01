@@ -35,6 +35,10 @@ public class Contents extends BaseEntity {
 
     private int comments;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     public void addFile(String fileURL){
         this.file = fileURL;
     }

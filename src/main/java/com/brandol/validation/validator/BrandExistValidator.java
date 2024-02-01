@@ -13,6 +13,7 @@ import javax.validation.ConstraintValidatorContext;
 @RequiredArgsConstructor
 public class BrandExistValidator implements ConstraintValidator<ExistBrand, Long> {
 
+
     private final BrandService brandService;
 
     @Override
@@ -33,3 +34,5 @@ public class BrandExistValidator implements ConstraintValidator<ExistBrand, Long
         return true;
     }
 }
+
+
