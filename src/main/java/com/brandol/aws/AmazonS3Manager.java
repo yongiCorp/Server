@@ -16,6 +16,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class AmazonS3Manager {
+
     private final AmazonS3 amazonS3;
 
     private final AmazonConfig amazonConfig;

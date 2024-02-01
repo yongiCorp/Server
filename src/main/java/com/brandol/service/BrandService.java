@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Validated
 public class BrandService {
 
+
     private final BrandRepository brandRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final FandomRepository fandomRepository;
@@ -139,6 +140,7 @@ public class BrandService {
 
         /*더미 데이터*/
         //어드민 멤버
+
         Member adminMember = Member.builder()
                 .name(targetBrand.getName()+"관리자")
                 .avatar(targetBrand.getBackgroundImage())
@@ -170,5 +172,9 @@ public class BrandService {
 
         return BrandConverter.toBrandContentsDto(contentsEventsDtoList,contentsCardNewsDtoList,contentsVideoDtoList);
     }
+
+
+
+
 
 }

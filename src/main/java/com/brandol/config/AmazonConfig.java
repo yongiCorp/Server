@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 @Getter
 public class AmazonConfig { //S3 연동 설정
 
+
     private AWSCredentials awsCredentials;
 
     @Value("${cloud.aws.credentials.access-key}")
@@ -50,4 +51,6 @@ public class AmazonConfig { //S3 연동 설정
     public AWSCredentialsProvider awsCredentialsProvider() {
         return new AWSStaticCredentialsProvider(awsCredentials);
     }
+
+
 }
