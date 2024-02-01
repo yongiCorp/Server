@@ -151,4 +151,50 @@ public class BrandResponseDto {
         private LocalDateTime writtenDate;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandCommunityFreeBoardDto{
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private Long contentsId;
+        private String title;
+        private String content;
+        private List<String> images;
+        private String video;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+    }
+
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandCommunityFeedBackBoardDto{
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private Long contentsId;
+        private String title;
+        private String content;
+        private List<String> images;
+        private String video;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class BrandCommunityDto{
+        List<BrandCommunityFreeBoardDto> brandCommunityFreeBoardDtoList;
+        List<BrandCommunityFeedBackBoardDto> brandCommunityFeedBackBoardDtoList;
+    }
+
 }
