@@ -3,10 +3,12 @@ package com.brandol.domain;
 import com.brandol.domain.common.BaseEntity;
 import com.brandol.domain.enums.Gender;
 import com.brandol.domain.enums.UserStatus;
+import com.brandol.domain.mapping.Community;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,4 +46,12 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
+    @OneToMany(mappedBy = "member")
+    List<Fandom> fandomList;
+
+    @OneToMany(mappedBy = "member")
+    List<Contents> contentsList;
+
+    @OneToMany(mappedBy = "member")
+    List<Community> communityList;
 }

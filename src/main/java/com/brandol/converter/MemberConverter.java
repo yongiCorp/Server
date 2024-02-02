@@ -2,11 +2,7 @@ package com.brandol.converter;
 
 import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
-import com.brandol.domain.ContentsImage;
-import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberBrandList;
-import com.brandol.dto.request.BrandRequestDto;
-import com.brandol.dto.response.BrandResponseDto;
 import com.brandol.dto.response.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +45,15 @@ public class MemberConverter {
                 .mainBannersDtoList(mainBannersDtoList)
                 .subBannersDtoList(subBannersDtoList)
                 .memberBrandListDtoList(memberBrandListDtoList)
+                .build();
+    }
+
+    public static MemberResponseDto.MemberWrittenArticleMainDto toMemberWrittenArticleMainDto(
+            Integer totalMemberWrittenArticleCount,
+            List<MemberResponseDto.MemberWrittenArticleDto> memberWrittenArticleDtoList){
+        return MemberResponseDto.MemberWrittenArticleMainDto.builder()
+                .totalArticleCount(totalMemberWrittenArticleCount)
+                .memberWrittenArticleDtoList(memberWrittenArticleDtoList)
                 .build();
     }
 }

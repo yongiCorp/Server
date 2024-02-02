@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/users")
 public class MemberController {
 
     private final MemberService memberService;
@@ -28,4 +27,13 @@ public class MemberController {
         MemberResponseDto.MemberMainDto memberMainDto = memberService.makeMemberMain(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberMainDto);
     }
+
+    @Operation(summary = "멤버 작성 글 조회",description ="멤버가 작성한 글을 조회 할때 호출" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @GetMapping("/users/my")
+    public ApiResponse<?> memberWritten(@RequestParam Long memberId){
+        MemberResponseDto.MemberWrittenArticleMainDto dto = memberService.makeMemberWrittenPage(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
 }
