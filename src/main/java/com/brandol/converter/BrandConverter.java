@@ -2,6 +2,7 @@ package com.brandol.converter;
 
 import com.brandol.domain.*;
 import com.brandol.domain.enums.MemberListStatus;
+import com.brandol.domain.mapping.Community;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
@@ -167,6 +168,34 @@ public class BrandConverter {
                 .brandContentsEventDtoList(brandContentsEventDtoList)
                 .brandContentsCardNewsDtoList(brandContentsCardNewsDtoList)
                 .brandContentsVideoDtoList(brandContentsVideoDtoList)
+                .build();
+    }
+
+    public static BrandResponseDto.BrandCommunityBoardDto toBrandCommunityBoardDto(
+            Community community,
+            List<String> communityImages,
+            Member member){
+        return BrandResponseDto.BrandCommunityBoardDto.builder()
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerProfile(member.getAvatar())
+                .communityId(community.getId())
+                .title(community.getTitle())
+                .content(community.getContent())
+                .images(communityImages)
+                .likeCount(community.getLikes())
+                .commentCount(community.getComments())
+                .writtenDate(community.getCreatedAt())
+                .build();
+    }
+
+
+    public static BrandResponseDto.BrandCommunityDto toBrandCommunityDto(
+            List<BrandResponseDto.BrandCommunityBoardDto> brandCommunityBoardDtoList,
+            List<BrandResponseDto.BrandCommunityBoardDto> brandCommunityFeedBackBoardDtoList){
+        return BrandResponseDto.BrandCommunityDto.builder()
+                .brandCommunityBoardDtoList(brandCommunityBoardDtoList)
+                .brandCommunityFeedBackBoardDtoList(brandCommunityFeedBackBoardDtoList)
                 .build();
     }
 }

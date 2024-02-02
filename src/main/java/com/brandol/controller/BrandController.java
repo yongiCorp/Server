@@ -53,4 +53,24 @@ public class BrandController {
         BrandResponseDto.BrandContentsDto brandContentsDto = brandService.makeBrandContentsBody(brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), brandContentsDto);
     }
+
+    @Operation(summary = "브랜드 커뮤니티 조회",description = "브랜드 콘텐츠에 종속된 브랜드 자유게시판, 피드백 게시판 최신 2건을 조회")
+    @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
+    @GetMapping(value = "/brands/{brandId}/community")
+    public ApiResponse<BrandResponseDto.BrandCommunityDto> showBrandCommunity(@ExistBrand @PathVariable("brandId")Long brandId){
+        BrandResponseDto.BrandCommunityDto brandCommunityDto = brandService.makeCommunityBody(brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), brandCommunityDto);
+    }
+
+    @Operation(summary = "브랜드 커뮤니티 게시글 생성",description = "브랜드 콘텐츠에 종속된 브랜드 자유게시판, 피드백 게시판에 게시글 생성")
+    @Parameter(name = "brandId",description = "생성 대상 브랜드의 ID")
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping(value = "/brands/{brandId}/community/new",consumes = "multipart/form-data")
+    public ApiResponse<String> crateBrandCommunity(@ModelAttribute BrandRequestDto.addCommunity communityDto,
+                                                   @PathVariable("brandId")Long brandId,
+                                                   @RequestParam("memberId") Long memberId
+                                                   ){
+        Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
+    }
 }
