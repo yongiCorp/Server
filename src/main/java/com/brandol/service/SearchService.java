@@ -31,7 +31,6 @@ public class SearchService {
 
 
     //검색 메인 페이지
-    @Transactional
     public SearchResponseDto.SearchMainAllDto makeSearchMainPage(){
 
 
@@ -90,7 +89,6 @@ public class SearchService {
     }
 
     //검색 더보기 페이지 - 브랜드
-    @Transactional
     public SearchResponseDto.SearchDetailBrandAllDto makeSearchDetailBrandPage(){
 
 
@@ -117,7 +115,6 @@ public class SearchService {
     }
 
     //검색 더보기 페이지 - 유저
-    @Transactional
     public SearchResponseDto.SearchDetailUserAllDto makeSearchDetailUserPage(){
 
 
@@ -144,7 +141,6 @@ public class SearchService {
     }
 
     //검색 더보기 페이지 - 컨텐츠
-    @Transactional
     public SearchResponseDto.SearchDetailContentsAllDto makeSearchDetailContentsPage(){
 
 
@@ -172,7 +168,6 @@ public class SearchService {
     }
 
     //검색 더보기 페이지 - 아바타 스토어 헤더
-    @Transactional
     public SearchResponseDto.SearchDetailAvatarStoreHeaderDto makeSearchDetailAvatarStoreHeaderPage(Long memberId){
 
         Member targetMember = memberRepository.findOneById(memberId);
@@ -183,7 +178,6 @@ public class SearchService {
     }
 
     //검색 더보기 페이지 - 아바타 스토어 바디
-    @Transactional
     public SearchResponseDto.Search_Detail_AvatarStore_Body_All_Dto makeSearchDetailAvatarStoreBodyPage(String itemPart){
 
 
