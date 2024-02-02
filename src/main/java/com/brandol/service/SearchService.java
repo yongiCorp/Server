@@ -27,8 +27,10 @@ public class SearchService {
     private final ContentsRepository contentsRepository;
     private final ItemsRepository itemsRepository;
     private final ContentImageRepository contentImageRepository;
+    private final MemberBrandRepository memberBrandRepository;
 
 
+    //검색 메인 페이지
     @Transactional
     public SearchResponseDto.SearchMainAllDto makeSearchMainPage(){
 
@@ -86,6 +88,138 @@ public class SearchService {
 
 
     }
+
+    //검색 더보기 페이지 - 브랜드
+    @Transactional
+    public SearchResponseDto.SearchDetailBrandAllDto makeSearchDetailBrandPage(){
+
+
+
+        // 브랜드 리스트
+        List<Brand> searchdetailbrandList = brandRepository.findAllByRandom();
+
+
+
+        int recentSubscriberCount = memberBrandRepository.getRecentSubscriberCount();
+
+        List<SearchResponseDto.SearchDetailBrandDto> search_Detail_Brand_DtoList = new ArrayList<>();
+        for(int i=0; i< searchdetailbrandList.size();i++){
+            SearchResponseDto.SearchDetailBrandDto dto = SearchConverter.toSearchDetailBrandDto(searchdetailbrandList.get(i),recentSubscriberCount );
+            search_Detail_Brand_DtoList.add(dto);
+        }
+
+
+
+
+        return SearchConverter.tosearchDetailBrandAllDto(search_Detail_Brand_DtoList);
+
+
+    }
+
+    //검색 더보기 페이지 - 유저
+    @Transactional
+    public SearchResponseDto.SearchDetailUserAllDto makeSearchDetailUserPage(){
+
+
+
+        // 멤버 리스트
+        List<Member> searchdetailuserList = memberRepository.findAllByRandom();
+
+
+
+
+
+        List<SearchResponseDto.SearchDetailUserDto> search_Detail_User_DtoList = new ArrayList<>();
+        for(int i=0; i< searchdetailuserList.size();i++){
+            SearchResponseDto.SearchDetailUserDto dto = SearchConverter.toSearchDetailUserDto(searchdetailuserList.get(i));
+            search_Detail_User_DtoList.add(dto);
+        }
+
+
+
+
+        return SearchConverter.tosearchDetailUserAllDto(search_Detail_User_DtoList);
+
+
+    }
+
+    //검색 더보기 페이지 - 컨텐츠
+    @Transactional
+    public SearchResponseDto.SearchDetailContentsAllDto makeSearchDetailContentsPage(){
+
+
+        // 컨텐츠 리스트
+        List<Contents> searchdetailcontentList = contentsRepository.findAllByRandom();
+
+
+
+
+
+        List<SearchResponseDto.SearchDetailContentsDto> search_Detail_Contents_DtoList = new ArrayList<>();
+        for(int i=0; i< searchdetailcontentList.size();i++){
+            List<ContentsImage> searchdetailcontentsImages = contentImageRepository.findAllByContentsId(searchdetailcontentList.get(i).getId());
+            List<String> searchdetailcontentsImageUrlList = searchdetailcontentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            SearchResponseDto.SearchDetailContentsDto dto = SearchConverter.toSearchDetailContentsDto(searchdetailcontentList.get(i),searchdetailcontentsImageUrlList);
+            search_Detail_Contents_DtoList.add(dto);
+        }
+
+
+
+
+        return SearchConverter.tosearchDetailContentsAllDto(search_Detail_Contents_DtoList);
+
+
+    }
+
+    //검색 더보기 페이지 - 아바타 스토어 헤더
+    @Transactional
+    public SearchResponseDto.SearchDetailAvatarStoreHeaderDto makeSearchDetailAvatarStoreHeaderPage(Long memberId){
+
+        Member targetMember = memberRepository.findOneById(memberId);
+
+        return SearchConverter.toSearchDetailAvatarStoreHeaderDto(targetMember);
+
+
+    }
+
+    //검색 더보기 페이지 - 아바타 스토어 바디
+    @Transactional
+    public SearchResponseDto.Search_Detail_AvatarStore_Body_All_Dto makeSearchDetailAvatarStoreBodyPage(String itemPart){
+
+
+
+        if(itemPart.equals("전체")){
+            // 전체 아바타 스토어 리스트
+            List<Items> search_detail_total_item_List = itemsRepository.findTotalByRandom();
+
+            List<SearchResponseDto.SearchDetailAvatarStoreBodyDto> search_Detail_AvatarStore_Body_DtoList = new ArrayList<>();
+            for(int i=0; i< search_detail_total_item_List.size();i++){
+                SearchResponseDto.SearchDetailAvatarStoreBodyDto dto = SearchConverter.toSearchDetailAvatarStoreBodyDto(search_detail_total_item_List.get(i));
+                search_Detail_AvatarStore_Body_DtoList.add(dto);
+            }
+
+            return SearchConverter.tosearchDetailAvatarStoreBodyAllDto(search_Detail_AvatarStore_Body_DtoList);
+        }
+
+
+
+        // 아바타스토어 리스트
+        List<Items> search_detail_itempart_item_List = itemsRepository.finditemPartByRandom(itemPart);
+
+
+        List<SearchResponseDto.SearchDetailAvatarStoreBodyDto> search_Detail_AvatarStore_Body_DtoList = new ArrayList<>();
+        for(int i=0; i< search_detail_itempart_item_List.size();i++){
+            SearchResponseDto.SearchDetailAvatarStoreBodyDto dto = SearchConverter.toSearchDetailAvatarStoreBodyDto(search_detail_itempart_item_List.get(i));
+            search_Detail_AvatarStore_Body_DtoList.add(dto);
+        }
+
+
+        return SearchConverter.tosearchDetailAvatarStoreBodyAllDto(search_Detail_AvatarStore_Body_DtoList);
+
+
+    }
+
+
 
 
 }

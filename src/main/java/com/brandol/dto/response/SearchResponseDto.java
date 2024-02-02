@@ -9,7 +9,7 @@ import java.util.List;
 public class SearchResponseDto {
 
 
-
+    //검색 메인 페이지
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -73,4 +73,119 @@ public class SearchResponseDto {
 
     }
 
+    //검색 더보기 페이지 - 브랜드
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailBrandAllDto {
+        private List<SearchDetailBrandDto> searchDetailBrandDto;
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailBrandDto {
+        private Long brandId;
+        private String brandName;
+        private String brandProfileImage;
+        private String brandBackgroundImage;
+        private String brandDescription;
+        private Integer brandFans;
+
+    }
+
+    //검색 더보기 페이지 - 유저
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailUserAllDto {
+        private List<SearchDetailUserDto> searchDetailUserDto;
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailUserDto {
+        private Long userId;
+        private String userName;
+        private String userAvatar;
+
+    }
+
+    //검색 더보기 페이지 - 컨텐츠
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailContentsAllDto {
+        private List<SearchDetailContentsDto> searchDetailContentsDto;
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailContentsDto {
+        private Long contentsId;
+        private String contentsTitle;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private LocalDateTime createdDate;
+
+    }
+
+    //검색 더보기 페이지 - 아바타 스토어 헤더
+    /*
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class Search_Detail_AvatarStore_Header_All_Dto {
+        private List<SearchDetailAvatarStoreHeaderDto> searchDetailAvatarStoreHeaderDto;
+
+     */
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailAvatarStoreHeaderDto {
+        private Long memberId;
+        private String memberAvatar;
+        private Integer memberPoints;//타입
+
+    }
+
+
+    //검색 더보기 페이지 - 아바타 스토어 바디
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class Search_Detail_AvatarStore_Body_All_Dto {
+        private List<SearchDetailAvatarStoreBodyDto> searchDetailAvatarStoreBodyDto;
+
+    }
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SearchDetailAvatarStoreBodyDto {
+        private Long itemId;
+        private String itemsName;
+        private String itemPart;
+        private String brandName;
+        private String itemImage;
+        private String itemDescription;
+        private int itemPrice;//타입
+
+    }
+
 }
+
