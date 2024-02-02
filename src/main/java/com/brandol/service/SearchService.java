@@ -192,18 +192,18 @@ public class SearchService {
             // 전체 아바타 스토어 리스트
             List<Items> search_detail_total_item_List = itemsRepository.findTotalByRandom();
 
-            List<SearchResponseDto.SearchDetailAvatarStoreBodyDto> search_Detail_AvatarStore_Body_DtoList = new ArrayList<>();
+            List<SearchResponseDto.SearchDetailAvatarStoreBodyDto> search_Detail_AvatarStore_Body_Total_DtoList = new ArrayList<>();
             for(int i=0; i< search_detail_total_item_List.size();i++){
                 SearchResponseDto.SearchDetailAvatarStoreBodyDto dto = SearchConverter.toSearchDetailAvatarStoreBodyDto(search_detail_total_item_List.get(i));
-                search_Detail_AvatarStore_Body_DtoList.add(dto);
+                search_Detail_AvatarStore_Body_Total_DtoList.add(dto);
             }
 
-            return SearchConverter.tosearchDetailAvatarStoreBodyAllDto(search_Detail_AvatarStore_Body_DtoList);
+            return SearchConverter.tosearchDetailAvatarStoreBodyAllDto(search_Detail_AvatarStore_Body_Total_DtoList);
         }
 
 
 
-        // 아바타스토어 리스트
+        // 종류별 아바타 스토어 리스트
         List<Items> search_detail_itempart_item_List = itemsRepository.finditemPartByRandom(itemPart);
 
 

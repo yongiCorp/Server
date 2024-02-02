@@ -29,21 +29,21 @@ public class SearchController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), searchmainresponse);
     }
 
-    @Operation(summary = "검색 더보기 페이지 조회 - 브랜드", description ="브랜드 랜덤 10개 상세 조회" )
+    @Operation(summary = "검색 더보기 페이지 조회 - 브랜드", description ="브랜드 전체 랜덤 상세 조회" )
     @GetMapping(value = "/search/detail/brands")
     public ApiResponse<SearchResponseDto.SearchDetailBrandAllDto> searchDetailBrand(){
         SearchResponseDto.SearchDetailBrandAllDto searchDetailBrandDto = searchService.makeSearchDetailBrandPage();
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), searchDetailBrandDto);
     }
 
-    @Operation(summary = "검색 더보기 페이지 조회 - 유저", description ="유저 랜덤 10명 상세 조회" )
+    @Operation(summary = "검색 더보기 페이지 조회 - 유저", description ="유저 전체 랜덤 상세 조회" )
     @GetMapping(value = "/search/detail/users")
     public ApiResponse<SearchResponseDto.SearchDetailUserAllDto> searchDetailUser(){
         SearchResponseDto.SearchDetailUserAllDto searchDetailUserDto = searchService.makeSearchDetailUserPage();
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), searchDetailUserDto);
     }
 
-    @Operation(summary = "검색 더보기 페이지 조회 - 컨텐츠", description ="컨텐츠 랜덤 10개 상세 조회" )
+    @Operation(summary = "검색 더보기 페이지 조회 - 컨텐츠", description ="컨텐츠 전체 랜덤 상세 조회" )
     @GetMapping(value = "/search/detail/contents")
     public ApiResponse<SearchResponseDto.SearchDetailContentsAllDto> searchDetailContents(){
         SearchResponseDto.SearchDetailContentsAllDto searchDetailContentsDto = searchService.makeSearchDetailContentsPage();
@@ -58,8 +58,8 @@ public class SearchController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), searchDetailAvatarStoreHeaderDto);
     }
 
-    @Operation(summary = "검색 더보기 페이지 조회 - 아바타 스토어의 바디", description ="아이템 종류별 랜덤 10개 상세 조회" )
-    @Parameter(name = "itemPart",description = "아이템을 종류 별로 조회 하기 위한 파라미터")
+    @Operation(summary = "검색 더보기 페이지 조회 - 아바타 스토어의 바디", description ="아이템 종류별 전체 랜덤 상세 조회" )
+    @Parameter(name = "itemPart",description = "아이템을 종류별로 조회 하기 위한 파라미터")
     @GetMapping(value = "/search/detail/avatar-store/body")
     public ApiResponse<SearchResponseDto.Search_Detail_AvatarStore_Body_All_Dto> searchDetailAvatarStoreBody(@RequestParam("itemPart")String itemPart){
         SearchResponseDto.Search_Detail_AvatarStore_Body_All_Dto searchDetailAvatarStoreBodyDto = searchService.makeSearchDetailAvatarStoreBodyPage(itemPart);

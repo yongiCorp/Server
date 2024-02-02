@@ -141,16 +141,7 @@ public class SearchResponseDto {
 
     }
 
-    //검색 더보기 페이지 - 아바타 스토어 헤더
-    /*
-    @Builder
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class Search_Detail_AvatarStore_Header_All_Dto {
-        private List<SearchDetailAvatarStoreHeaderDto> searchDetailAvatarStoreHeaderDto;
 
-     */
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -183,7 +174,7 @@ public class SearchResponseDto {
         private String brandName;
         private String itemImage;
         private String itemDescription;
-        private int itemPrice;//타입
+        private int itemPrice;
 
     }
 
