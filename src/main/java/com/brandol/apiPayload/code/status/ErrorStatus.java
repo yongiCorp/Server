@@ -37,7 +37,10 @@ public enum ErrorStatus implements BaseCode {
     _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),
 
     //파일
-    _FILE_NAME_ERROR(HttpStatus.BAD_REQUEST,"FILE400","잘못된 파일 형식명입니다.");
+    _FILE_NAME_ERROR(HttpStatus.BAD_REQUEST,"FILE400","잘못된 파일 형식명입니다."),
+
+    // 아이템
+    _NOT_EXIST_MY_ITEM(HttpStatus.NOT_FOUND,"MYITEM400","내 아이템이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
