@@ -174,7 +174,6 @@ public class BrandService {
             BrandResponseDto.BrandContentsVideoDto dto = BrandConverter.toBrandContentsVideoDto(videoList.get(i),contentsImageUrlList,adminMember);
             contentsVideoDtoList.add(dto);
         }
-
         return BrandConverter.toBrandContentsDto(contentsEventsDtoList,contentsCardNewsDtoList,contentsVideoDtoList);
     }
 
