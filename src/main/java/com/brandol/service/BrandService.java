@@ -186,7 +186,7 @@ public class BrandService {
         // 커뮤니티 자유 게시판
         List<BrandResponseDto.BrandCommunityFreeBoardDto> freeBoardDtoList = new ArrayList<>();
         for(int i=0; i<freeBoardList.size();i++){
-            Member member = memberRepository.findOneById(freeBoardList.get(i).getMember().getId());
+            Member member = freeBoardList.get(i).getMember();
             List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(freeBoardList.get(i).getId());
             List<String> communityImageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
             BrandResponseDto.BrandCommunityFreeBoardDto dto = BrandConverter.toBrandCommunityFreeBoardDto(freeBoardList.get(i),communityImageUrlList,member);
@@ -196,7 +196,7 @@ public class BrandService {
         // 커뮤니티 피드백 게시판
         List<BrandResponseDto.BrandCommunityFeedBackBoardDto> feedBackBoardDtoList = new ArrayList<>();
         for(int i=0; i<feedBackBoardList.size();i++){
-            Member member =memberRepository.findOneById(feedBackBoardList.get(i).getMember().getId());
+            Member member = feedBackBoardList.get(i).getMember();
             List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(feedBackBoardList.get(i).getId());
             List<String> communityIageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
             BrandResponseDto.BrandCommunityFeedBackBoardDto dto = BrandConverter.toBrandCommunityFeedBackBoardDto(feedBackBoardList.get(i),communityIageUrlList,member);
