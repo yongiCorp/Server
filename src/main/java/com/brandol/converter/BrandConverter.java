@@ -171,11 +171,11 @@ public class BrandConverter {
                 .build();
     }
 
-    public static BrandResponseDto.BrandCommunityFreeBoardDto toBrandCommunityFreeBoardDto(
+    public static BrandResponseDto.BrandCommunityBoardDto toBrandCommunityBoardDto(
             Community community,
             List<String> communityImages,
             Member member){
-        return BrandResponseDto.BrandCommunityFreeBoardDto.builder()
+        return BrandResponseDto.BrandCommunityBoardDto.builder()
                 .writerId(member.getId())
                 .writerName(member.getName())
                 .writerProfile(member.getAvatar())
@@ -189,29 +189,12 @@ public class BrandConverter {
                 .build();
     }
 
-    public static BrandResponseDto.BrandCommunityFeedBackBoardDto toBrandCommunityFeedBackBoardDto(
-            Community community,
-            List<String> communityImages,
-            Member member){
-        return BrandResponseDto.BrandCommunityFeedBackBoardDto.builder()
-                .writerId(member.getId())
-                .writerName(member.getName())
-                .writerProfile(member.getAvatar())
-                .communityId(community.getId())
-                .title(community.getTitle())
-                .content(community.getContent())
-                .images(communityImages)
-                .likeCount(community.getLikes())
-                .commentCount(community.getComments())
-                .writtenDate(community.getCreatedAt())
-                .build();
-    }
 
     public static BrandResponseDto.BrandCommunityDto toBrandCommunityDto(
-            List<BrandResponseDto.BrandCommunityFreeBoardDto> brandCommunityFreeBoardDtoList,
-            List<BrandResponseDto.BrandCommunityFeedBackBoardDto> brandCommunityFeedBackBoardDtoList){
+            List<BrandResponseDto.BrandCommunityBoardDto> brandCommunityBoardDtoList,
+            List<BrandResponseDto.BrandCommunityBoardDto> brandCommunityFeedBackBoardDtoList){
         return BrandResponseDto.BrandCommunityDto.builder()
-                .brandCommunityFreeBoardDtoList(brandCommunityFreeBoardDtoList)
+                .brandCommunityBoardDtoList(brandCommunityBoardDtoList)
                 .brandCommunityFeedBackBoardDtoList(brandCommunityFeedBackBoardDtoList)
                 .build();
     }

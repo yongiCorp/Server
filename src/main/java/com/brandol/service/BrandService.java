@@ -186,22 +186,22 @@ public class BrandService {
         List<Community> feedBackBoardList = communityRepository.findRecentFeedBackBoard(brandId,PageRequest.of(0,2));
 
         // 커뮤니티 자유 게시판
-        List<BrandResponseDto.BrandCommunityFreeBoardDto> freeBoardDtoList = new ArrayList<>();
+        List<BrandResponseDto.BrandCommunityBoardDto> freeBoardDtoList = new ArrayList<>();
         for(int i=0; i<freeBoardList.size();i++){
             Member member = freeBoardList.get(i).getMember();
             List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(freeBoardList.get(i).getId());
             List<String> communityImageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
-            BrandResponseDto.BrandCommunityFreeBoardDto dto = BrandConverter.toBrandCommunityFreeBoardDto(freeBoardList.get(i),communityImageUrlList,member);
+            BrandResponseDto.BrandCommunityBoardDto dto = BrandConverter.toBrandCommunityBoardDto(freeBoardList.get(i),communityImageUrlList,member);
             freeBoardDtoList.add(dto);
         }
 
         // 커뮤니티 피드백 게시판
-        List<BrandResponseDto.BrandCommunityFeedBackBoardDto> feedBackBoardDtoList = new ArrayList<>();
+        List<BrandResponseDto.BrandCommunityBoardDto> feedBackBoardDtoList = new ArrayList<>();
         for(int i=0; i<feedBackBoardList.size();i++){
             Member member = feedBackBoardList.get(i).getMember();
             List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(feedBackBoardList.get(i).getId());
             List<String> communityIageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
-            BrandResponseDto.BrandCommunityFeedBackBoardDto dto = BrandConverter.toBrandCommunityFeedBackBoardDto(feedBackBoardList.get(i),communityIageUrlList,member);
+            BrandResponseDto.BrandCommunityBoardDto dto = BrandConverter.toBrandCommunityBoardDto(feedBackBoardList.get(i),communityIageUrlList,member);
             feedBackBoardDtoList.add(dto);
         }
 
