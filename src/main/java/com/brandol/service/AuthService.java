@@ -1,12 +1,12 @@
 package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
-import com.brandol.apiPayload.exception.GeneralException;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.config.security.JwtProvider;
 import com.brandol.config.security.TokenDto;
 import com.brandol.converter.MemberConverter;
 import com.brandol.domain.Member;
-import com.brandol.dto.request.AuthResquestDto;
+import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class AuthService {
     //private final RedisService redisService;
 
     @Transactional
-    public TokenDto login(AuthResquestDto.KakaoLoginRequest request) {
+    public TokenDto login(AuthRequestDto.KakaoLoginRequest request) {
         System.out.println("login함수 실행");
         Optional<Member> optionalMember = memberRepository.findByEmail(request.getEmail());
 
@@ -55,7 +55,7 @@ public class AuthService {
         // 회원가입 - 이용약관
         } else { // 해당 이메일로 가입된 회원이 없으면 회원가입 진행하라는 오류 메시지 전달
             //throw new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND);
-            throw new GeneralException(ErrorStatus._MEMBER_NOT_FOUND_SIGNUP); // 이용약관 동의 api 호출
+            throw new ErrorHandler(ErrorStatus._MEMBER_NOT_FOUND_SIGNUP); // 이용약관 동의 api 호출
         }
     }
 
@@ -68,7 +68,7 @@ public class AuthService {
 
     // 회원정보 설정
     @Transactional
-    public TokenDto signup(AuthResquestDto.SignupRequest request) { // 여기서 다시 다 받아옴
+    public TokenDto signup(AuthRequestDto.SignupRequest request) { // 여기서 다시 다 받아옴
         // 가입안된 이메일인지는 로그인에서 확인했기 때문에 이 절차 X
         // Optional<Member> member = memberRepository.findByEmail(request.getEmail());
         Member member = MemberConverter.toMember(request);
@@ -83,11 +83,11 @@ public class AuthService {
 
     // 닉네임 중복확인 
     // 커스텀 어노테이션 적용 예정
-    public Boolean checkNicknameDuplicate(AuthResquestDto.NicknameCheckReq request) {
+    public Boolean checkNicknameDuplicate(AuthRequestDto.NicknameCheckReq request) {
 
         if (memberRepository.existsByNickname(request.getNickname())) {
-            // throw new ErrorHandler(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
-            throw new GeneralException(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
+            throw new ErrorHandler(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
+            //throw new GeneralException(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
         }
         return memberRepository.existsByNickname(request.getNickname());
     }

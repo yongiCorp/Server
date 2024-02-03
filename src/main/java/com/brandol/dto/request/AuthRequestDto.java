@@ -5,7 +5,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class AuthResquestDto {
+public class AuthRequestDto {
     // 수정 필요
     @Getter
     public static class KakaoLoginRequest { 

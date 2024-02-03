@@ -15,7 +15,7 @@ public enum ErrorStatus implements BaseCode {
 
     // Jwt 관련
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "JWT400", "유효하지 않은 토큰입니다."),
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "JWT401", "만료된 토큰입니다.");
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "JWT401", "만료된 토큰입니다."),
     //브랜드
     _NOT_EXIST_BRAND(HttpStatus.BAD_REQUEST,"BRAND400","존재하지 않는 브랜드입니다."),
 
