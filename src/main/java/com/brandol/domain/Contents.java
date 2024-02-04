@@ -21,5 +21,25 @@ public class Contents extends BaseEntity {
     private ContentsType contentsType;
 
     @Column(columnDefinition = "TEXT")
-    private String file;
+    private String file; //이미지 외의 첩부파일
+
+    private String title; // 2014-01-19 누락 필드 추가
+
+    private String content; // 2014-01-19 누락 필드 추가
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id",nullable = false)
+    private Brand brand;
+
+    private int likes;
+
+    private int comments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    public void addFile(String fileURL){
+        this.file = fileURL;
+    }
 }
