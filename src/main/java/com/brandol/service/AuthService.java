@@ -4,15 +4,22 @@ import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.config.security.JwtProvider;
 import com.brandol.config.security.TokenDto;
+import com.brandol.converter.AgreementConverter;
 import com.brandol.converter.MemberConverter;
 import com.brandol.domain.Member;
+import com.brandol.domain.Term;
+import com.brandol.domain.enums.Gender;
 import com.brandol.dto.request.AuthRequestDto;
+import com.brandol.dto.response.AuthResponseDto;
+import com.brandol.repository.AgreementRepository;
 import com.brandol.repository.MemberRepository;
+import com.brandol.repository.TermRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,24 +27,18 @@ import java.util.Optional;
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final TermRepository termRepository;
+    private final AgreementRepository agreementRepository;
     private final JwtProvider jwtProvider;
-    //private final RedisTemplate<String, String> redisTemplate;
-    //private final RedisService redisService;
 
     @Transactional
     public TokenDto login(AuthRequestDto.KakaoLoginRequest request) {
-        System.out.println("login함수 실행");
-        Optional<Member> optionalMember = memberRepository.findByEmail(request.getEmail());
-
-        System.out.println("이메일로 회원있는지 확인");
+        Member member = memberRepository.findByEmail(request.getEmail()).orElse(null);
 
         // 로그인
-        if (optionalMember.isPresent()) { // 해당 이메일로 가입된 회원이 있으면 로그인 진행
+        if (member != null && member.isSignUp()) { // 해당 이메일로 가입O, 회원가입도 완료된 회원이 있으면 로그인 진행
 
-            Member member = optionalMember.get();
-            System.out.println("가입되어있는 회원: " + member);
-
-            // 토큰 생성
+            // 토큰 생성 - ATK
             TokenDto tokenDto = jwtProvider.createToken(member.getEmail(),member.getId(), member.getRole().toString());
             System.out.println("토큰 생성: ");
             System.out.println(tokenDto.getAccessToken());
@@ -46,49 +47,52 @@ public class AuthService {
             // Login 하면 Redis에 RT:{email} : {refresh token 값}  // key - value 형태로 refresh 토큰 저장
             // opsForValue() : set을 통해 key,value값 저장하고 get(key)통해 value가져올 수 있음.
             // refreshToken.getTokenExpriresTime().getTime() : 리프레시 토큰의 만료시간이 지나면 해당 값 자동 삭제
-            String refreshToken = tokenDto.getRefreshToken();
-            //redisService.setValuesWithTimeout("RT:"+member.getEmail(),refreshToken,jwtProvider.getTokenExpirationTime(refreshToken));
-            //System.out.println("redis 에 refresh token 저장");
-            System.out.println("tokenDto-ATK: " + tokenDto.getAccessToken() + " tokenDto-RTK: " + tokenDto.getRefreshToken());
             return tokenDto;
-            
-        // 회원가입 - 이용약관
-        } else { // 해당 이메일로 가입된 회원이 없으면 회원가입 진행하라는 오류 메시지 전달
-            //throw new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND);
-            throw new ErrorHandler(ErrorStatus._MEMBER_NOT_FOUND_SIGNUP); // 이용약관 동의 api 호출
+
+        } else if (member != null && !member.isSignUp()) { // 이메일로 가입된 회원이 있지만 회원가입이 완료되지 않은 경우
+            return null;
+        }
+        else { // 아예 회원가입이 안되어 있는 경우
+            Member newmember = MemberConverter.toMemberWithEmail(request);
+            memberRepository.save(newmember);// 이메일로 회원정보 저장
+            return null;
         }
     }
 
-    // 이용약관 동의 api
-    // 회원가입(이용약관 동의 + 닉네임 및 회원 정보 설정)
-    /*@Transactional
-    public AuthDto.termsAgreementRes termsAgreement(AuthDto.termsAgreementReq request) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(request.getMemberId());
-    }*/
-
-    // 회원정보 설정
+    // 회원가입
     @Transactional
-    public TokenDto signup(AuthRequestDto.SignupRequest request) { // 여기서 다시 다 받아옴
-        // 가입안된 이메일인지는 로그인에서 확인했기 때문에 이 절차 X
-        // Optional<Member> member = memberRepository.findByEmail(request.getEmail());
-        Member member = MemberConverter.toMember(request);
-        memberRepository.save(member); // 회원정보 저장
-        TokenDto tokenDto = jwtProvider.createToken(member.getEmail(),member.getId(), member.getRole().toString());
-        String refreshToken = tokenDto.getRefreshToken();
-        System.out.println("tokenDto-ATK: " + tokenDto.getAccessToken() + " tokenDto-RTK: " + tokenDto.getRefreshToken());
-        //redisService.setValuesWithTimeout("RT:"+member.getEmail(),refreshToken,jwtProvider.getTokenExpirationTime(refreshToken));
-        return tokenDto;
+    public AuthResponseDto.SignUpDto signUp(AuthRequestDto.SignUpDto request) {
+        AuthResponseDto.AgreeTermsDto agreeTermsResponse = agreeTerms(request);
+        Member member = setProfile(request);
+        return MemberConverter.signUpResDto(member.getId());
     }
 
+    // 이용약관 동의
+    @Transactional
+    public AuthResponseDto.AgreeTermsDto agreeTerms(AuthRequestDto.SignUpDto request) { // email, termsIdList
+        Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        List<Term> termList = request.getTermsIdList().stream()
+                .map(termId -> {
+                    return termRepository.findById(termId).orElseThrow(() -> new ErrorHandler(ErrorStatus._TERM_NOT_FOUND));
+                }).collect(Collectors.toList());
 
-    // 닉네임 중복확인 
-    // 커스텀 어노테이션 적용 예정
-    public Boolean checkNicknameDuplicate(AuthRequestDto.NicknameCheckReq request) {
+        // 회원이 동의한 이용약관 저장
+        termList.stream()
+                .map(term -> AgreementConverter.toAgreement(member, term))
+                .forEach(agreementRepository::save);
+        return AgreementConverter.toAgreementResDto(member);
+    }
 
-        if (memberRepository.existsByNickname(request.getNickname())) {
-            throw new ErrorHandler(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
-            //throw new GeneralException(ErrorStatus._MEMBER_NICKNAME_DUPLICATE); // 닉네임 중복
+    // 프로필 설정
+    @Transactional
+    public Member setProfile(AuthRequestDto.SignUpDto request) {
+        Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        if (request.getGender() == Gender.MALE) {
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%8F%8C+%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4.png");
         }
-        return memberRepository.existsByNickname(request.getNickname());
+        else {
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%93%9C+%ED%94%84%EB%A1%9C%ED%95%84.png");
+        }
+        return member;
     }
 }

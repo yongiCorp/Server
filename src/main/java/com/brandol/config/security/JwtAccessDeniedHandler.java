@@ -19,7 +19,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setCharacterEncoding("utf-8");
-        System.out.println("JwtAccessDeniedHandler 실행"  + accessDeniedException.getMessage());
+        System.out.println("JwtAccessDeniedHandler 실행" + accessDeniedException.getMessage());
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }

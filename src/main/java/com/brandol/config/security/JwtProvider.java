@@ -40,7 +40,7 @@ public class JwtProvider implements InitializingBean {
     // 토큰 생성
     // atk, rtk 각각 생성으로 변경하기
     // @Transactional
-    public TokenDto createToken(String email, Long id, String authorities){
+    public TokenDto createToken(String email, Long id, String authorities) {
         System.out.println("createToken() 실행");
         Date now = new Date();
         Date atkExpiration = new Date(now.getTime() + accessTokenValidTime); // 액세스 토큰 만료 시간
@@ -79,7 +79,7 @@ public class JwtProvider implements InitializingBean {
     // 토큰에서 정보 추출
     // 토큰의 claims 추출
     public Claims getClaims(String token) {
-        System.out.println("getClaims() 실행" );
+        System.out.println("getClaims() 실행");
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
@@ -105,7 +105,7 @@ public class JwtProvider implements InitializingBean {
                     .build()
                     .parseClaimsJws(accessToken);
             return true;
-        } catch(ExpiredJwtException e) { // accessToken 만료여도 일단 true, refreshToken 확인 후 재발급
+        } catch (ExpiredJwtException e) { // accessToken 만료여도 일단 true, refreshToken 확인 후 재발급
             return true;
         } catch (Exception e) {
             return false;

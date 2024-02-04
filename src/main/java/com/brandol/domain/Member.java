@@ -2,19 +2,11 @@ package com.brandol.domain;
 
 import com.brandol.domain.common.BaseEntity;
 import com.brandol.domain.enums.Gender;
-import com.brandol.domain.enums.Role;
 import com.brandol.domain.enums.UserStatus;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -51,8 +43,5 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
-
-    @Enumerated(EnumType.STRING)
-    private Role role; // 2024.01.28 추가 by 지윤
 
 }
