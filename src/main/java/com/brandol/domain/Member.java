@@ -53,9 +53,8 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    public void setProfile(String nickname, String name, Gender gender, Integer age, String avatar) {
+    public void setProfile(String nickname, Gender gender, Integer age, String avatar) {
         this.nickname = nickname;
-        this.name = name;
         this.gender = gender;
         this.age = age;
         this.avatar = avatar;

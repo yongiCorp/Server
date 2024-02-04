@@ -34,7 +34,8 @@ public class SecurityConfig {
                 "/auth/login/kakao",
                 "/auth/nickname/exist",
                 "/auth/signup/terms",
-                "/auth/signup/profile"
+                "/auth/signup/profile",
+                "/auth/signup"
                 );
     }
 

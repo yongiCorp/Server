@@ -12,4 +12,13 @@ public class AuthResponseDto {
         private boolean signUp;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SignUpDto {
+        private Long memberId;
+        private boolean signUp;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.brandol.dto.request;
 
+import com.brandol.domain.Member;
 import com.brandol.domain.enums.Gender;
 import com.brandol.validation.annotation.ExistNickname;
 import lombok.*;
@@ -9,11 +10,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class AuthRequestDto {
-    // 수정 필요
+
     @Getter
     public static class KakaoLoginRequest {
         private String email;
-//        private String name;
+        private String name;
     }
 
     @Getter
@@ -27,14 +28,28 @@ public class AuthRequestDto {
 
     @Getter
     @Setter
-    public static class SetProfileDto{
-        @NotNull
-        private Long memberId;
+    public static class SetProfileDto {
+
         @NotBlank
         @ExistNickname
         private String nickname;
+
+        private Gender gender;
+        @NotNull
+        private Integer age;
+    }
+
+    @Getter
+    @Setter
+    public static class SignUpDto {
+        @NotNull
+        private String email;
+        @NotNull
+        private List<Long> termsIdList;
         @NotBlank
-        private String name;
+        @ExistNickname
+        private String nickname;
+
         private Gender gender;
         @NotNull
         private Integer age;

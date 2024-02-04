@@ -2,15 +2,13 @@ package com.brandol.converter;
 
 import com.brandol.domain.Brand;
 import com.brandol.domain.Contents;
-import com.brandol.domain.ContentsImage;
 import com.brandol.domain.Member;
 import com.brandol.domain.enums.Provider;
 import com.brandol.domain.enums.Role;
 import com.brandol.domain.enums.UserStatus;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.dto.request.AuthRequestDto;
-import com.brandol.dto.request.BrandRequestDto;
-import com.brandol.dto.response.BrandResponseDto;
+import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.dto.response.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberConverter {
 
-    public static Member toMemberWithEmail(String email) {
+    public static Member toMemberWithEmail(AuthRequestDto.KakaoLoginRequest request) {
         return Member.builder()
-                .email(email)
+                .email(request.getEmail())
+                .name(request.getName())
                 .role(Role.ROLE_USER)
                 .userStatus(UserStatus.ACTIVE)
                 .provider(Provider.KAKAO)
+                .build();
+    }
+
+    public static AuthResponseDto.SignUpDto signUpResDto(Long memberId) {
+        return AuthResponseDto.SignUpDto.builder()
+                .memberId(memberId)
+                .signUp(true)
                 .build();
     }
 
