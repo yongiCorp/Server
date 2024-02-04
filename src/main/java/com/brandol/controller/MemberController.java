@@ -2,7 +2,6 @@ package com.brandol.controller;
 
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
-import com.brandol.dto.response.MemberMainPageResponse;
 import com.brandol.dto.response.MemberResponseDto;
 import com.brandol.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
