@@ -32,11 +32,8 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/swagger-resources/**",
                 "/auth/login/kakao",
-                "/auth/nickname/exist",
-                "/auth/signup/terms",
-                "/auth/signup/profile",
-                "/auth/signup"
-                );
+                "/auth/signup",
+                "/auth/nickname/exist");
     }
 
     @Bean

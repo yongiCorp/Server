@@ -1,6 +1,5 @@
 package com.brandol.dto.request;
 
-import com.brandol.domain.Member;
 import com.brandol.domain.enums.Gender;
 import com.brandol.validation.annotation.ExistNickname;
 import lombok.*;

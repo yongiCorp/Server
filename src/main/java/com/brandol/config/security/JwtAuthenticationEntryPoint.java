@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
- * 인가(Authorization)에 실패했을 때 예외처리
- * */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
