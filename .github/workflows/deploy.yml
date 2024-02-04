@@ -1,7 +1,9 @@
 name: Brandol CI/CD
 
 on:
-  push: main
+  push:
+    branches:
+      - Main
   workflow_dispatch:
 jobs:
   build:
