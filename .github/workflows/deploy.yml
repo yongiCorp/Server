@@ -2,12 +2,12 @@ name: Brandol CI/CD
 
 on:
   pull_request:
-    types: [closed]
+    types: push
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    #if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
 
       - name: Generate deployment package
         run: |
-          mkdir -p deploy/application.jar
+          mkdir -p deploy
           cp build/libs/*.jar deploy/application.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
