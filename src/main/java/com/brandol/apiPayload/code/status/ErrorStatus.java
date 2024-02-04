@@ -13,6 +13,9 @@ public enum ErrorStatus implements BaseCode {
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
 
+    // Jwt 관련
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "JWT400", "유효하지 않은 토큰입니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "JWT401", "만료된 토큰입니다."),
     //브랜드
     _NOT_EXIST_BRAND(HttpStatus.BAD_REQUEST,"BRAND400","존재하지 않는 브랜드입니다."),
 
@@ -32,6 +35,8 @@ public enum ErrorStatus implements BaseCode {
 
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
+    _MEMBER_NOT_FOUND_SIGNUP(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
+    _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
 
     //DB
     _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),
