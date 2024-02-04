@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,40 +42,22 @@ public class MemberService {
         if(brand == null){
             throw new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND);}
 
-        List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId,brandId);
-        int len = memberBrandLists.size();
-
-        //기존에 구독했던 기록이 존재하는 경우
-        if(len == 1){
-            MemberBrandList memberBrandList=memberBrandLists.get(0);
-
-            if(memberBrandList.getMemberListStatus() == MemberListStatus.UNSUBSCRIBED){ // 구독을 취소한 경우
-            memberBrandList.changeMemberListStatus(MemberListStatus.SUBSCRIBED);
-            return memberBrandList.getId();
-            }
-            else { //중복 구독을 신청한 경우
-                throw new ErrorHandler(ErrorStatus._ALREADY_EXIST_MEMBER_BRAND_LIST);
-            }
+        MemberBrandList memberBrand = memberBrandRepository.findByMemberAndBrand(member, brand).orElse(null);
+        if(memberBrand != null) {
+            memberBrand.changeMemberListStatus(MemberListStatus.SUBSCRIBED);
+            return memberBrand.getId();
         }
 
-
-        Long fanCount=1L;
-        // 기존에 구독했던 적이 없는 경우
-
-        //가장 마지막으로 구독했던 사람의 sequence 가져오기
-        List<MemberBrandList> recentJoinedMemberBrandList = memberBrandRepository.getBrandJoinedFanCount(brandId, PageRequest.of(0,1));
-        if(!recentJoinedMemberBrandList.isEmpty()){ fanCount = recentJoinedMemberBrandList.get(0).getSequence()+1;}
-
-        MemberBrandList memberBrandEntity = MemberBrandList.builder()
+        Optional<MemberBrandList> allByBrand = memberBrandRepository.getAllByBrand(brand);
+        Long count = allByBrand.stream().count();
+        MemberBrandList build = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)
                 .member(member)
                 .brand(brand)
-                .sequence(fanCount)
+                .sequence(count + 1)
                 .build();
-
-
-        memberBrandRepository.save(memberBrandEntity);
-        return memberBrandEntity.getId();
+        memberBrandRepository.save(build);
+        return build.getId();
 
     }
 

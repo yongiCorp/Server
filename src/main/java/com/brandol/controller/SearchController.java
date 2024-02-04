@@ -7,7 +7,10 @@ import com.brandol.dto.response.SearchResponseDto;
 import com.brandol.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "페이지 조회 API", description = "홈 페이지, 검색 페이지 등 조회")
+@Validated
 public class SearchController {
 
     private final SearchService searchService;
@@ -51,9 +56,9 @@ public class SearchController {
     }
 
     @Operation(summary = "검색 더보기 페이지 조회 - 아바타 스토어의 헤더", description ="유저의 아바타와 보유 포인트 조회" )
-    @Parameter(name = "memberId",description = "유저의 아바타와 포인트 조회를 위한 ID")
-    @GetMapping(value = "/search/detail/avatar-store/header/{memberId}")
-    public ApiResponse<SearchResponseDto.SearchDetailAvatarStoreHeaderDto> searchDetailAvatarStoreHeader(@PathVariable("memberId")Long memberId){
+    @GetMapping(value = "/search/detail/avatar-store/header")
+    public ApiResponse<SearchResponseDto.SearchDetailAvatarStoreHeaderDto> searchDetailAvatarStoreHeader(Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
         SearchResponseDto.SearchDetailAvatarStoreHeaderDto searchDetailAvatarStoreHeaderDto = searchService.makeSearchDetailAvatarStoreHeaderPage(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), searchDetailAvatarStoreHeaderDto);
     }

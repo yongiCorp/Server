@@ -14,4 +14,8 @@ public class HealthController {
     public String healthAPI(){
         return "I'm Healthy";
     }
+
+    @Operation(hidden = true)
+    @GetMapping("/")
+    public String welcomeAPI(){return "브랜돌 서버";}
 }

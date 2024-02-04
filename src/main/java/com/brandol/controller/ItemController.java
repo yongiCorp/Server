@@ -9,6 +9,7 @@ import com.brandol.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,15 +23,17 @@ public class ItemController {
     private final ItemService itemService;
 
     @Operation(summary = "구매 아이템 조회",description = "내가 구매한 아이템, 아이템의 상세 정보, 아이템의 착용여부 조회")
-    @GetMapping("/myitems/{memberId}")
-    public ApiResponse<List<MyItemResponseDto.MyItemDto>> getMyItems(@PathVariable Long memberId) {
+    @GetMapping("/myitems")
+    public ApiResponse<List<MyItemResponseDto.MyItemDto>> getMyItems(Authentication authentication) {
+        Long memberId = Long.parseLong(authentication.getName());
         List<MyItemResponseDto.MyItemDto> myItemList = itemService.getMyItemList(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), myItemList);
     }
 
     @Operation(summary = "아이템 착용",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용")
-    @PatchMapping("/myitems/wear/{memberId}")
-    public ApiResponse<String> wearMyItem(@PathVariable Long memberId, @RequestBody MyItemRequestDto.wearMyItemDto request) {
+    @PatchMapping("/myitems/wear")
+    public ApiResponse<String> wearMyItem(@RequestBody MyItemRequestDto.wearMyItemDto request, Authentication authentication) {
+        Long memberId = Long.parseLong(authentication.getName());
         String wearMyItem = itemService.toWearMyItem(memberId, request);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), wearMyItem);
     }

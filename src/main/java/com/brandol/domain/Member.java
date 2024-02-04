@@ -2,6 +2,8 @@ package com.brandol.domain;
 
 import com.brandol.domain.common.BaseEntity;
 import com.brandol.domain.enums.Gender;
+import com.brandol.domain.enums.Provider;
+import com.brandol.domain.enums.Role;
 import com.brandol.domain.enums.UserStatus;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -22,10 +24,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 45)
     private String email;
 
-    @Column(nullable = false, length = 45)
+    @Column(length = 45)
     private String name;
 
-    @Column(nullable = false, length = 45, unique = true)
+    @Column(length = 45, unique = true)
     private String nickname;
 
     @ColumnDefault("0")
@@ -35,7 +37,6 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(45)")
     private Gender gender;
 
-    @Column(nullable = false)
     private int age;
 
     @Column(columnDefinition = "TEXT")
@@ -44,4 +45,19 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private boolean signUp; // 회원가입 완료 여부 - 약관동의, 프로필 등록 완료 여부
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
+    public void setProfile(String nickname, Gender gender, Integer age, String avatar) {
+        this.nickname = nickname;
+        this.gender = gender;
+        this.age = age;
+        this.avatar = avatar;
+        this.signUp = true;
+    }
 }

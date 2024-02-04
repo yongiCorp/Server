@@ -9,32 +9,32 @@ import com.brandol.service.BrandService;
 import com.brandol.validation.annotation.ExistBrand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "브랜드 관련 API")
+@Tag(name = "브랜드 관련 API", description = "피그마 기준 페이지 2의 브랜드 상단 부분 조회, 하단 부분의 팬덤, 컨텐츠, 커뮤니티 조회")
 public class BrandController {
 
     private final BrandService brandService;
 
 
-    @Operation(summary = "브랜드 등록",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수" )
+    @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = true )
     @PostMapping(value = "/brands/new",consumes = "multipart/form-data") // 브랜드 신규 등록 함수
     private ApiResponse<Brand> addNewBrand(@ModelAttribute BrandRequestDto.addBrand request){
-        System.out.println(request.getName());
-        System.out.println(request.getDescription());
         Brand brand = brandService.createBrand(request);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), brand);
     }
 
     @Operation(summary = "브랜드 공통 헤더 조회",description ="브랜드 프로필,배경이미지, 구독자 수등 브랜드 상세정보 헤더를 조회" )
-    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @Parameter(name = "brandId",description = "조회 대상 브랜드의 ID")
     @GetMapping(value = "/brands/{brandId}/header")
-    public ApiResponse<BrandResponseDto.BrandHeaderDto> showBrandHeader(@PathVariable("brandId")Long brandId, @RequestParam("memberId")Long memberId){
+    public ApiResponse<BrandResponseDto.BrandHeaderDto> showBrandHeader(@PathVariable("brandId")Long brandId, Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
         BrandResponseDto.BrandHeaderDto brandHeaderDto = brandService.makeBrandCommonHeader(brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), brandHeaderDto);
     }
@@ -64,12 +64,12 @@ public class BrandController {
 
     @Operation(summary = "브랜드 커뮤니티 게시글 생성",description = "브랜드 콘텐츠에 종속된 브랜드 자유게시판, 피드백 게시판에 게시글 생성")
     @Parameter(name = "brandId",description = "생성 대상 브랜드의 ID")
-    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping(value = "/brands/{brandId}/community/new",consumes = "multipart/form-data")
     public ApiResponse<String> crateBrandCommunity(@ModelAttribute BrandRequestDto.addCommunity communityDto,
                                                    @PathVariable("brandId")Long brandId,
-                                                   @RequestParam("memberId") Long memberId
+                                                   Authentication authentication
                                                    ){
+        Long memberId = Long.parseLong(authentication.getName());
         Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
     }
