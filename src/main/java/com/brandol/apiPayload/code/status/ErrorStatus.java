@@ -30,9 +30,13 @@ public enum ErrorStatus implements BaseCode {
     //서브 배너
     _CANNOT_LOAD_SUB_BANNER(HttpStatus.NOT_FOUND,"SUB-BANNER404","서브배너 조회에 실패했습니다."),
 
+    //팬덤
+    _CANNOT_LOAD_FANDOM(HttpStatus.NOT_FOUND,"FANDOM404","팬덤 조회에 실패하였습니다."),
+
     //콘텐츠
     _CANNOT_LOAD_CONTENTS(HttpStatus.NOT_FOUND,"CONTENTS404","콘텐츠 조회에 실패하였습니다."),
-
+    // 커뮤니티
+    _CANNOT_LOAD_COMMUNITY(HttpStatus.NOT_FOUND,"COMMUNITY404","커뮤니티 조회에 실패하였습니다."),
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
     _MEMBER_NOT_FOUND_SIGNUP(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),

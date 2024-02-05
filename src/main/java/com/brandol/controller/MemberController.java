@@ -29,4 +29,21 @@ public class MemberController {
         MemberResponseDto.MemberMainDto memberMainDto = memberService.makeMemberMain(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberMainDto);
     }
+
+    @Operation(summary = "멤버 작성 글조회",description ="2페이지 d 진입시 호출하는 API" )
+    @GetMapping("/user/my/written/articles")
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenArticle(@RequestParam("memberId")Long meberId){
+         MemberResponseDto.MemberWrittenMainDto dto = memberService.makeMemberWrittenPage(meberId);
+         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
+    @Operation(summary = "멤버 작성 댓글 조회",description ="2페이지 d 진입시 호출하는 API" )
+    @GetMapping("/user/my/written/comments")
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenComment(@RequestParam("memberId")Long meberId){
+        MemberResponseDto.MemberWrittenMainDto dto = memberService.makeMemberWrittenCommentPage(meberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
+
+
 }

@@ -70,4 +70,13 @@ public class MemberConverter {
                 .memberBrandListDtoList(memberBrandListDtoList)
                 .build();
     }
+
+    public static MemberResponseDto.MemberWrittenMainDto toMemberWrittenMainDto(
+            Integer totalMemberWrittenArticleCount,
+            List<MemberResponseDto.MemberWrittenDto> memberWrittenDtoList){
+        return MemberResponseDto.MemberWrittenMainDto.builder()
+                .totalArticleCount(totalMemberWrittenArticleCount)
+                .memberWrittenDtoList(memberWrittenDtoList)
+                .build();
+    }
 }
