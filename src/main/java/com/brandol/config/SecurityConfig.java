@@ -34,7 +34,8 @@ public class SecurityConfig {
                 "/auth/login/kakao",
                 "/auth/signup",
                 "/auth/nickname/exist",
-                "/health");
+                "/health",
+                "/");
     }
 
     @Bean
