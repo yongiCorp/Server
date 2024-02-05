@@ -23,7 +23,7 @@ public class BrandController {
     private final BrandService brandService;
 
 
-    @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = true )
+    @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = false ) // 테스트 해야함
     @PostMapping(value = "/brands/new",consumes = "multipart/form-data") // 브랜드 신규 등록 함수
     private ApiResponse<Brand> addNewBrand(@ModelAttribute BrandRequestDto.addBrand request){
         Brand brand = brandService.createBrand(request);
