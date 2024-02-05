@@ -51,7 +51,7 @@ public class MemberResponseDto {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-    public static class MemberWrittenArticleDto {
+    public static class MemberWrittenDto {
 
         private Long writerId;
         private String writerName;
@@ -71,9 +71,10 @@ public class MemberResponseDto {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class MemberWrittenArticleMainDto {
+    public static class MemberWrittenMainDto {
         private Integer totalArticleCount;
-        private List<MemberWrittenArticleDto> memberWrittenArticleDtoList;
+        private List<MemberWrittenDto> memberWrittenDtoList;
     }
+
 
 }

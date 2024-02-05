@@ -5,9 +5,7 @@ import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.MemberConverter;
 import com.brandol.domain.*;
 import com.brandol.domain.enums.MemberListStatus;
-import com.brandol.domain.mapping.Community;
-import com.brandol.domain.mapping.CommunityImage;
-import com.brandol.domain.mapping.MemberBrandList;
+import com.brandol.domain.mapping.*;
 import com.brandol.dto.response.MemberResponseDto;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +29,9 @@ public class MemberService {
     private final ContentImageRepository contentImageRepository;
     private final FandomImageRepository fandomImageRepository;
     private final CommunityImageRepository communityImageRepository;
+    private final FandomCommentRepository fandomCommentRepository;
+    private final ContentsCommentRepository contentsCommentRepository;
+    private final CommunityCommentRepository communityCommentRepository;
 
     @Transactional
     public Long addMemberBrandList(Long memberId, Long brandId){ //멤버가 멤버브랜드리스트에 브랜드를 추가 하는 함수
@@ -120,7 +121,7 @@ public class MemberService {
 
     }
 
-    public MemberResponseDto.MemberWrittenArticleMainDto makeMemberWrittenPage(Long memberId){
+    public MemberResponseDto.MemberWrittenMainDto makeMemberWrittenPage(Long memberId){
 
         Member member = memberRepository.findOneById(memberId);
 
@@ -146,12 +147,12 @@ public class MemberService {
         masterList.addAll(recentCommunityListWrittenByMember);
 
         // 각각의 article 들의 createdAt 필드를 기준으로 내림차순으로 정렬
-        Collections.sort(masterList, Comparator.comparing(this::getCreatedAt).reversed());
+        Collections.sort(masterList, Comparator.comparing(this::getArticleCreatedAt).reversed());
 
         // 가장 최신 두건의 article 들만 추출
         List<Object>resultArticleList = masterList.stream().limit(2).collect(Collectors.toList());
 
-        List<MemberResponseDto.MemberWrittenArticleDto> memberWrittenArticleDtoList = new ArrayList<>();
+        List<MemberResponseDto.MemberWrittenDto> memberWrittenDtoList = new ArrayList<>();
       for(int i=0;i<resultArticleList.size();i++){
 
           //해당 객체가 Fandom 게시글 일 경우
@@ -159,7 +160,7 @@ public class MemberService {
               Fandom targetFandom = (Fandom) resultArticleList.get(i);
               List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(targetFandom.getId());
               List<String>imageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
-              MemberResponseDto.MemberWrittenArticleDto fandomArticle = MemberResponseDto.MemberWrittenArticleDto.builder()
+              MemberResponseDto.MemberWrittenDto fandomArticle = MemberResponseDto.MemberWrittenDto.builder()
                       .writerId(targetFandom.getMember().getId())
                       .writerName(targetFandom.getMember().getNickname())
                       .writerProfile(targetFandom.getMember().getAvatar())
@@ -172,7 +173,7 @@ public class MemberService {
                       .commentCount(targetFandom.getComments())
                       .writtenDate(targetFandom.getCreatedAt())
                       .build();
-              memberWrittenArticleDtoList.add(fandomArticle);
+              memberWrittenDtoList.add(fandomArticle);
 
           }
 
@@ -182,7 +183,7 @@ public class MemberService {
               Contents targetContents = (Contents) resultArticleList.get(i);
               List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(targetContents.getId());
               List<String>imageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
-              MemberResponseDto.MemberWrittenArticleDto contentsArticle = MemberResponseDto.MemberWrittenArticleDto.builder()
+              MemberResponseDto.MemberWrittenDto contentsArticle = MemberResponseDto.MemberWrittenDto.builder()
                       .writerId(targetContents.getMember().getId())
                       .writerName(targetContents.getMember().getNickname())
                       .writerProfile(targetContents.getMember().getAvatar())
@@ -195,7 +196,7 @@ public class MemberService {
                       .commentCount(targetContents.getComments())
                       .writtenDate(targetContents.getCreatedAt())
                       .build();
-              memberWrittenArticleDtoList.add(contentsArticle);
+              memberWrittenDtoList.add(contentsArticle);
           }
 
           // 해당 게시글이 커뮤니티 게시글일 경우
@@ -204,7 +205,7 @@ public class MemberService {
               Community targetCommunity = (Community)resultArticleList.get(i);
               List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(targetCommunity.getId());
               List<String>imageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
-              MemberResponseDto.MemberWrittenArticleDto communityArticle = MemberResponseDto.MemberWrittenArticleDto.builder()
+              MemberResponseDto.MemberWrittenDto communityArticle = MemberResponseDto.MemberWrittenDto.builder()
                       .writerId(targetCommunity.getMember().getId())
                       .writerName(targetCommunity.getMember().getNickname())
                       .writerProfile(targetCommunity.getMember().getAvatar())
@@ -217,14 +218,101 @@ public class MemberService {
                       .commentCount(targetCommunity.getComments())
                       .writtenDate(targetCommunity.getCreatedAt())
                       .build();
-              memberWrittenArticleDtoList.add(communityArticle);
+              memberWrittenDtoList.add(communityArticle);
           }
       }
         Integer totalArticleCount = fandomSize + contentsSize + communitySize;
-      return MemberConverter.toMemberWrittenArticleMainDto(totalArticleCount,memberWrittenArticleDtoList);
+      return MemberConverter.toMemberWrittenMainDto(totalArticleCount, memberWrittenDtoList);
     }
 
-    private  LocalDateTime getCreatedAt(Object entity) {
+    public MemberResponseDto.MemberWrittenMainDto makeMemberWrittenCommentPage(Long memberId){
+
+        List<FandomComment> fandomCommentList = fandomCommentRepository.findFandomCommentsByMemberId(memberId);
+        Integer fandomCommentCount = fandomCommentList.size();
+        List<ContentsComment> contentsCommentList = contentsCommentRepository.findContentsCommentByMemberId(memberId);
+        Integer contentsCommentCount = contentsCommentList.size();
+        List<CommunityComment> communityCommentList = communityCommentRepository.findCommunityCommentByMemberId(memberId);
+        Integer communityCommentCount = communityCommentList.size();
+
+        List<Object> masterList = new ArrayList<>();
+        masterList.addAll(fandomCommentList);
+        masterList.addAll(contentsCommentList);
+        masterList.addAll(communityCommentList);
+
+        Collections.sort(masterList, Comparator.comparing(this::getCommentCreatedAt).reversed());
+        List<Object>resultArticleList = masterList.stream().limit(2).collect(Collectors.toList());
+        List<MemberResponseDto.MemberWrittenDto> memberWrittenCommentDtoList = new ArrayList<>();
+
+        for(int i=0; i<resultArticleList.size();i++){
+            if(resultArticleList.get(i) instanceof FandomComment){
+                FandomComment targetFandomComment = (FandomComment) resultArticleList.get(i);
+                Fandom targetFandom = targetFandomComment.getFandom();
+                List<FandomImage> fandomImageList = fandomImageRepository.findFandomImages(targetFandom.getId());
+                List<String> imageUrlList = fandomImageList.stream().map(FandomImage::getImage).collect(Collectors.toList());
+
+                MemberResponseDto.MemberWrittenDto fandomArticle = MemberResponseDto.MemberWrittenDto.builder()
+                        .writerId(targetFandom.getMember().getId())
+                        .writerName(targetFandom.getMember().getName())
+                        .writerProfile(targetFandom.getMember().getAvatar())
+                        .articleType("Fandom")
+                        .id(targetFandom.getId())
+                        .title(targetFandom.getTitle())
+                        .images(imageUrlList)
+                        .likeCount(targetFandom.getLikes())
+                        .commentCount(targetFandom.getComments())
+                        .writtenDate(targetFandom.getCreatedAt())
+                        .build();
+                memberWrittenCommentDtoList.add(fandomArticle);
+            } else if (resultArticleList.get(i) instanceof ContentsComment) {
+                ContentsComment targetContentsComment = (ContentsComment) resultArticleList.get(i);
+                Contents targetContents = targetContentsComment.getContents();
+                List<ContentsImage> contentsImageList = contentImageRepository.findAllByContentsId(targetContentsComment.getId());
+                List<String> imageUrlList = contentsImageList.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+
+                MemberResponseDto.MemberWrittenDto contentsArticle = MemberResponseDto.MemberWrittenDto.builder()
+                        .writerId(targetContents.getMember().getId())
+                        .writerName(targetContents.getMember().getName())
+                        .writerProfile(targetContents.getMember().getAvatar())
+                        .articleType("Contents")
+                        .id(targetContents.getId())
+                        .title(targetContents.getTitle())
+                        .images(imageUrlList)
+                        .likeCount(targetContents.getLikes())
+                        .commentCount(targetContents.getComments())
+                        .writtenDate(targetContents.getCreatedAt())
+                        .build();
+                memberWrittenCommentDtoList.add(contentsArticle);
+
+            } else if (resultArticleList.get(i) instanceof  CommunityComment) {
+                CommunityComment targetCommunityComment = (CommunityComment) resultArticleList.get(i);
+                Community tagetCommunity = targetCommunityComment.getCommunity();
+                List<CommunityImage> communityImageList = communityImageRepository.findAllByCommunityId(targetCommunityComment.getId());
+                List<String> imageUrlList = communityImageList.stream().map(CommunityImage::getImage).collect(Collectors.toList());
+
+                MemberResponseDto.MemberWrittenDto communityArticle = MemberResponseDto.MemberWrittenDto.builder()
+                        .writerId(tagetCommunity.getMember().getId())
+                        .writerName(tagetCommunity.getMember().getName())
+                        .writerProfile(tagetCommunity.getMember().getAvatar())
+                        .articleType("Community")
+                        .id(tagetCommunity.getId())
+                        .title(tagetCommunity.getTitle())
+                        .images(imageUrlList)
+                        .likeCount(tagetCommunity.getLikes())
+                        .commentCount(tagetCommunity.getComments())
+                        .writtenDate(tagetCommunity.getCreatedAt())
+                        .build();
+
+                memberWrittenCommentDtoList.add(communityArticle);
+            }
+        }
+
+        Integer commentCount = fandomCommentCount + contentsCommentCount + communityCommentCount;
+        return MemberConverter.toMemberWrittenMainDto(commentCount,memberWrittenCommentDtoList);
+    }
+
+
+
+    private  LocalDateTime getArticleCreatedAt(Object entity) {
         // 각 엔티티의 생성 날짜를 가져오는 메서드
         if (entity instanceof Fandom) {
             return ((Fandom) entity).getCreatedAt();
@@ -232,6 +320,18 @@ public class MemberService {
             return ((Contents) entity).getCreatedAt();
         } else if (entity instanceof Community) {
             return ((Community) entity).getCreatedAt();
+        }
+        return null;
+    }
+
+    private  LocalDateTime getCommentCreatedAt(Object entity) {
+        // 각 엔티티의 생성 날짜를 가져오는 메서드
+        if (entity instanceof FandomComment) {
+            return ((FandomComment) entity).getCreatedAt();
+        } else if (entity instanceof ContentsComment) {
+            return ((ContentsComment) entity).getCreatedAt();
+        } else if (entity instanceof CommunityComment) {
+            return ((CommunityComment) entity).getCreatedAt();
         }
         return null;
     }

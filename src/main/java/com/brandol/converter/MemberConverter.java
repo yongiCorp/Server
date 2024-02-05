@@ -48,12 +48,13 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponseDto.MemberWrittenArticleMainDto toMemberWrittenArticleMainDto(
+    public static MemberResponseDto.MemberWrittenMainDto toMemberWrittenMainDto(
             Integer totalMemberWrittenArticleCount,
-            List<MemberResponseDto.MemberWrittenArticleDto> memberWrittenArticleDtoList){
-        return MemberResponseDto.MemberWrittenArticleMainDto.builder()
+            List<MemberResponseDto.MemberWrittenDto> memberWrittenDtoList){
+        return MemberResponseDto.MemberWrittenMainDto.builder()
                 .totalArticleCount(totalMemberWrittenArticleCount)
-                .memberWrittenArticleDtoList(memberWrittenArticleDtoList)
+                .memberWrittenDtoList(memberWrittenDtoList)
                 .build();
     }
+
 }
