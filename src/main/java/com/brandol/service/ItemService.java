@@ -2,10 +2,13 @@ package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
+import com.brandol.aws.AmazonS3Manager;
 import com.brandol.converter.ItemConverter;
+import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.MyItemRequestDto;
 import com.brandol.dto.response.MyItemResponseDto;
+import com.brandol.repository.MemberRepository;
 import com.brandol.repository.MyItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,9 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final MyItemRepository myItemRepository;
+    private final MemberRepository memberRepository;
+    private final AmazonS3Manager s3Manager;
+
     public List<MyItemResponseDto.MyItemDto> getMyItemList(Long memberId) {
         //Member member = memberRepository.findById(userId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<MyItem> myItemList = myItemRepository.findALlByMemberId(memberId);
@@ -46,8 +52,18 @@ public class ItemService {
         currentMyItemList.stream()
                 .filter(currentMyItem -> !wearingMyItemList.contains(currentMyItem))// 현재 착용중인 아이템이 wearingMyItemList에 없으면
                 .forEach(currentMyItem -> currentMyItem.updateIsWearing(false)); // isWearing은 false
-
         wearingMyItemList.forEach(myItem -> {myItem.updateIsWearing(true);});
-        return "아이템 착용 성공";
+
+        if (request.getAvatarImage() != null && !request.getAvatarImage().isEmpty()) {
+            String avatar = request.getAvatarImage().getOriginalFilename();
+            String avatarUUID = s3Manager.generateAvatarKeyName(avatar);
+            String avatarURL = s3Manager.uploadFile(avatarUUID, request.getAvatarImage());
+
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+            member.updateAvatar(avatarURL);
+            return "아바타 저장 완료";
+        } else {
+            throw new ErrorHandler(ErrorStatus._FILE_AVATAR_INVALID);
+        }
     }
 }
