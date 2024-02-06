@@ -2,6 +2,7 @@ package com.brandol.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MemberResponseDto {
@@ -43,5 +44,35 @@ public class MemberResponseDto {
         private String brandName;
         private String profileImage;
         private Long sequence;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
+    public static class MemberWrittenDto {
+
+        private Long writerId;
+        private String writerName;
+        private String writerProfile;
+        private String articleType;
+        private Long id;
+        private String title;
+        private String content;
+        private List<String> images;
+        private int likeCount;
+        private int commentCount;
+        private LocalDateTime writtenDate;
+
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberWrittenMainDto {
+        private Integer totalArticleCount;
+        private List<MemberWrittenDto> memberWrittenDtoList;
     }
 }
