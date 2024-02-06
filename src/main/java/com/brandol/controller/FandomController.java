@@ -22,15 +22,15 @@ public class FandomController {
 
     private final FandomService fandomService;
 
-    @Operation(summary = "팬덤 컬처 게시판 전체조회 ",description ="팬덤 컬체 게시물 전체 조회(페이징: 0페이지 부터 시작)")
-    @GetMapping("/brands/{brandId}/fandom-culture/all")
+    @Operation(summary = "팬덤 컬처 게시판 전체조회 ",description ="팬덤 컬처 게시물 전체 조회(페이징: 0페이지 부터 시작)")
+    @GetMapping("/brands/{brandId}/fandom-cultures")
     public ApiResponse<List<FandomResponseDto.FandomDto>>allFandomCultures(@PathVariable("brandId")Long brandId,@RequestParam("page")Integer pageNumber){
         List<FandomResponseDto.FandomDto> fandomDtoList = fandomService.showAllFandomCultures(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), fandomDtoList);
     }
 
-    @Operation(summary = "팬덤 아나운스먼트 게시판 전체조회 ",description ="팬덤 컬체 게시물 전체 조회(페이징: 0페이지 부터 시작)")
-    @GetMapping("/brands/{brandId}/fandom-announcement/all")
+    @Operation(summary = "팬덤 아나운스먼트 게시판 전체조회 ",description ="팬덤 아나운스먼트 게시물 전체 조회(페이징: 0페이지 부터 시작)")
+    @GetMapping("/brands/{brandId}/fandom-announcements")
     public ApiResponse<List<FandomResponseDto.FandomDto>>allFandomAnnouncements(@PathVariable("brandId")Long brandId,@RequestParam("page")Integer pageNumber){
         List<FandomResponseDto.FandomDto> fandomDtoList = fandomService.showAllFandomAnnouncement(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), fandomDtoList);

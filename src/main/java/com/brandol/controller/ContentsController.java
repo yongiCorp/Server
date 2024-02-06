@@ -22,22 +22,22 @@ public class ContentsController {
 
     private final ContentsService contentsService;
 
-    @Operation(summary = "콘텐츠 카드뉴스 게시판 전체조회 ",description ="팬덤 컬체 게시물 전체 조회(페이징: 0페이지 부터 시작)")
-    @GetMapping("/brands/{brandId}/contents-cardnews/all")
+    @Operation(summary = "콘텐츠 카드뉴스 게시판 전체조회 ",description ="콘텐츠 카드뉴스 게시판 전체 조회(페이징: 0페이지 부터 시작)")
+    @GetMapping("/brands/{brandId}/contents-cardnews")
     public ApiResponse<List<ContentsResponseDto.ContentsDto>> allContentsCardNews(@PathVariable("brandId")Long brandId,@RequestParam("page")Integer pageNumber){
         List<ContentsResponseDto.ContentsDto> contentsDtoList = contentsService.showAllContentsCardNews(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), contentsDtoList);
     }
 
-    @Operation(summary = "콘텐츠 이벤트 게시판 전체조회 ",description ="팬덤 컬체 게시물 전체 조회(페이징: 0페이지 부터 시작)")
-    @GetMapping("/brands/{brandId}/contents-event/all")
+    @Operation(summary = "콘텐츠 이벤트 게시판 전체조회 ",description ="콘텐츠 이벤트 게사판 전체 조회(페이징: 0페이지 부터 시작)")
+    @GetMapping("/brands/{brandId}/contents-events")
     public ApiResponse<List<ContentsResponseDto.ContentsDto>> allContentsEvents(@PathVariable("brandId")Long brandId,@RequestParam("page")Integer pageNumber){
         List<ContentsResponseDto.ContentsDto> contentsDtoList = contentsService.showAllContentsEvents(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), contentsDtoList);
     }
 
-    @Operation(summary = "콘텐츠 비디오 게시판 전체조회 ",description ="팬덤 컬체 게시물 전체 조회(페이징: 0페이지 부터 시작)")
-    @GetMapping("/brands/{brandId}/contents-video/all")
+    @Operation(summary = "콘텐츠 비디오 게시판 전체조회 ",description ="콘텐츠 비디오 게시판 전체 조회(페이징: 0페이지 부터 시작)")
+    @GetMapping("/brands/{brandId}/contents-videos")
     public ApiResponse<List<ContentsResponseDto.ContentsDto>> allContentsVideos(@PathVariable("brandId")Long brandId, @RequestParam("page")Integer pageNumber){
         List<ContentsResponseDto.ContentsDto> contentsDtoList = contentsService.showAllContentsVideos(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), contentsDtoList);

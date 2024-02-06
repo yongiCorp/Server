@@ -36,7 +36,7 @@ public class ContentsService {
             Contents targetContents = contentsList.get(i);
             List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(targetContents.getId());
             List<String> contentsUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
-            Member writer = memberRepository.findOneById(targetContents.getMember().getId());
+            Member writer = targetContents.getMember();
             ContentsResponseDto.ContentsDto dto = ContentsConverter.toContentsDto(targetContents,contentsUrlList,writer);
             contentsDtoList.add(dto);
         }
@@ -52,7 +52,7 @@ public class ContentsService {
             Contents targetContents = contentsList.get(i);
             List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(targetContents.getId());
             List<String> contentsUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
-            Member writer = memberRepository.findOneById(targetContents.getMember().getId());
+            Member writer = targetContents.getMember();
             ContentsResponseDto.ContentsDto dto = ContentsConverter.toContentsDto(targetContents,contentsUrlList,writer);
             contentsDtoList.add(dto);
         }
@@ -68,7 +68,7 @@ public class ContentsService {
             Contents targetContents = contentsList.get(i);
             List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(targetContents.getId());
             List<String> contentsUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
-            Member writer = memberRepository.findOneById(targetContents.getMember().getId());
+            Member writer = targetContents.getMember();
             ContentsResponseDto.ContentsDto dto = ContentsConverter.toContentsDto(targetContents,contentsUrlList,writer);
             contentsDtoList.add(dto);
         }

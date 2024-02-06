@@ -38,7 +38,7 @@ public class FandomService {
             Fandom targetFandom = fandomList.get(i);
             List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(targetFandom.getId());
             List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
-            Member writer = memberRepository.findOneById(targetFandom.getMember().getId());
+            Member writer = targetFandom.getMember();
             FandomResponseDto.FandomDto dto = FandomConverter.toFandomDto(targetFandom,fandomImageUrlList,writer);
             fandomDtoList.add(dto);
         }
@@ -55,7 +55,7 @@ public class FandomService {
             Fandom targetFandom = fandomList.get(i);
             List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(targetFandom.getId());
             List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
-            Member writer = memberRepository.findOneById(targetFandom.getMember().getId());
+            Member writer = targetFandom.getMember();
             FandomResponseDto.FandomDto dto = FandomConverter.toFandomDto(targetFandom,fandomImageUrlList,writer);
             fandomDtoList.add(dto);
         }
