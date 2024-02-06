@@ -1,5 +1,7 @@
 package com.brandol.service;
 
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.CommunityConverter;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.Community;
@@ -60,5 +62,15 @@ public class CommunityService {
             communityDtoList.add(dto);
         }
         return communityDtoList;
+    }
+
+    public CommunityResponseDto.CommunityDto showOneCommunityArticle(Long communityId){
+
+        Community community = communityRepository.findById(communityId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_COMMUNITY));
+        List<CommunityImage> communityImages = communityImageRepository.findAllByCommunityId(community.getId());
+        List<String>communityImageUrlList = communityImages.stream().map(CommunityImage::getImage).collect(Collectors.toList());
+        Member member = community.getMember();
+
+        return CommunityConverter.toContentsDto(community,communityImageUrlList,member);
     }
 }

@@ -36,4 +36,11 @@ public class CommunityController {
         List<CommunityResponseDto.CommunityDto> communityDtoList = communityService.showAllCommunityFeedBack(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), communityDtoList);
     }
+
+    @Operation(summary = "커뮤니티 게시글 조회 ",description ="커뮤니티 게시글 상세조회")
+    @GetMapping("/brands/communities/{communityId}")
+    public ApiResponse<CommunityResponseDto.CommunityDto> communityArticle(@PathVariable("communityId")Long communityId){
+        CommunityResponseDto.CommunityDto dto =communityService.showOneCommunityArticle(communityId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
 }
