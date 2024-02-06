@@ -55,11 +55,20 @@ public class ItemService {
         wearingMyItemList.forEach(myItem -> {myItem.updateIsWearing(true);});
 
         if (request.getAvatarImage() != null && !request.getAvatarImage().isEmpty()) {
+            // 이전 아바타 파일 삭제
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+            String existingMemberAvatar = member.getAvatar();
+            if (existingMemberAvatar != null && !existingMemberAvatar.isEmpty()) {
+                String existingAvatarFileName = s3Manager.getKeyNameFromUrl(existingMemberAvatar);
+                s3Manager.deleteFile("avatar/" + existingAvatarFileName);
+            }
+
+            // 새로운 아바타 파일 업로드
             String avatar = request.getAvatarImage().getOriginalFilename();
             String avatarUUID = s3Manager.generateAvatarKeyName(avatar);
             String avatarURL = s3Manager.uploadFile(avatarUUID, request.getAvatarImage());
 
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+            // 해당 회원의 아바타 수정
             member.updateAvatar(avatarURL);
             return "아바타 저장 완료";
         } else {

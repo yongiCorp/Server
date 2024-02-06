@@ -3,6 +3,8 @@ package com.brandol.aws;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.config.AmazonConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +52,15 @@ public class AmazonS3Manager {
 
     public String generateAvatarKeyName(String filename) {
         return "avatar/" + createFileName(filename);
+    }
+
+    // url 에서 파일 이름 추출
+    public String getKeyNameFromUrl(String url) {
+        int lastSlashIndex = url.lastIndexOf("/");
+        if (lastSlashIndex != -1 && lastSlashIndex < url.length() - 1) {
+            return url.substring(lastSlashIndex + 1);
+        } else {
+            throw new ErrorHandler(ErrorStatus._FILE_NAME_ERROR);
+        }
     }
 }
