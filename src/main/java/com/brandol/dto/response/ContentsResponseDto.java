@@ -19,6 +19,7 @@ public class ContentsResponseDto {
         private String title;
         private String content;
         private List<String> images;
+        private String file;
         private int likeCount;
         private int commentCount;
         private LocalDateTime writtenDate;

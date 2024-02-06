@@ -43,4 +43,10 @@ public class ContentsController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), contentsDtoList);
     }
 
+    @Operation(summary = "콘텐츠 게시글 조회 ",description ="콘텐츠 게시글 상세조회")
+    @GetMapping("/brands/contents/{contentsId}")
+    public ApiResponse<ContentsResponseDto.ContentsDto> contentsArticle(@PathVariable("contentsId")Long contentsId){
+        ContentsResponseDto.ContentsDto dto = contentsService.showOneContentsArticle(contentsId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
 }

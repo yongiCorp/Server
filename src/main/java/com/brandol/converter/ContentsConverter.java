@@ -26,6 +26,7 @@ public class ContentsConverter {
                 .title(contents.getTitle())
                 .content(contents.getContent())
                 .images(contentsImages)
+                .file(contents.getFile())
                 .likeCount(contents.getLikes())
                 .commentCount(contents.getComments())
                 .writtenDate(contents.getCreatedAt())

@@ -1,10 +1,13 @@
 package com.brandol.service;
 
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.ContentsConverter;
 import com.brandol.domain.Contents;
 import com.brandol.domain.ContentsImage;
 import com.brandol.domain.Member;
 import com.brandol.dto.response.ContentsResponseDto;
+import com.brandol.dto.response.FandomResponseDto;
 import com.brandol.repository.ContentImageRepository;
 import com.brandol.repository.ContentsRepository;
 import com.brandol.repository.MemberRepository;
@@ -73,5 +76,15 @@ public class ContentsService {
             contentsDtoList.add(dto);
         }
         return  contentsDtoList;
+    }
+
+    public ContentsResponseDto.ContentsDto showOneContentsArticle(Long contentsId){
+
+        Contents contents = contentsRepository.findById(contentsId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS));
+        List<ContentsImage> contentsImages = contentImageRepository.findAllByContentsId(contents.getId());
+        List<String> contentsImageUrlList = contentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+        Member member = contents.getMember();
+
+        return ContentsConverter.toContentsDto(contents,contentsImageUrlList,member);
     }
 }
