@@ -1,5 +1,7 @@
 package com.brandol.service;
 
+import com.brandol.apiPayload.code.status.ErrorStatus;
+import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.FandomConverter;
 import com.brandol.domain.Fandom;
 import com.brandol.domain.FandomImage;
@@ -60,6 +62,14 @@ public class FandomService {
             fandomDtoList.add(dto);
         }
         return  fandomDtoList;
+    }
+
+    public FandomResponseDto.FandomDto showOneFandomArticle(Long fandomId){
+        Fandom fandom = fandomRepository.findById(fandomId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM));
+        List<FandomImage> fandomImages = fandomImageRepository.findFandomImages(fandom.getId());
+        List<String> fandomImageUrlList = fandomImages.stream().map(FandomImage::getImage).collect(Collectors.toList());
+        Member member = fandom.getMember();
+        return FandomConverter.toFandomDto(fandom,fandomImageUrlList,member);
     }
 
 }

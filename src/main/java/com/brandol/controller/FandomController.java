@@ -35,4 +35,11 @@ public class FandomController {
         List<FandomResponseDto.FandomDto> fandomDtoList = fandomService.showAllFandomAnnouncement(pageNumber,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), fandomDtoList);
     }
+
+    @Operation(summary = "팬덤 게시글 조회 ",description ="팬덤 게시글 상세조회")
+    @GetMapping("/brands/fandoms/{fandomId}")
+    public ApiResponse<FandomResponseDto.FandomDto> FandomArticle(@PathVariable("fandomId")Long fandomId){
+        FandomResponseDto.FandomDto dto = fandomService.showOneFandomArticle(fandomId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
 }
