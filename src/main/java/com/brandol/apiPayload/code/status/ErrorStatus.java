@@ -56,7 +56,7 @@ public enum ErrorStatus implements BaseCode {
 
     // 이용약관
     _TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS400", "이용약관이 존재하지 않습니다." ),
-    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
+    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
 
     private final HttpStatus httpStatus;
     private final String code;
