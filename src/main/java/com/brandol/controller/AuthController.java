@@ -8,7 +8,6 @@ import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,7 @@ public class AuthController {
     @Operation(summary = "로그인 API", description = "body에 사용자 이름, 이메일 넣어서 요청")
     public ApiResponse<TokenDto> login(@RequestBody AuthRequestDto.KakaoLoginRequest request){
         TokenDto tokenDto = authService.login(request);
-        return tokenDto == null ? ApiResponse.onFailure(ErrorStatus._NOT_EXIST_MEMBER.getCode(), ErrorStatus._NOT_EXIST_MEMBER.getMessage(), tokenDto) : ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), tokenDto);
+        return tokenDto == null ? ApiResponse.onFailure(ErrorStatus._MEMBER_SIGNUP_REQUIRED.getCode(), ErrorStatus._MEMBER_SIGNUP_REQUIRED.getMessage(), tokenDto) : ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), tokenDto);
     }
 
     @Operation(summary = "회원가입 API", description = "body에 약관 동의 항목 Id, 이메일, 닉네임, 성별, 나이 넣어서 요청")

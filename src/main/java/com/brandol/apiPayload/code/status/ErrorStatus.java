@@ -39,10 +39,8 @@ public enum ErrorStatus implements BaseCode {
     _CANNOT_LOAD_COMMUNITY(HttpStatus.NOT_FOUND,"COMMUNITY404","커뮤니티 조회에 실패하였습니다."),
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
-    _MEMBER_NOT_FOUND_SIGNUP(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
+    _MEMBER_SIGNUP_REQUIRED(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
     _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
-    _NOT_AGREE_TERMS(HttpStatus.BAD_REQUEST, "MEMBER403", "이용약관에 동의해주세요."),
-    _NOT_SET_PROFILE(HttpStatus.BAD_REQUEST, "MEMBER404", "프로필을 설정해주세요."),
 
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
@@ -59,7 +57,7 @@ public enum ErrorStatus implements BaseCode {
 
     // 이용약관
     _TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS400", "이용약관이 존재하지 않습니다." ),
-    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
+    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
 
     private final HttpStatus httpStatus;
     private final String code;
