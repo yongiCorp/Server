@@ -10,4 +10,7 @@ import java.util.List;
 public interface ContentsCommentRepository extends JpaRepository<ContentsComment,Long> {
     @Query("select cc from ContentsComment cc where cc.writer.id = :memberId")
     List<ContentsComment> findContentsCommentByMemberId(@Param("memberId")Long memberId);
+
+    @Query("select cc from ContentsComment cc where cc.parentId = :parentId order by cc.createdAt")
+    List<ContentsComment> findContentsCommentsByParentId(@Param("parentId")Long parentId);
 }

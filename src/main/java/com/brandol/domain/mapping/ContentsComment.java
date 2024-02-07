@@ -35,4 +35,8 @@ public class ContentsComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contents_id", nullable = false)
     private Contents contents;
+
+    public void addParentId(Long parentId){
+        this.parentId = parentId;
+    }
 }
