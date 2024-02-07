@@ -50,8 +50,9 @@ public class AmazonS3Manager {
         }
     }
 
+    // 아바타 파일 이름 생성
     public String generateAvatarKeyName(String filename) {
-        return "avatar/" + createFileName(filename);
+        return amazonConfig.getAvatarPath() + "/" + createFileName(filename);
     }
 
     // url 에서 파일 이름 추출

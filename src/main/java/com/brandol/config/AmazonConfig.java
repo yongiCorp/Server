@@ -20,10 +20,10 @@ public class AmazonConfig { //S3 연동 설정
 
     private AWSCredentials awsCredentials;
 
-    @Value("${cloud.aws.credentials.access-key}")
+    @Value("${cloud.aws.credentials.accesskey}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secret-key}")
+    @Value("${cloud.aws.credentials.secretKey}")
     private String secretKey;
 
     @Value("${cloud.aws.region.static}")
@@ -31,6 +31,9 @@ public class AmazonConfig { //S3 연동 설정
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${cloud.aws.s3.path.avatar}")
+    private String avatarPath;
 
 
     @PostConstruct
