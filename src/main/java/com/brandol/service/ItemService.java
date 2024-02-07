@@ -28,11 +28,7 @@ public class ItemService {
     private final AmazonS3Manager s3Manager;
 
     public List<MyItemResponseDto.MyItemDto> getMyItemList(Long memberId) {
-        //Member member = memberRepository.findById(userId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<MyItem> myItemList = myItemRepository.findALlByMemberId(memberId);
-        /*if (myItemList.isEmpty()) {
-            throw new ErrorHandler();
-        }*/
         List<MyItemResponseDto.MyItemDto> myItemDtoList = new ArrayList<>();
 
         for (MyItem myItem : myItemList) {
@@ -55,19 +51,17 @@ public class ItemService {
         wearingMyItemList.forEach(myItem -> {myItem.updateIsWearing(true);});
 
         if (request.getAvatarImage() != null && !request.getAvatarImage().isEmpty()) {
-            // 이전 아바타 파일 삭제
+            // 기존 아바타 파일 S3에서 삭제
             Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
             String existingMemberAvatar = member.getAvatar();
             if (existingMemberAvatar != null && !existingMemberAvatar.isEmpty()) {
-                String existingAvatarFileName = s3Manager.getKeyNameFromUrl(existingMemberAvatar);
-                s3Manager.deleteFile("avatar/" + existingAvatarFileName);
+                String existingAvatarFileName = s3Manager.getAvatarKeyName(existingMemberAvatar);
+                s3Manager.deleteFile(existingAvatarFileName);
             }
-
             // 새로운 아바타 파일 업로드
             String avatar = request.getAvatarImage().getOriginalFilename();
             String avatarUUID = s3Manager.generateAvatarKeyName(avatar);
             String avatarURL = s3Manager.uploadFile(avatarUUID, request.getAvatarImage());
-
             // 해당 회원의 아바타 수정
             member.updateAvatar(avatarURL);
             return "아바타 저장 완료";

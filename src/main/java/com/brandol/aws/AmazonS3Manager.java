@@ -50,7 +50,7 @@ public class AmazonS3Manager {
         }
     }
 
-    // 아바타 파일 이름 생성
+    // avatar/ 디렉토리에 아바타 파일 이름 생성
     public String generateAvatarKeyName(String filename) {
         return amazonConfig.getAvatarPath() + "/" + createFileName(filename);
     }
@@ -63,5 +63,10 @@ public class AmazonS3Manager {
         } else {
             throw new ErrorHandler(ErrorStatus._FILE_NAME_ERROR);
         }
+    }
+
+    // avatar/ 디렉토리의 아바타 파일 이름 추출
+    public String getAvatarKeyName(String filename) {
+        return amazonConfig.getAvatarPath() + "/" + getKeyNameFromUrl(filename);
     }
 }
