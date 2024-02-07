@@ -72,4 +72,9 @@ public class Member extends BaseEntity {
         this.avatar = avatar;
         this.signUp = true;
     }
+
+    public void updateAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
 }

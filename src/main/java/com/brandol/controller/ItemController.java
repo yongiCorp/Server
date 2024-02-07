@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,10 +32,10 @@ public class ItemController {
     }
 
     @Operation(summary = "아이템 착용",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용")
-    @PatchMapping("/myitems/wear")
-    public ApiResponse<String> wearMyItem(@RequestBody MyItemRequestDto.wearMyItemDto request, Authentication authentication) {
+    @PatchMapping(value = "/myitems/wear", consumes = "multipart/form-data")
+    public ApiResponse<String> wearMyItem(@ModelAttribute MyItemRequestDto.wearMyItemDto request, Authentication authentication) {
         Long memberId = Long.parseLong(authentication.getName());
         String wearMyItem = itemService.toWearMyItem(memberId, request);
-        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), wearMyItem);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), wearMyItem);
     }
 }
