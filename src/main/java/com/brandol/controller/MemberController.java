@@ -44,6 +44,12 @@ public class MemberController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
 
+    @Operation(summary = "타 멤버의 아바타 및 닉네임 조회")
+    @GetMapping("/users/{memberId}/avatar")
+    public ApiResponse<MemberResponseDto.MemberAvatarDto> getMemberAvatarNickname(@PathVariable("memberId") Long memberId) {
+        MemberResponseDto.MemberAvatarDto memberAvatarDto = memberService.getMemberAvatarNickname(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarDto);
+    }
 
 
 }
