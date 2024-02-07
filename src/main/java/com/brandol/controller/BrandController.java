@@ -67,9 +67,9 @@ public class BrandController {
     @PostMapping(value = "/brands/{brandId}/community/new",consumes = "multipart/form-data")
     public ApiResponse<String> crateBrandCommunity(@ModelAttribute BrandRequestDto.addCommunity communityDto,
                                                    @PathVariable("brandId")Long brandId,
-                                                   Authentication authentication
+                                                   @RequestParam("memberId") Long memberID
                                                    ){
-        Long memberId = Long.parseLong(authentication.getName());
+        Long memberId = memberID;
         Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
     }

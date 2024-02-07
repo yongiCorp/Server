@@ -15,4 +15,7 @@ public interface FandomRepository extends JpaRepository<Fandom,Long> {
 
     @Query("select f from Fandom f where f.brand.id= :brandId and f.fandomType = com.brandol.domain.enums.FandomType.ANNOUNCEMENT order by f.createdAt desc ")
     List<Fandom> getSomeRecentFandomNotices(@Param("brandId")Long brandId, Pageable pageable);
+
+    @Query("select f from  Fandom f where f.brand.id = :brandId and f.fandomType = com.brandol.domain.enums.FandomType.CULTURE")
+    List<Fandom> getFandomCulturesByBrandId(@Param("brandId")Long brandId,Pageable pageable);
 }
