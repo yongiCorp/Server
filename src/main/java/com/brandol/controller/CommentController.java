@@ -42,5 +42,4 @@ public class CommentController {
         return  ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"CommunityCommentId: "+ commentId);
     }
 
-
 }
