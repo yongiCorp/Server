@@ -28,4 +28,8 @@ public class MemberMission {
 
     @Enumerated(EnumType.STRING)
     private MissionStatus missionStatus;
+
+    public void changeStatus(MissionStatus missionStatus) {
+        this.missionStatus = missionStatus;
+    }
 }

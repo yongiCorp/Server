@@ -48,4 +48,7 @@ public class AmazonS3Manager {
         }
     }
 
+    public String generateAvatarKeyName(String filename) {
+        return "avatar/" + createFileName(filename);
+    }
 }
