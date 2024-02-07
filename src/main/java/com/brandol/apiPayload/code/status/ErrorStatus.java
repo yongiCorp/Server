@@ -52,7 +52,7 @@ public enum ErrorStatus implements BaseCode {
 
     //파일
     _FILE_NAME_ERROR(HttpStatus.BAD_REQUEST,"FILE400","잘못된 파일 형식명입니다."),
-    _FILE_AVATAR_INVALID(HttpStatus.BAD_REQUEST,"FILE401","저장할 아바타 파일을 입력하세요."),
+    _FILE_AVATAR_INVALID(HttpStatus.BAD_REQUEST,"FILE401","저장할 아바타 파일이 없습니다."),
 
     // 아이템
     _NOT_EXIST_MY_ITEM(HttpStatus.NOT_FOUND,"MYITEM400","내 아이템이 존재하지 않습니다."),

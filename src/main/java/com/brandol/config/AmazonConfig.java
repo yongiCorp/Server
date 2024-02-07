@@ -32,6 +32,9 @@ public class AmazonConfig { //S3 연동 설정
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.s3.path.avatar}")
+    private String avatarPath;
+
 
     @PostConstruct
     public void init() {
