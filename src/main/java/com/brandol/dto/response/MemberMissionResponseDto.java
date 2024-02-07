@@ -42,4 +42,13 @@ public class MemberMissionResponseDto {
         private Long brandId;
     }
 
+    @Builder
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MissionChallengeDto {
+        private Long Id;
+    }
+
+
 }

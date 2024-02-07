@@ -44,6 +44,9 @@ public enum ErrorStatus implements BaseCode {
     _NOT_AGREE_TERMS(HttpStatus.BAD_REQUEST, "MEMBER403", "이용약관에 동의해주세요."),
     _NOT_SET_PROFILE(HttpStatus.BAD_REQUEST, "MEMBER404", "프로필을 설정해주세요."),
 
+    //미션
+    _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
+
     //DB
     _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),
 
