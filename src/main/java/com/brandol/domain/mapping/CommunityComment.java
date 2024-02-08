@@ -35,4 +35,8 @@ public class CommunityComment extends BaseEntity {
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
 
+    public void addParentId(Long parentId){
+        this.parentId = parentId;
+    }
+
 }

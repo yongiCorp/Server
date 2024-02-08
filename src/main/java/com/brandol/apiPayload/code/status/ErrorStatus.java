@@ -37,6 +37,8 @@ public enum ErrorStatus implements BaseCode {
     _CANNOT_LOAD_CONTENTS(HttpStatus.NOT_FOUND,"CONTENTS404","콘텐츠 조회에 실패하였습니다."),
     // 커뮤니티
     _CANNOT_LOAD_COMMUNITY(HttpStatus.NOT_FOUND,"COMMUNITY404","커뮤니티 조회에 실패하였습니다."),
+    // 댓글
+    _NOT_EXIST_COMMENT(HttpStatus.NOT_FOUND,"COMMENT404","존재하지 않는 댓글입니다."),
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
     _MEMBER_SIGNUP_REQUIRED(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),

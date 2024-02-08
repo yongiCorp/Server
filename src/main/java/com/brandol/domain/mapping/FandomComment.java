@@ -36,4 +36,8 @@ public class FandomComment extends BaseEntity {
     @JoinColumn(name="fandom_id", nullable = false)
     private Fandom fandom;
 
+    public void addParentId(Long parentId){
+        this.parentId = parentId;
+    }
+
 }

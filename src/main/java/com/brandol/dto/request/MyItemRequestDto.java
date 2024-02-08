@@ -1,6 +1,5 @@
 package com.brandol.dto.request;
 
-import com.brandol.validation.annotation.ValidateFile;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
