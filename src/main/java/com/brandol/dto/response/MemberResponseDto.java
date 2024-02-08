@@ -77,7 +77,7 @@ public class MemberResponseDto {
 
     @Builder
     @Getter
-    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED) // 빨간줄 떠서 내가 수정함 Required -> No by 종.
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class MemberAvatarDto {
         private Long memberId;

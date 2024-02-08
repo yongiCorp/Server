@@ -35,5 +35,4 @@ public class MemberController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarDto);
     }
 
-
 }
