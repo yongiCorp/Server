@@ -19,4 +19,22 @@ public class AvatarResponseDto {
         private String profileImage;
         private Long sequence;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberAvatarItemDto {
+        private Long myItemId;
+        private Long itemId;
+        private Long brandId;
+        private String brandName;
+        private String itemName;
+        private boolean isWearing;
+        private String part;
+        private String description;
+        private String image;
+        private int price;
+        private LocalDateTime createdAt;
+    }
 }

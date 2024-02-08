@@ -42,4 +42,22 @@ public class AvatarConverter {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public static List<AvatarResponseDto.MemberAvatarItemDto> toMemberAvatarItemListDto(List<MyItem> memberAvatarItems) {
+        return memberAvatarItems.stream()
+                .map(memberAvatarItem -> AvatarResponseDto.MemberAvatarItemDto.builder()
+                        .myItemId(memberAvatarItem.getId())
+                        .itemId(memberAvatarItem.getItems().getId())
+                        .brandId(memberAvatarItem.getItems().getBrand().getId())
+                        .brandName(memberAvatarItem.getItems().getBrand().getName())
+                        .itemName(memberAvatarItem.getItems().getName())
+                        .isWearing(memberAvatarItem.getIsWearing())
+                        .part(memberAvatarItem.getItems().getItemPart().toString())
+                        .description(memberAvatarItem.getItems().getDescription())
+                        .image(memberAvatarItem.getItems().getImage())
+                        .price(memberAvatarItem.getItems().getPrice())
+                        .createdAt(memberAvatarItem.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

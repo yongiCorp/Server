@@ -5,6 +5,7 @@ import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.AvatarConverter;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberBrandList;
+import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.repository.MemberBrandRepository;
 import com.brandol.repository.MemberRepository;
@@ -28,5 +29,11 @@ public class AvatarService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<MemberBrandList> otherMemberBrandLists = memberBrandRepository.findAllSubscribedByMemberId(memberId);
         return AvatarConverter.toOtherMemberBrandListDto(otherMemberBrandLists);
+    }
+
+    public List<AvatarResponseDto.MemberAvatarItemDto> getMemberAvatarItem(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        List<MyItem> memberAvatarItems = myItemRepository.findALlByMemberIdAndIsWearing(memberId, true);
+        return AvatarConverter.toMemberAvatarItemListDto(memberAvatarItems);
     }
 }

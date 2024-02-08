@@ -46,4 +46,12 @@ public class ItemController {
         List<AvatarResponseDto.OtherMemberBrandListDto> otherMemberBrandListDto = avatarService.getOtherMemberBrandList(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), otherMemberBrandListDto);
     }
+
+    @Operation(summary = "타 회원의 아바타가 착용한 아이템 조회",description ="유저 프로필 클릭 혹은 유저 검색 시 해당 아바타의 착용 아이템 조회")
+    @GetMapping("/{memberId}/items")
+    public ApiResponse<List<AvatarResponseDto.MemberAvatarItemDto>> getMemberAvatarItem(@PathVariable("memberId") Long memberId) {
+        List<AvatarResponseDto.MemberAvatarItemDto> memberAvatarItemListDto = avatarService.getMemberAvatarItem(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarItemListDto);
+    }
+
 }
