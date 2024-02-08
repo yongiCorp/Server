@@ -56,8 +56,7 @@ public class MemberResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
-        private String articleType;
-        private Long id;
+        private String articleInfo;
         private String title;
         private String content;
         private List<String> images;
