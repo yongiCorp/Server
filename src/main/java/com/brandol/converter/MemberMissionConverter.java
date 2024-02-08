@@ -40,4 +40,11 @@ public class MemberMissionConverter {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public static MemberMissionResponseDto.MissionChallengeDto toMissionChallengeDto(MemberMission memberMission, Boolean result) {
+        return MemberMissionResponseDto.MissionChallengeDto.builder()
+                .Id(memberMission.getId())
+                .missionSuccess(result)
+                .build();
+    }
 }

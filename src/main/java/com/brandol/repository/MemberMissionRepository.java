@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
     @Query("select m from MemberMission m join fetch m.mission where m.member.id = :memberId")
@@ -16,5 +17,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
 
     @Query("select m from MemberMission m join fetch m.mission where m.member.id = :memberId and m.mission.missionType = :type")
     List<MemberMission> findAddMissionByMemberId(@Param("memberId") Long memberId, @Param("type") MissionType type);
+
+    Optional<MemberMission> findByMemberIdAndMissionId(Long memberId, Long missionId);
 
 }
