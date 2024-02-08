@@ -71,10 +71,27 @@ public class CommentController {
 
     @Operation(summary = "팬덤 게시글 댓글 전체 조회",description ="해당 팬덤 게시글의 댓글 전체 조회" )
     @Parameter(name = "fandomId",description = "대상 팬덤게시글의 id")
-    @GetMapping("fandom/{fandomId}/comments")
+    @GetMapping("fandoms/{fandomId}/comments/all")
     public ApiResponse<List<CommentResponseDto.CommentPackageDto>> showAllFandomComments(@PathVariable("fandomId")Long fandomId){
         List<CommentResponseDto.CommentPackageDto> dto = commentService.showAllFandomComment(fandomId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
+
+    @Operation(summary = "콘텐츠 게시글 댓글 전체 조회",description ="해당 콘텐츠 게시글의 댓글 전체 조회" )
+    @Parameter(name = "contentsId",description = "대상 콘텐츠 게시글의 id")
+    @GetMapping("contents/{contentsId}/comments/all")
+    public ApiResponse<List<CommentResponseDto.CommentPackageDto>> showAllContentsComments(@PathVariable("contentsId")Long contentsId){
+        List<CommentResponseDto.CommentPackageDto> dto = commentService.showAllContentsComment(contentsId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
+    @Operation(summary = "커뮤니티 게시글 댓글 전체 조회",description ="해당 커뮤니티 게시글의 댓글 전체 조회" )
+    @Parameter(name = "communityId",description = "대상 커뮤니티 게시글의 id")
+    @GetMapping("communities/{communityId}/comments/all")
+    public ApiResponse<List<CommentResponseDto.CommentPackageDto>> showAllCommunityComments(@PathVariable("communityId")Long communityId){
+        List<CommentResponseDto.CommentPackageDto> dto = commentService.showAllCommunityComment(communityId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
 
 }

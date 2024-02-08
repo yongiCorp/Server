@@ -26,7 +26,6 @@ public class CommentResponseDto {
         public Long commentId;
         public Long parentId;
         public Long depth;
-        public Long articleId;
         public Long writerId;
         public String writerName;
         public String writerProfile;

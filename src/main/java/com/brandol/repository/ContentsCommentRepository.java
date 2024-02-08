@@ -13,4 +13,7 @@ public interface ContentsCommentRepository extends JpaRepository<ContentsComment
 
     @Query("select cc from ContentsComment cc where cc.parentId = :parentId order by cc.createdAt")
     List<ContentsComment> findContentsCommentsByParentId(@Param("parentId")Long parentId);
+
+    @Query("select cc from ContentsComment cc where cc.contents.id = :contentsId order by cc.createdAt asc ")
+    List<ContentsComment> findAllByContentsId(@Param("contentsId")Long contentsId);
 }
