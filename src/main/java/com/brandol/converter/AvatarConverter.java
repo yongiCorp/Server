@@ -1,14 +1,19 @@
 package com.brandol.converter;
+import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MyItem;
+import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ItemConverter {
+public class AvatarConverter {
     public static MyItemResponseDto.MyItemDto toMyItemResDTO(MyItem myItem) {
 
         return MyItemResponseDto.MyItemDto.builder()
@@ -24,5 +29,17 @@ public class ItemConverter {
                 .price(myItem.getItems().getPrice())
                 .createdAt(myItem.getCreatedAt())
                 .build();
+    }
+
+    public static List<AvatarResponseDto.OtherMemberBrandListDto> toOtherMemberBrandListDto(List<MemberBrandList> otherMemberBrandLists) {
+        return otherMemberBrandLists.stream()
+                .map(memberBrandList -> AvatarResponseDto.OtherMemberBrandListDto.builder()
+                        .brandId(memberBrandList.getBrand().getId())
+                        .brandName(memberBrandList.getBrand().getName())
+                        .description(memberBrandList.getBrand().getDescription())
+                        .profileImage(memberBrandList.getBrand().getProfileImage())
+                        .sequence(memberBrandList.getSequence())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
