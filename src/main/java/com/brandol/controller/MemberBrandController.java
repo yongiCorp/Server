@@ -35,7 +35,7 @@ public class MemberBrandController {
     public ApiResponse<String> addMemberBrandList(@PathVariable("brandId")Long brandId, Authentication authentication){
         Long memberId = Long.parseLong(authentication.getName());
         memberService.addMemberBrandList(memberId, brandId);
-        memberMissionService.checkAddMission(memberId);
+        //memberMissionService.checkAddMission(memberId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), null);
     }
 
