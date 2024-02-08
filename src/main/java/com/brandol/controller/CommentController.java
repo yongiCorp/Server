@@ -3,6 +3,7 @@ package com.brandol.controller;
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.dto.request.CommentRequestDto;
+import com.brandol.dto.response.CommentResponseDto;
 import com.brandol.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,5 +69,12 @@ public class CommentController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"CommunityCommentId: "+ nestedCommentId);
     }
 
+    @Operation(summary = "팬덤 게시글 댓글 전체 조회",description ="해당 팬덤 게시글의 댓글 전체 조회" )
+    @Parameter(name = "fandomId",description = "대상 팬덤게시글의 id")
+    @GetMapping("fandom/{fandomId}/comments")
+    public ApiResponse<List<CommentResponseDto.CommentPackageDto>> showAllFandomComments(@PathVariable("fandomId")Long fandomId){
+        List<CommentResponseDto.CommentPackageDto> dto = commentService.showAllFandomComment(fandomId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
 
 }
