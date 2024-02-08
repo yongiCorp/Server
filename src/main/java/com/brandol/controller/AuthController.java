@@ -47,4 +47,13 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), "test");
     }
 
+    // 회원 탈퇴
+    @Operation(summary = "회원 탈퇴 API", description = "현재 로그인한 사용자 탈퇴 처리")
+    @PatchMapping("/status")
+    public ApiResponse<String> inactivateMember(Authentication authentication) {
+        Long memberId = Long.parseLong(authentication.getName());
+        String inactivateMember = authService.inactivateMember(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), inactivateMember);
+    }
+
 }
