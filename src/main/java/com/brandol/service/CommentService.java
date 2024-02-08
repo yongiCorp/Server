@@ -98,9 +98,7 @@ public class CommentService {
 
         Fandom fandom = fandomRepository.findById(fandomId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM)); // 댓글이 게시될 팬덤 게시판
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER)); // 댓글 작성자
-        List<FandomComment> fandomCommentList = fandomCommentRepository.findFandomCommentsByParentId(commentId);
-        if(fandomCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
-
+        fandomCommentRepository.findById(commentId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT)); //commentId 존재여부 확인
         FandomComment fandomComment = FandomComment.builder()
                 .parentId(commentId)
                 .depth(1L) // 대댓글 Depth:1
@@ -120,8 +118,7 @@ public class CommentService {
 
         Contents contents = contentsRepository.findById(contentsId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS));
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
-        List<ContentsComment> contentsCommentList = contentsCommentRepository.findContentsCommentsByParentId(commentId);
-        if(contentsCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
+        contentsCommentRepository.findById(commentId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT)); //commentId 존재여부 확인
 
         ContentsComment contentsComment = ContentsComment.builder()
                 .parentId(commentId)
@@ -141,8 +138,7 @@ public class CommentService {
 
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_COMMUNITY));
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
-        List<CommunityComment> communityCommentList = communityCommentRepository.findCommunityCommentsByParentId(commentId);
-        if(communityCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
+        communityCommentRepository.findById(commentId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT)); //commentId 존재여부 확인
 
         CommunityComment communityComment = CommunityComment.builder()
                 .parentId(commentId)
