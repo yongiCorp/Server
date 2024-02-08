@@ -74,4 +74,15 @@ public class MemberResponseDto {
         private Integer totalArticleCount;
         private List<MemberWrittenDto> memberWrittenDtoList;
     }
+
+    @Builder
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberAvatarDto {
+        private Long memberId;
+        private String avatar;
+        private String nickname;
+    }
+
 }

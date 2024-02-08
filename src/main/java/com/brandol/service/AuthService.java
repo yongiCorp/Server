@@ -10,6 +10,7 @@ import com.brandol.domain.Member;
 import com.brandol.domain.Term;
 import com.brandol.domain.enums.Gender;
 import com.brandol.domain.enums.TermType;
+import com.brandol.domain.enums.UserStatus;
 import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.repository.AgreementRepository;
@@ -101,5 +102,14 @@ public class AuthService {
             member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%93%9C+%ED%94%84%EB%A1%9C%ED%95%84.png");
         }
         return member;
+    }
+
+    // 회원 탈퇴
+    @Transactional
+    public String inactivateMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        System.out.println("탈퇴할 회원id: "+member.getId() + member.getEmail());
+        member.inactivate(UserStatus.INACTIVE);
+        return "탈퇴 성공";
     }
 }

@@ -234,4 +234,11 @@ public class MemberService {
         }
         return null;
     }
+
+    // 멤버의 아바타 및 닉네임 조회
+    public MemberResponseDto.MemberAvatarDto getMemberAvatarNickname(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        return MemberConverter.toMemberAvatarDto(member);
+    }
+
 }
