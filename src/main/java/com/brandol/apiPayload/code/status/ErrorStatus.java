@@ -41,24 +41,25 @@ public enum ErrorStatus implements BaseCode {
     _NOT_EXIST_COMMENT(HttpStatus.NOT_FOUND,"COMMENT404","존재하지 않는 댓글입니다."),
     //유저
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
-    _MEMBER_NOT_FOUND_SIGNUP(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
+    _MEMBER_SIGNUP_REQUIRED(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
     _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
-    _NOT_AGREE_TERMS(HttpStatus.BAD_REQUEST, "MEMBER403", "이용약관에 동의해주세요."),
-    _NOT_SET_PROFILE(HttpStatus.BAD_REQUEST, "MEMBER404", "프로필을 설정해주세요."),
+
+    //미션
+    _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
 
     //DB
     _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),
 
     //파일
     _FILE_NAME_ERROR(HttpStatus.BAD_REQUEST,"FILE400","잘못된 파일 형식명입니다."),
-    _FILE_AVATAR_INVALID(HttpStatus.BAD_REQUEST,"FILE401","저장할 아바타 파일을 입력하세요."),
+    _FILE_AVATAR_INVALID(HttpStatus.BAD_REQUEST,"FILE401","저장할 아바타 파일이 없습니다."),
 
     // 아이템
     _NOT_EXIST_MY_ITEM(HttpStatus.NOT_FOUND,"MYITEM400","내 아이템이 존재하지 않습니다."),
 
     // 이용약관
     _TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS400", "이용약관이 존재하지 않습니다." ),
-    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
+    _MANDATORY_AGREEMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "TERMS401", "필수 이용약관에 동의하지 않았습니다." );
 
     private final HttpStatus httpStatus;
     private final String code;

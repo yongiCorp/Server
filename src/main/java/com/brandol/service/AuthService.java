@@ -9,6 +9,7 @@ import com.brandol.converter.MemberConverter;
 import com.brandol.domain.Member;
 import com.brandol.domain.Term;
 import com.brandol.domain.enums.Gender;
+import com.brandol.domain.enums.TermType;
 import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.repository.AgreementRepository;
@@ -71,12 +72,18 @@ public class AuthService {
     @Transactional
     public AuthResponseDto.AgreeTermsDto agreeTerms(AuthRequestDto.SignUpDto request) { // email, termsIdList
         Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        // 필수 약관 동의 체크
+        List<Term> mandatoryTerms = termRepository.findByTermType(TermType.MANDATORY);
+        for (Term mandatoryTerm : mandatoryTerms) {
+            if (!request.getTermsIdList().contains(mandatoryTerm.getId())) {
+                throw new ErrorHandler(ErrorStatus._MANDATORY_AGREEMENT_NOT_FOUND);
+            }
+        }
+        // 회원이 동의한 이용약관 저장
         List<Term> termList = request.getTermsIdList().stream()
-                .map(termId -> {
-                    return termRepository.findById(termId).orElseThrow(() -> new ErrorHandler(ErrorStatus._TERM_NOT_FOUND));
+                .map(termId -> { return termRepository.findById(termId).orElseThrow(() -> new ErrorHandler(ErrorStatus._TERM_NOT_FOUND));// 존재하지 않는 이용약관 id일 때 예외처리
                 }).collect(Collectors.toList());
 
-        // 회원이 동의한 이용약관 저장
         termList.stream()
                 .map(term -> AgreementConverter.toAgreement(member, term))
                 .forEach(agreementRepository::save);
