@@ -42,4 +42,5 @@ public class Contents extends BaseEntity {
     public void addFile(String fileURL){
         this.file = fileURL;
     }
+    public void updateComments(int number){this.comments=number;}
 }

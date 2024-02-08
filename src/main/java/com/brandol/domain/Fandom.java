@@ -45,4 +45,5 @@ public class Fandom extends BaseEntity {
     public void AddBrand(Brand brand){
         this.brand=brand;
     }
+    public void updateComments(int number){this.comments=number;}
 }

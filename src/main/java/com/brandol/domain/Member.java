@@ -77,4 +77,8 @@ public class Member extends BaseEntity {
         this.avatar = avatar;
     }
 
+    public void inactivate(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
 }

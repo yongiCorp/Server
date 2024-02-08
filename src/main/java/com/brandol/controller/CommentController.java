@@ -18,7 +18,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "팬덤 작성 댓글 작성",description ="멤버가 팬덤 게시판 게시글에 댓글을 생성" )
+    @Operation(summary = "팬덤 댓글 작성",description ="멤버가 팬덤 게시판 게시글에 댓글을 생성" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("fandom/{fandom_id}/comments/new")
     public ApiResponse<String> addNewFandomComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("fandom_id")Long fandomId, @RequestParam("memberId")Long memberId){
@@ -26,7 +26,7 @@ public class CommentController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"FandomCommentId: "+ commentId);
     }
 
-    @Operation(summary = "콘텐츠 작성 댓글 작성",description ="멤버가 콘텐츠 게시판 게시글에 댓글을 생성" )
+    @Operation(summary = "콘텐츠 댓글 작성",description ="멤버가 콘텐츠 게시판 게시글에 댓글을 생성" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("contents/{contents_id}/comments/new")
     public ApiResponse<String> addNewContentsComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("contents_id")Long contentsId, @RequestParam("memberId")Long memberId){
@@ -34,12 +34,37 @@ public class CommentController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"ContentsCommentId: "+ commentId);
     }
 
-    @Operation(summary = "커뮤니티 작성 댓글 작성",description ="멤버가 커뮤니티 게시판 게시글에 댓글을 생성" )
+    @Operation(summary = "커뮤니티 댓글 작성",description ="멤버가 커뮤니티 게시판 게시글에 댓글을 생성" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("communities/{community_id}/comments/new")
     public ApiResponse<String> addNewCommunityComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("community_id")Long communityId,@RequestParam("memberId")Long memberId){
         Long commentId = commentService.createCommunityComment(dto,communityId,memberId);
         return  ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"CommunityCommentId: "+ commentId);
     }
+
+    @Operation(summary = "팬덤 대댓글 작성",description ="멤버가 팬덤 게시판 게시글에 대댓글을 생성" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("fandom/{fandom_id}/comments/{commentId}")
+    public ApiResponse<String> addNewFandomNestedComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("fandom_id")Long fandomId, @RequestParam("memberId")Long memberId,@RequestParam("commentId")Long commentId){
+        Long  nestedCommentId = commentService.createFandomNestedComment(dto,fandomId,commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"FandomCommentId: "+ nestedCommentId);
+    }
+
+    @Operation(summary = "콘텐츠 대댓글 작성",description ="멤버가 콘텐츠 게시판 게시글에 대댓글을 생성" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("contents/{contents_id}/comments/{commentId}")
+    public ApiResponse<String> addNewContentsNestedComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("contents_id")Long contentsId, @RequestParam("memberId")Long memberId,@RequestParam("commentId")Long commentId){
+        Long  nestedCommentId = commentService.createContentsNestedComment(dto,contentsId,commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"ContentsCommentId: "+ nestedCommentId);
+    }
+
+    @Operation(summary = "커뮤니티 대댓글 작성",description ="멤버가 커뮤니티 게시판 게시글에 대댓글을 생성" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("communities/{community_id}/comments/{commentId}")
+    public ApiResponse<String> addNewCommunityNestedComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("community_id")Long communityId, @RequestParam("memberId")Long memberId,@RequestParam("commentId")Long commentId){
+        Long  nestedCommentId = commentService.createCommunityNestedComment(dto,communityId,commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"CommunityCommentId: "+ nestedCommentId);
+    }
+
 
 }

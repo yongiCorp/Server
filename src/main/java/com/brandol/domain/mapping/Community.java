@@ -41,4 +41,6 @@ public class Community extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
+
+    public void updateComments(int number){this.comments=number;}
 }
