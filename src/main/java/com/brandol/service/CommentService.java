@@ -99,16 +99,11 @@ public class CommentService {
         Fandom fandom = fandomRepository.findById(fandomId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM)); // 댓글이 게시될 팬덤 게시판
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER)); // 댓글 작성자
         List<FandomComment> fandomCommentList = fandomCommentRepository.findFandomCommentsByParentId(commentId);
-        if(fandomCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);}
-        Long lastDepth = fandomCommentList.stream().max(Comparator.comparingLong(FandomComment::getDepth)).get().getDepth(); // 마지막 depth 찾기
-
-        if (lastDepth == 0) { // 대댓글 Depth:1
-            lastDepth++;
-        }
+        if(fandomCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
 
         FandomComment fandomComment = FandomComment.builder()
                 .parentId(commentId)
-                .depth(lastDepth)
+                .depth(1L) // 대댓글 Depth:1
                 .content(dto.getContent())
                 .isDeleted(false)
                 .writer(member)
@@ -126,16 +121,11 @@ public class CommentService {
         Contents contents = contentsRepository.findById(contentsId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS));
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<ContentsComment> contentsCommentList = contentsCommentRepository.findContentsCommentsByParentId(commentId);
-        if(contentsCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);}
-        Long lastDepth = contentsCommentList.stream().max(Comparator.comparingLong(ContentsComment::getDepth)).get().getDepth();
-
-        if(lastDepth == 0){ // 대댓글 Depth:1
-            lastDepth++;
-        }
+        if(contentsCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
 
         ContentsComment contentsComment = ContentsComment.builder()
                 .parentId(commentId)
-                .depth(lastDepth)
+                .depth(1L) // 대댓글 Depth:1
                 .content(dto.getContent())
                 .isDeleted(false)
                 .writer(member)
@@ -152,16 +142,11 @@ public class CommentService {
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_COMMUNITY));
         Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<CommunityComment> communityCommentList = communityCommentRepository.findCommunityCommentsByParentId(commentId);
-        if(communityCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);}
-        Long lastDepth = communityCommentList.stream().max(Comparator.comparingLong(CommunityComment::getDepth)).get().getDepth();
-
-        if(lastDepth == 0){ // 대댓글 Depth:1
-            lastDepth++;
-        }
+        if(communityCommentList.isEmpty()){throw new ErrorHandler(ErrorStatus._NOT_EXIST_COMMENT);} //commentId 존재여부 확인
 
         CommunityComment communityComment = CommunityComment.builder()
                 .parentId(commentId)
-                .depth(lastDepth)
+                .depth(1L)
                 .content(dto.getContent())
                 .isDeleted(false)
                 .writer(member)
