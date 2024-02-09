@@ -2,7 +2,9 @@ package com.brandol.controller;
 
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
+import com.brandol.config.security.PrincipalDetails;
 import com.brandol.converter.MemberMissionConverter;
+import com.brandol.domain.Member;
 import com.brandol.domain.mapping.MemberMission;
 import com.brandol.dto.response.MemberMissionResponseDto;
 import com.brandol.service.MemberMissionService;
@@ -30,8 +32,19 @@ public class MemberMissionController {
     @PostMapping("/users/missions/{missionId}")
     public ApiResponse<MemberMissionResponseDto.MissionChallengeDto> missionChallenge(Authentication authentication, @PathVariable("missionId")Long missionId) {
         Long memberId = Long.parseLong(authentication.getName());
+        Object details = authentication.getDetails();
+        System.out.println(details);
         MemberMission memberMission = memberMissionService.challengeMission(memberId, missionId);
         boolean result = memberMissionService.checkBrandMission(memberId, memberMission.getMission().getBrand().getId());
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),MemberMissionConverter.toMissionChallengeDto(memberMission, result));
+    }
+
+    @Operation(summary = "포인트 미션 성공")
+    @PostMapping("/users/missions/{missionId}/success")
+    public ApiResponse<?> missionSuccess(Authentication authentication, @PathVariable("missionId")Long missionId) {
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        Member member = principalDetails.getMember();
+        memberMissionService.successMission(member.getId(), missionId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),null);
     }
 }
