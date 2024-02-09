@@ -48,6 +48,7 @@ public class MemberMissionResponseDto {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class MissionChallengeDto {
         private Long Id;
+        private boolean missionSuccess;
     }
 
 

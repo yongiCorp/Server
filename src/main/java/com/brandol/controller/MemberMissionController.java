@@ -30,7 +30,8 @@ public class MemberMissionController {
     @PostMapping("/users/missions/{missionId}")
     public ApiResponse<MemberMissionResponseDto.MissionChallengeDto> missionChallenge(Authentication authentication, @PathVariable("missionId")Long missionId) {
         Long memberId = Long.parseLong(authentication.getName());
-        //MemberMissionResponseDto.MissionChallengeDto missionChallengeDto = memberMissionService.challengeMission(memberId, missionId);
-        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),null);//missionChallengeDto);
+        MemberMission memberMission = memberMissionService.challengeMission(memberId, missionId);
+        boolean result = memberMissionService.checkBrandMission(memberId, memberMission.getMission().getBrand().getId());
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),MemberMissionConverter.toMissionChallengeDto(memberMission, result));
     }
 }
