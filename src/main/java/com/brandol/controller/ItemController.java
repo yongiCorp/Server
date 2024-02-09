@@ -6,6 +6,7 @@ import com.brandol.dto.request.MyItemRequestDto;
 import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
 import com.brandol.service.AvatarService;
+import com.brandol.dto.response.ItemResponseDto;
 import com.brandol.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,5 +66,12 @@ public class ItemController {
     public ApiResponse<List<AvatarResponseDto.OtherMemberCommunityDto>> getOtherMemberCommunity(@PathVariable("memberId") Long memberId, @RequestParam(name = "page") Integer page) {
         List<AvatarResponseDto.OtherMemberCommunityDto> otherMemberCommunityListDto = avatarService.getOtherMemberCommunity(memberId, page);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), otherMemberCommunityListDto);
+    }
+
+    @Operation(summary = "아이템 정보 조회",description = "검색 페이지에서 특정 아이템 클릭 시, 피그마 기준 5페이지 d의 최상단에서 해당 아이템 정보 조회 ")
+    @GetMapping("/items/{itemId}")
+    public ApiResponse<ItemResponseDto.AvatarStoreBodyListDto> itemInfo(@PathVariable Long itemId, @RequestParam("itemPart")String itemPart) {
+        ItemResponseDto.AvatarStoreBodyListDto itemDto = itemService.makeAvatarStoreBodyPage(itemId, itemPart);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), itemDto);
     }
 }

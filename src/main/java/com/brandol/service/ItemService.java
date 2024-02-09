@@ -5,9 +5,13 @@ import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.aws.AmazonS3Manager;
 import com.brandol.converter.AvatarConverter;
 import com.brandol.domain.Member;
+import com.brandol.converter.ItemConverter;
+import com.brandol.domain.Items;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.MyItemRequestDto;
+import com.brandol.dto.response.ItemResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
+import com.brandol.repository.ItemsRepository;
 import com.brandol.repository.MemberRepository;
 import com.brandol.repository.MyItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +28,12 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final MyItemRepository myItemRepository;
+    private final ItemsRepository itemsRepository;
     private final MemberRepository memberRepository;
     private final AmazonS3Manager s3Manager;
 
     public List<MyItemResponseDto.MyItemDto> getMyItemList(Long memberId) {
+
         List<MyItem> myItemList = myItemRepository.findALlByMemberId(memberId);
         List<MyItemResponseDto.MyItemDto> myItemDtoList = new ArrayList<>();
 
@@ -68,5 +74,45 @@ public class ItemService {
         } else {
             throw new ErrorHandler(ErrorStatus._FILE_AVATAR_INVALID);
         }
+    }
+    public ItemResponseDto.AvatarStoreBodyListDto makeAvatarStoreBodyPage(Long itemId, String itemPart){
+
+
+
+
+
+        if(itemPart.equals("전체")){
+            // 전체 아바타 스토어 리스트
+            List<Items> total_item_List = itemsRepository.finditemByIdandRandom(itemId);
+
+            List<ItemResponseDto.AvatarStoreBodyDto> AvatarStore_Body_Total_DtoList = new ArrayList<>();
+            for(int i=0; i< total_item_List.size();i++){
+                ItemResponseDto.AvatarStoreBodyDto dto = ItemConverter.toItemResDTO(total_item_List.get(i));
+                AvatarStore_Body_Total_DtoList.add(dto);
+            }
+
+            return ItemConverter.toAvatarStoreBodyAllDto(AvatarStore_Body_Total_DtoList);
+        }
+
+
+
+
+
+
+
+        // 종류별 아바타 스토어 리스트
+        List<Items> itempart_item_List = itemsRepository.finditemPartByRandom(itemPart);
+
+
+        List<ItemResponseDto.AvatarStoreBodyDto> AvatarStore_Body_DtoList = new ArrayList<>();
+        for(int i=0; i< itempart_item_List.size();i++){
+            ItemResponseDto.AvatarStoreBodyDto dto = ItemConverter.toItemResDTO(itempart_item_List.get(i));
+            AvatarStore_Body_DtoList.add(dto);
+        }
+
+
+        return ItemConverter.toAvatarStoreBodyAllDto(AvatarStore_Body_DtoList);
+
+
     }
 }
