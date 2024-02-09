@@ -108,7 +108,7 @@ public class FandomService {
 
         List<FandomLikes> fandomLikesList = fandomLikesRepository.findAllByFandomIdAndMemberId(fandomId,memberId);
         if(fandomLikesList.size() > 1){throw  new ErrorHandler(ErrorStatus._DUPLICATE_DATABASE_ERROR);} // DB 예외 처리(중복 좋아요 조회가 발생한 경우)
-        if(fandomLikesList.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_LIKE);} // 팬덤라이크 엔티티가 존재하지 않는 경우
+        if(fandomLikesList.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_LIKES);} // 팬덤라이크 엔티티가 존재하지 않는 경우
         FandomLikes tagetFandomLikes = fandomLikesList.get(0);
         tagetFandomLikes.changeLikeStatus(LikeStatus.Cancel); // 더티 체킹 활용
         Fandom fandom = fandomRepository.findById(fandomId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM));

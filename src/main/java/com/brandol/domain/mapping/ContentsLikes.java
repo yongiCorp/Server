@@ -29,4 +29,8 @@ public class ContentsLikes extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="contents_id", nullable = false)
     private Contents contents;
+
+    public void changeLikeStatus(LikeStatus likeStatus){
+        this.likeStatus = likeStatus;
+    }
 }

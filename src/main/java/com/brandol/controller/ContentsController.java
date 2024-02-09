@@ -49,4 +49,18 @@ public class ContentsController {
         ContentsResponseDto.ContentsDto dto = contentsService.showOneContentsArticle(contentsId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
+
+    @Operation(summary = "콘텐츠 게시글 좋아요 등록",description ="콘텐츠 게시글 좋아요 등록")
+    @GetMapping("/brands/contents/{contentsId}/like")
+    public ApiResponse<String> FandomLike(@PathVariable("contentsId")Long contentsId,@RequestParam("memberId")Long memberId){
+        Long contentsLikesId = contentsService.contentsLike(contentsId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"ContentsLikesId: "+contentsLikesId);
+    }
+
+    @Operation(summary = "콘텐츠 게시글 좋아요 취소",description ="콘텐츠 게시글 좋아요 취소")
+    @GetMapping("/brands/contents/{contentsId}/like-cancel")
+    public ApiResponse<String> FandomLikeCancel(@PathVariable("contentsId")Long contentsId,@RequestParam("memberId")Long memberId){
+        Long contentsLikesId = contentsService.contentsLikeCancel(contentsId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"ContentsLikesId: "+contentsLikesId);
+    }
 }
