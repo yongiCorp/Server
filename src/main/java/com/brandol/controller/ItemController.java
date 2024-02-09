@@ -4,6 +4,7 @@ import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.MyItemRequestDto;
+import com.brandol.dto.response.ItemResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
 import com.brandol.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,5 +38,12 @@ public class ItemController {
         Long memberId = Long.parseLong(authentication.getName());
         String wearMyItem = itemService.toWearMyItem(memberId, request);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), wearMyItem);
+    }
+
+    @Operation(summary = "아이템 정보 조회",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용")
+    @GetMapping("/items/{itemId}")
+    public ApiResponse<ItemResponseDto.AvatarStoreBodyListDto> itemInfo(@PathVariable Long itemId, @RequestParam("itemPart")String itemPart) {
+        ItemResponseDto.AvatarStoreBodyListDto itemDto = itemService.makeAvatarStoreBodyPage(itemId, itemPart);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), itemDto);
     }
 }
