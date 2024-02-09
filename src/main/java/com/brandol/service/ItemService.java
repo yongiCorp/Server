@@ -45,12 +45,12 @@ public class ItemService {
     }
 
     @Transactional
-    public String toWearMyItem(Long memberId, MyItemRequestDto.wearMyItemDto request) {
+    public String toWearMyItem(Long memberId, MyItemRequestDto.wearItemsDto request) {
         List<MyItem> currentMyItemList = myItemRepository.findALlByMemberIdAndIsWearing(memberId, true);
-        List<MyItem> wearingMyItemList = request.getWearingMyItemIdList().stream()
-                .map(myItemId -> myItemRepository.findById(myItemId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MY_ITEM)))
+        List<MyItem> wearingMyItemList = request.getWearingItemIdList().stream()
+                .map(itemId -> myItemRepository.findByItemsIdAndMemberId(itemId, memberId)
+                        .orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MY_ITEM)))
                 .collect(Collectors.toList());
-
         currentMyItemList.stream()
                 .filter(currentMyItem -> !wearingMyItemList.contains(currentMyItem))// 현재 착용중인 아이템이 wearingMyItemList에 없으면
                 .forEach(currentMyItem -> currentMyItem.updateIsWearing(false)); // isWearing은 false

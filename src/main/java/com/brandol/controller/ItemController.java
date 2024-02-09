@@ -35,9 +35,9 @@ public class ItemController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), myItemList);
     }
 
-    @Operation(summary = "아이템 착용",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용")
+    @Operation(summary = "아이템 착용한 아바타 저장",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용 및 아바타 이미지 저장")
     @PatchMapping(value = "/myitems/wear", consumes = "multipart/form-data")
-    public ApiResponse<String> wearMyItem(@ModelAttribute MyItemRequestDto.wearMyItemDto request, Authentication authentication) {
+    public ApiResponse<String> wearMyItem(@ModelAttribute MyItemRequestDto.wearItemsDto request, Authentication authentication) {
         Long memberId = Long.parseLong(authentication.getName());
         String wearMyItem = itemService.toWearMyItem(memberId, request);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), wearMyItem);
