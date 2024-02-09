@@ -40,7 +40,7 @@ public class ItemController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), wearMyItem);
     }
 
-    @Operation(summary = "아이템 정보 조회",description = "구매한 아이템 목록 중 사용자가 선택한 아이템을 착용")
+    @Operation(summary = "아이템 정보 조회",description = "검색 페이지에서 특정 아이템 클릭 시, 피그마 기준 5페이지 d의 최상단에서 해당 아이템 정보 조회 ")
     @GetMapping("/items/{itemId}")
     public ApiResponse<ItemResponseDto.AvatarStoreBodyListDto> itemInfo(@PathVariable Long itemId, @RequestParam("itemPart")String itemPart) {
         ItemResponseDto.AvatarStoreBodyListDto itemDto = itemService.makeAvatarStoreBodyPage(itemId, itemPart);
