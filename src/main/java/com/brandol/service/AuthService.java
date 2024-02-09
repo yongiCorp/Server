@@ -96,10 +96,10 @@ public class AuthService {
     public Member setProfile(AuthRequestDto.SignUpDto request) {
         Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         if (request.getGender() == Gender.MALE) {
-            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%8F%8C+%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4.png");
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8+%EC%95%84%EB%B0%94%ED%83%80+%EB%82%A8%EC%9E%90.png");
         }
         else {
-            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%93%9C+%ED%94%84%EB%A1%9C%ED%95%84.png");
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8+%EC%95%84%EB%B0%94%ED%83%80+%EC%97%AC%EC%9E%90.png");
         }
         return member;
     }
