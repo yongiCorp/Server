@@ -18,5 +18,8 @@ public interface ItemsRepository extends JpaRepository<Items, Long> {
     @Query(value = "SELECT * FROM Items i WHERE i.item_part like :itemPart ORDER BY RAND() ",nativeQuery = true)
     List<Items> finditemPartByRandom(@Param("itemPart") String itemPart);
 
+    @Query(value = "SELECT * FROM Items i  ORDER BY CASE WHEN i.items_id = :itemId THEN 0 ELSE 1 END, RAND()",nativeQuery = true)
+    List<Items> finditemByIdandRandom(@Param("itemId") Long itemId);
+
 
 }
