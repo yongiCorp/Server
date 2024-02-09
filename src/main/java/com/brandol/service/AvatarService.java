@@ -52,4 +52,9 @@ public class AvatarService {
                         .collect(Collectors.toList()));
         return AvatarConverter.toOtherMemberCommunityListDto(otherMemberCommunityList, communityImages);
     }
+
+    public String getMyAvatar(Long memberId) {
+        Member member= memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        return member.getAvatar();
+    }
 }

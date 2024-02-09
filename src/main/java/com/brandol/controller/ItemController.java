@@ -74,4 +74,12 @@ public class ItemController {
         ItemResponseDto.AvatarStoreBodyListDto itemDto = itemService.makeAvatarStoreBodyPage(itemId, itemPart);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), itemDto);
     }
+
+    @Operation(summary = "내 아바타 이미지 조회")
+    @GetMapping("/myAvatar")
+    public ApiResponse<String> getMyAvatar(Authentication authentication) {
+        Long memberId = Long.parseLong(authentication.getName());
+        String myAvatar = avatarService.getMyAvatar(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), myAvatar);
+    }
 }
