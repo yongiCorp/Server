@@ -28,7 +28,7 @@ public class MemberMissionController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), result);
     }
 
-    @Operation(summary = "포인트 미션 도전")
+    @Operation(summary = "포인트 미션 도전", description = "missionSuccess가 true이면 미션 완료, false이면 미션 도전 중으로 해주시면 됩니다.")
     @PostMapping("/users/missions/{missionId}")
     public ApiResponse<MemberMissionResponseDto.MissionChallengeDto> missionChallenge(Authentication authentication, @PathVariable("missionId")Long missionId) {
         Long memberId = Long.parseLong(authentication.getName());
