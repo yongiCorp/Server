@@ -2,6 +2,7 @@ package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
+import com.brandol.converter.CommentConverter;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Fandom;
 import com.brandol.domain.Member;
@@ -10,13 +11,14 @@ import com.brandol.domain.mapping.CommunityComment;
 import com.brandol.domain.mapping.ContentsComment;
 import com.brandol.domain.mapping.FandomComment;
 import com.brandol.dto.request.CommentRequestDto;
+import com.brandol.dto.response.CommentResponseDto;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -152,5 +154,72 @@ public class CommentService {
         communityCommentRepository.save(communityComment);
         community.updateComments(community.getComments()+1); // 커뮤니티 게시물의 댓글 개수 업데이트 (더티체킹 활용)
         return communityComment.getId();
+    }
+
+    public List<CommentResponseDto.CommentPackageDto> showAllFandomComment(Long fandomId){
+
+        List<FandomComment> fandomCommentList= fandomCommentRepository.findAllByFandomId(fandomId); //해당 게시글의 전체 댓글 조회
+        List<FandomComment> parentCommentList = fandomCommentList.stream().filter(fc-> fc.getDepth() == 0).collect(Collectors.toList()); //부모 댓글
+        List<FandomComment> childCommentList = fandomCommentList.stream().filter(fc->fc.getDepth() == 1 ).collect(Collectors.toList()); //자식 댓글
+
+        Map<Long,List<FandomComment>> parentChildPairMap =new LinkedHashMap<>(); // key: 부모댓글, value: 자식댓글 리스트
+
+        for(int i=0 ; i<fandomCommentList.size();i++){
+            Long key = fandomCommentList.get(i).getId();
+            parentChildPairMap.put(key,childCommentList.stream().filter(fc ->fc.getParentId() == key).collect(Collectors.toList()));
+        }
+
+        List<CommentResponseDto.CommentPackageDto> results = new ArrayList<>();
+        for(int i=0; i<parentCommentList.size();i++){
+            Long parentId = parentCommentList.get(i).getParentId();
+           CommentResponseDto.CommentPackageDto dto = CommentConverter.toFandomCommentPackageDto(parentCommentList.get(i),parentChildPairMap.get(parentId));
+           results.add(dto);
+        }
+
+        return results;
+    }
+
+    public List<CommentResponseDto.CommentPackageDto> showAllContentsComment(Long contentsId){
+
+        List<ContentsComment> contentsCommentList = contentsCommentRepository.findAllByContentsId(contentsId);
+        List<ContentsComment> parentCommentList = contentsCommentList.stream().filter(cc-> cc.getDepth() == 0).collect(Collectors.toList()); //부모 댓글
+        List<ContentsComment> childCommentList = contentsCommentList.stream().filter(cc->cc.getDepth() == 1).collect(Collectors.toList()); // 자식 댓글
+
+        Map<Long,List<ContentsComment>> parentChildPairMap = new LinkedHashMap<>();
+
+        for(int i=0; i<contentsCommentList.size();i++){
+            Long key = contentsCommentList.get(i).getId();
+            parentChildPairMap.put(key,childCommentList.stream().filter(cc->cc.getParentId() == key).collect(Collectors.toList()));
+        }
+
+        List<CommentResponseDto.CommentPackageDto> results = new ArrayList<>();
+        for(int i=0; i<parentCommentList.size();i++){
+            Long parentId = parentCommentList.get(i).getParentId();
+            CommentResponseDto.CommentPackageDto dto = CommentConverter.toContentsCommentPackageDto(parentCommentList.get(i),parentChildPairMap.get(parentId));
+            results.add(dto);
+        }
+        return results;
+    }
+
+    public List<CommentResponseDto.CommentPackageDto> showAllCommunityComment(Long communityId){
+
+        List<CommunityComment> communityCommentList = communityCommentRepository.findAllByCommunityId(communityId);
+        List<CommunityComment> parentCommentList = communityCommentList.stream().filter(cc-> cc.getDepth() == 0).collect(Collectors.toList()); //부모 댓글
+        List<CommunityComment> childCommentList = communityCommentList.stream().filter(cc->cc.getDepth() == 1).collect(Collectors.toList()); // 자식 댓글
+
+        Map<Long,List<CommunityComment>> parentChildPairMap = new LinkedHashMap<>();
+
+        for(int i=0; i<communityCommentList.size();i++){
+            Long key = communityCommentList.get(i).getId();
+            parentChildPairMap.put(key,childCommentList.stream().filter(cc->cc.getParentId() == key).collect(Collectors.toList()));
+        }
+
+        List<CommentResponseDto.CommentPackageDto> results = new ArrayList<>();
+        for(int i=0; i<parentCommentList.size();i++){
+            Long parentId = parentCommentList.get(i).getParentId();
+            CommentResponseDto.CommentPackageDto dto = CommentConverter.toCommunityCommentPackageDto(parentCommentList.get(i),parentChildPairMap.get(parentId));
+            results.add(dto);
+        }
+        return results;
     }
 }

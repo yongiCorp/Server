@@ -10,10 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -30,20 +28,11 @@ public class MemberController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberMainDto);
     }
 
-    @Operation(summary = "멤버 작성 글조회",description ="2페이지 d 진입시 호출하는 API" )
-    @GetMapping("/user/my/written/articles")
-    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenArticle(@RequestParam("memberId")Long meberId){
-         MemberResponseDto.MemberWrittenMainDto dto = memberService.makeMemberWrittenPage(meberId);
-         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    @Operation(summary = "타 멤버의 아바타 및 닉네임 조회")
+    @GetMapping("/users/{memberId}/avatar")
+    public ApiResponse<MemberResponseDto.MemberAvatarDto> getMemberAvatarNickname(@PathVariable("memberId") Long memberId) {
+        MemberResponseDto.MemberAvatarDto memberAvatarDto = memberService.getMemberAvatarNickname(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarDto);
     }
-
-    @Operation(summary = "멤버 작성 댓글 조회",description ="2페이지 d 진입시 호출하는 API" )
-    @GetMapping("/user/my/written/comments")
-    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenComment(@RequestParam("memberId")Long meberId){
-        MemberResponseDto.MemberWrittenMainDto dto = memberService.makeMemberWrittenCommentPage(meberId);
-        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
-    }
-
-
 
 }

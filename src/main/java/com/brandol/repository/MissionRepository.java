@@ -14,4 +14,6 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     List<Mission> findMissionNotBelongingToMember(@Param("memberId") Long memberId);
 
     Optional<Mission> findById(Long missionId);
+
+    Optional<Mission> findByBrand_Id(Long brandId);
 }

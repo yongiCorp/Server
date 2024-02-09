@@ -56,8 +56,7 @@ public class MemberResponseDto {
         private Long writerId;
         private String writerName;
         private String writerProfile;
-        private String articleType;
-        private Long id;
+        private String articleInfo;
         private String title;
         private String content;
         private List<String> images;
@@ -75,4 +74,15 @@ public class MemberResponseDto {
         private Integer totalArticleCount;
         private List<MemberWrittenDto> memberWrittenDtoList;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED) // 빨간줄 떠서 내가 수정함 Required -> No by 종.
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberAvatarDto {
+        private Long memberId;
+        private String avatar;
+        private String nickname;
+    }
+
 }
