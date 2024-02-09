@@ -2,6 +2,7 @@ package com.brandol.domain;
 
 import com.brandol.domain.common.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -26,4 +27,8 @@ public class ChatMessages extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="chatrooms_id", nullable = false)
     private ChatRooms chatRooms;
+
+    @Column(nullable = false)//읽음표시추가
+    @ColumnDefault("0")
+    private boolean isRead;
 }
