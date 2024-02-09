@@ -43,4 +43,18 @@ public class CommunityController {
         CommunityResponseDto.CommunityDto dto =communityService.showOneCommunityArticle(communityId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
+
+    @Operation(summary = "커뮤니티 게시글 좋아요 등록",description ="커뮤니티 게시글 좋아요 등록")
+    @GetMapping("/brands/community/{communityId}/like")
+    public ApiResponse<String> FandomLike(@PathVariable("communityId")Long contentsId,@RequestParam("memberId")Long memberId){
+        Long communityLikesId = communityService.communityLike(contentsId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"CommunityLikesId: "+communityLikesId);
+    }
+
+    @Operation(summary = "커뮤니티 게시글 좋아요 취소",description ="커뮤니티 게시글 좋아요 취소")
+    @GetMapping("/brands/community/{communityId}/like-cancel")
+    public ApiResponse<String> FandomLikeCancel(@PathVariable("communityId")Long communityId,@RequestParam("memberId")Long memberId){
+        Long communityLikesId = communityService.communityLikeCancel(communityId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"CommunityLikesId: "+communityLikesId);
+    }
 }

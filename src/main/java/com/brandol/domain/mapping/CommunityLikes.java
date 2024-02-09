@@ -28,4 +28,8 @@ public class CommunityLikes extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="community_id", nullable = false)
     private Community community;
+
+    public void changeLikeStatus(LikeStatus likeStatus){
+        this.likeStatus = likeStatus;
+    }
 }
