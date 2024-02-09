@@ -14,4 +14,7 @@ public interface CommunityCommentRepository extends JpaRepository<CommunityComme
     @Query("select cc from CommunityComment cc where  cc.parentId = :parentId order by cc.createdAt desc")
     List<CommunityComment> findCommunityCommentsByParentId(@Param("parentId")Long parentId);
 
+    @Query("select cc from CommunityComment cc where  cc.community.id = :communityId order by  cc.createdAt asc")
+    List<CommunityComment> findAllByCommunityId(@Param("communityId")Long CommunityId);
+
 }

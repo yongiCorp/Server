@@ -14,4 +14,7 @@ public interface FandomCommentRepository extends JpaRepository<FandomComment,Lon
 
     @Query("select fc from FandomComment fc where fc.parentId = :parentId order by fc.createdAt desc ")
     List<FandomComment> findFandomCommentsByParentId(@Param("parentId")Long parentId);
+
+    @Query("select fc from FandomComment fc where fc.fandom.id = :fandomId order by fc.createdAt asc ")
+    List<FandomComment> findAllByFandomId(@Param("fandomId")Long fandomId);
 }
