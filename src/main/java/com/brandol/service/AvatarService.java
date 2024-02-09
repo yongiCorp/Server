@@ -4,17 +4,19 @@ import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.AvatarConverter;
 import com.brandol.domain.Member;
+import com.brandol.domain.mapping.Community;
+import com.brandol.domain.mapping.CommunityImage;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.response.AvatarResponseDto;
-import com.brandol.repository.MemberBrandRepository;
-import com.brandol.repository.MemberRepository;
-import com.brandol.repository.MyItemRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class AvatarService {
     private final MemberRepository memberRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final MyItemRepository myItemRepository;
+    private final CommunityRepository communityRepository;
+    private final CommunityImageRepository communityImageRepository;
 
     public List<AvatarResponseDto.OtherMemberBrandListDto> getOtherMemberBrandList(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
@@ -35,5 +39,15 @@ public class AvatarService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         List<MyItem> memberAvatarItems = myItemRepository.findALlByMemberIdAndIsWearing(memberId, true);
         return AvatarConverter.toMemberAvatarItemListDto(memberAvatarItems);
+    }
+
+    public List<AvatarResponseDto.OtherMemberCommunityDto> getOtherMemberCommunity(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        List<Community> otherMemberCommunityList = communityRepository.findByMember(member);
+        List<CommunityImage> communityImages = communityImageRepository.findByCommunityIdIn(
+                otherMemberCommunityList.stream()
+                        .map(Community::getId)
+                        .collect(Collectors.toList()));
+        return AvatarConverter.toOtherMemberCommunityListDto(otherMemberCommunityList, communityImages);
     }
 }

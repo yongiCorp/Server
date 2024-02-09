@@ -54,4 +54,10 @@ public class ItemController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarItemListDto);
     }
 
+    @Operation(summary = "다른 회원이 작성한 글 조회", description = "다른 회원이 작성한 커뮤니티(자유 게시판, 피드백 게시판)의 글 목록 조회")
+    @GetMapping("/{memberId}/community")
+    public ApiResponse<List<AvatarResponseDto.OtherMemberCommunityDto>> getOtherMemberCommunity(@PathVariable("memberId") Long memberId) {
+        List<AvatarResponseDto.OtherMemberCommunityDto> otherMemberCommunityListDto = avatarService.getOtherMemberCommunity(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), otherMemberCommunityListDto);
+    }
 }

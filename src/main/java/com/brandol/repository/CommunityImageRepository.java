@@ -11,4 +11,7 @@ public interface CommunityImageRepository extends JpaRepository<CommunityImage,L
 
     @Query("select ci from CommunityImage ci where ci.community.id = :communityId")
     List<CommunityImage> findAllByCommunityId(@Param("communityId")Long communityId);
+
+    List<CommunityImage> findByCommunityIdIn(List<Long> communityIds);
+
 }

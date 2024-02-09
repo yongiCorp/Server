@@ -1,4 +1,6 @@
 package com.brandol.converter;
+import com.brandol.domain.mapping.Community;
+import com.brandol.domain.mapping.CommunityImage;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.response.AvatarResponseDto;
@@ -57,6 +59,27 @@ public class AvatarConverter {
                         .image(memberAvatarItem.getItems().getImage())
                         .price(memberAvatarItem.getItems().getPrice())
                         .createdAt(memberAvatarItem.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public static List<AvatarResponseDto.OtherMemberCommunityDto> toOtherMemberCommunityListDto(List<Community> otherMemberCommunityList, List<CommunityImage> communityImages) {
+        return otherMemberCommunityList.stream()
+                .map(community -> AvatarResponseDto.OtherMemberCommunityDto.builder()
+                        .writerId(community.getMember().getId())
+                        .writerName(community.getMember().getName())
+                        .writerProfile(community.getMember().getAvatar())
+                        .articleType(community.getCommunityType().toString())
+                        .id(community.getId())
+                        .title(community.getTitle())
+                        .content(community.getContent())
+                        .images(communityImages.stream()
+                                .filter(communityImage -> communityImage.getCommunity().getId().equals(community.getId()))
+                                .map(CommunityImage::getImage)
+                                .collect(Collectors.toList()))
+                        .likeCount(community.getLikes())
+                        .commentCount(community.getComments())
+                        .writtenDate(community.getCreatedAt())
                         .build())
                 .collect(Collectors.toList());
     }
