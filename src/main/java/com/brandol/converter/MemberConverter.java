@@ -81,6 +81,7 @@ public class MemberConverter {
     }
 
     public static MemberResponseDto.MemberAvatarDto toMemberAvatarDto(Member member){
+
         return MemberResponseDto.MemberAvatarDto.builder()
                 .memberId(member.getId())
                 .avatar(member.getAvatar())
