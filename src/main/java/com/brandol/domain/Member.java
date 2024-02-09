@@ -81,4 +81,6 @@ public class Member extends BaseEntity {
         this.userStatus = userStatus;
     }
 
+    public void updatePoint(int num) { this.point += num;}
+
 }

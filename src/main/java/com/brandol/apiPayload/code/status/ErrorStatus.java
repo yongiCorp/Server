@@ -46,6 +46,8 @@ public enum ErrorStatus implements BaseCode {
 
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
+    _NOT_CHALLENGING_MISSION(HttpStatus.NOT_FOUND, "MISSION401", "도전 중인 미션이 아닙니다."),
+    _ALREADY_COMPLETED_MISSION(HttpStatus.BAD_REQUEST, "MISSION402", "이미 도전 완료된 미션입니다"),
 
     //DB
     _DUPLICATE_DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DATABASE500","DB에서 중복 데이터가 조회됨"),

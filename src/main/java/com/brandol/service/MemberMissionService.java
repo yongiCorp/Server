@@ -62,4 +62,13 @@ public class MemberMissionService {
         memberMissionRepository.save(memberMission);
         return memberMission;
     }
+
+    @Transactional
+    public void successMission(Long memberId, Long missionId) {
+        MemberMission memberMission = memberMissionRepository.findAllByMemberIdAndMissionId(memberId, missionId);
+        if(memberMission == null) throw new ErrorHandler(ErrorStatus._NOT_CHALLENGING_MISSION);
+        if(memberMission.getMissionStatus() == MissionStatus.ENDED) throw new ErrorHandler(ErrorStatus._ALREADY_COMPLETED_MISSION);
+        memberMission.changeStatus(MissionStatus.ENDED);
+        memberMission.getMember().updatePoint(memberMission.getMission().getPoints());
+    }
 }

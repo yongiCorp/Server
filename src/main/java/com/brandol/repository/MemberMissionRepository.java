@@ -19,5 +19,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
     List<MemberMission> findAddMissionByMemberId(@Param("memberId") Long memberId, @Param("type") MissionType type);
 
     Optional<MemberMission> findByMemberIdAndMissionId(Long memberId, Long missionId);
+    @Query("SELECT mm FROM MemberMission mm JOIN FETCH mm.member m JOIN FETCH mm.mission ms WHERE m.id = :memberId AND ms.id = :missionId")
+    MemberMission findAllByMemberIdAndMissionId(@Param("memberId") Long memberId, @Param("missionId") Long missionId);
 
 }
