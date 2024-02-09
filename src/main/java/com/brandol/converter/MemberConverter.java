@@ -70,4 +70,23 @@ public class MemberConverter {
                 .memberBrandListDtoList(memberBrandListDtoList)
                 .build();
     }
+
+    public static MemberResponseDto.MemberWrittenMainDto toMemberWrittenMainDto(
+            Integer totalMemberWrittenArticleCount,
+            List<MemberResponseDto.MemberWrittenDto> memberWrittenDtoList){
+        return MemberResponseDto.MemberWrittenMainDto.builder()
+                .totalArticleCount(totalMemberWrittenArticleCount)
+                .memberWrittenDtoList(memberWrittenDtoList)
+                .build();
+    }
+
+    public static MemberResponseDto.MemberAvatarDto toMemberAvatarDto(Member member){
+
+        return MemberResponseDto.MemberAvatarDto.builder()
+                .memberId(member.getId())
+                .avatar(member.getAvatar())
+                .nickname(member.getNickname())
+                .build();
+    }
+
 }

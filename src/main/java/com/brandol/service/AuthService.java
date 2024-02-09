@@ -9,6 +9,8 @@ import com.brandol.converter.MemberConverter;
 import com.brandol.domain.Member;
 import com.brandol.domain.Term;
 import com.brandol.domain.enums.Gender;
+import com.brandol.domain.enums.TermType;
+import com.brandol.domain.enums.UserStatus;
 import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.repository.AgreementRepository;
@@ -71,12 +73,18 @@ public class AuthService {
     @Transactional
     public AuthResponseDto.AgreeTermsDto agreeTerms(AuthRequestDto.SignUpDto request) { // email, termsIdList
         Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        // 필수 약관 동의 체크
+        List<Term> mandatoryTerms = termRepository.findByTermType(TermType.MANDATORY);
+        for (Term mandatoryTerm : mandatoryTerms) {
+            if (!request.getTermsIdList().contains(mandatoryTerm.getId())) {
+                throw new ErrorHandler(ErrorStatus._MANDATORY_AGREEMENT_NOT_FOUND);
+            }
+        }
+        // 회원이 동의한 이용약관 저장
         List<Term> termList = request.getTermsIdList().stream()
-                .map(termId -> {
-                    return termRepository.findById(termId).orElseThrow(() -> new ErrorHandler(ErrorStatus._TERM_NOT_FOUND));
+                .map(termId -> { return termRepository.findById(termId).orElseThrow(() -> new ErrorHandler(ErrorStatus._TERM_NOT_FOUND));// 존재하지 않는 이용약관 id일 때 예외처리
                 }).collect(Collectors.toList());
 
-        // 회원이 동의한 이용약관 저장
         termList.stream()
                 .map(term -> AgreementConverter.toAgreement(member, term))
                 .forEach(agreementRepository::save);
@@ -88,11 +96,20 @@ public class AuthService {
     public Member setProfile(AuthRequestDto.SignUpDto request) {
         Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         if (request.getGender() == Gender.MALE) {
-            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%8F%8C+%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4.png");
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8+%EC%95%84%EB%B0%94%ED%83%80+%EB%82%A8%EC%9E%90.png");
         }
         else {
-            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EB%B8%8C%EB%9E%9C%EB%93%9C+%ED%94%84%EB%A1%9C%ED%95%84.png");
+            member.setProfile(request.getNickname(), request.getGender(), request.getAge(), "https://brandol.s3.ap-northeast-2.amazonaws.com/%EA%B8%B0%EB%B3%B8+%EC%95%84%EB%B0%94%ED%83%80+%EC%97%AC%EC%9E%90.png");
         }
         return member;
+    }
+
+    // 회원 탈퇴
+    @Transactional
+    public String inactivateMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        System.out.println("탈퇴할 회원id: "+member.getId() + member.getEmail());
+        member.inactivate(UserStatus.INACTIVE);
+        return "탈퇴 성공";
     }
 }

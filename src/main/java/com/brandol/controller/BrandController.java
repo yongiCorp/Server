@@ -5,11 +5,12 @@ import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.Brand;
 import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
+import com.brandol.dto.response.MemberResponseDto;
 import com.brandol.service.BrandService;
+import com.brandol.service.MemberService;
 import com.brandol.validation.annotation.ExistBrand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,9 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class BrandController {
 
     private final BrandService brandService;
+    private final MemberService memberService;
 
 
-    @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = true )
+    @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = false ) // 테스트 해야함
     @PostMapping(value = "/brands/new",consumes = "multipart/form-data") // 브랜드 신규 등록 함수
     private ApiResponse<Brand> addNewBrand(@ModelAttribute BrandRequestDto.addBrand request){
         Brand brand = brandService.createBrand(request);
@@ -62,14 +64,28 @@ public class BrandController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), brandCommunityDto);
     }
 
+    @Operation(summary = "멤버 작성 글 조회",description ="2페이지 d 진입시 호출하는 API" )
+    @GetMapping("/brands/{brandId}/my-written/articles")
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenArticle(@PathVariable("brandId")Long brandId,@RequestParam("memberId")Long memberId){
+        MemberResponseDto.MemberWrittenMainDto dto = memberService.makeBrandMemberWrittenPage(memberId,brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
+    @Operation(summary = "멤버 작성 댓글 조회",description ="2페이지 d 진입시 호출하는 API" )
+    @GetMapping("/brands/{brandId}/my-written/comments")
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenComment(@PathVariable("brandId")Long brandId,@RequestParam("memberId")Long memberId){
+        MemberResponseDto.MemberWrittenMainDto dto = memberService.makeBrandMemberWrittenCommentPage(memberId,brandId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
+    }
+
     @Operation(summary = "브랜드 커뮤니티 게시글 생성",description = "브랜드 콘텐츠에 종속된 브랜드 자유게시판, 피드백 게시판에 게시글 생성")
     @Parameter(name = "brandId",description = "생성 대상 브랜드의 ID")
     @PostMapping(value = "/brands/{brandId}/community/new",consumes = "multipart/form-data")
     public ApiResponse<String> crateBrandCommunity(@ModelAttribute BrandRequestDto.addCommunity communityDto,
                                                    @PathVariable("brandId")Long brandId,
-                                                   Authentication authentication
+                                                   @RequestParam("memberId") Long memberID
                                                    ){
-        Long memberId = Long.parseLong(authentication.getName());
+        Long memberId = memberID;
         Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
     }

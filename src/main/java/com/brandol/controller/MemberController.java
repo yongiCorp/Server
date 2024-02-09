@@ -10,10 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequiredArgsConstructor
 @Validated
@@ -29,4 +27,12 @@ public class MemberController {
         MemberResponseDto.MemberMainDto memberMainDto = memberService.makeMemberMain(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberMainDto);
     }
+
+    @Operation(summary = "타 멤버의 아바타 및 닉네임 조회")
+    @GetMapping("/users/{memberId}/avatar")
+    public ApiResponse<MemberResponseDto.MemberAvatarDto> getMemberAvatarNickname(@PathVariable("memberId") Long memberId) {
+        MemberResponseDto.MemberAvatarDto memberAvatarDto = memberService.getMemberAvatarNickname(memberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarDto);
+    }
+
 }

@@ -5,10 +5,12 @@ import com.brandol.domain.enums.Gender;
 import com.brandol.domain.enums.Provider;
 import com.brandol.domain.enums.Role;
 import com.brandol.domain.enums.UserStatus;
+import com.brandol.domain.mapping.Community;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,6 +55,16 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+
+    @OneToMany(mappedBy = "member")
+    List<Fandom> fandomList;
+
+    @OneToMany(mappedBy = "member")
+    List<Contents> contentsList;
+
+    @OneToMany(mappedBy = "member")
+    List<Community> communityList;
+
     public void setProfile(String nickname, Gender gender, Integer age, String avatar) {
         this.nickname = nickname;
         this.gender = gender;
@@ -60,4 +72,15 @@ public class Member extends BaseEntity {
         this.avatar = avatar;
         this.signUp = true;
     }
+
+    public void updateAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void inactivate(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public void updatePoint(int num) { this.point += num;}
+
 }

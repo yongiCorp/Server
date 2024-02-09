@@ -21,6 +21,7 @@ public interface ContentsRepository extends JpaRepository<Contents,Long> {
 
     @Query(value = "select  c from  Contents c where c.brand.id= :brandId and c.contentsType =com.brandol.domain.enums.ContentsType.VIDEOS order by c.createdAt desc ")
     List<Contents>findRecentVideos(@Param("brandId")Long brandId,Pageable pageable);
+
     
     @Query(value = "SELECT * FROM Contents  ORDER BY RAND() limit 3",nativeQuery = true)
     List<Contents> findThreeByRandom();

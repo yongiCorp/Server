@@ -3,8 +3,10 @@ package com.brandol.controller;
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
 import com.brandol.domain.mapping.MemberBrandList;
+import com.brandol.domain.mapping.MemberMission;
 import com.brandol.dto.request.MemberBrandRequestDto;
 import com.brandol.service.MemberBrandService;
+import com.brandol.service.MemberMissionService;
 import com.brandol.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,13 +28,14 @@ public class MemberBrandController {
 
     private final MemberService memberService;
     private final MemberBrandService memberBrandService;
+    private final MemberMissionService memberMissionService;
 
     @Operation(summary = "브랜드 리스트 등록",description ="유저가 특정 브랜드를 자신의 브랜드-리스트에 추가" )
-    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("users/my-board-list/subscribe/{brandId}") // 멤버 브랜드 리스트 추가 처리
     public ApiResponse<String> addMemberBrandList(@PathVariable("brandId")Long brandId, Authentication authentication){
         Long memberId = Long.parseLong(authentication.getName());
         memberService.addMemberBrandList(memberId, brandId);
+        memberMissionService.checkBrandMission(memberId, brandId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(), null);
     }
 

@@ -1,6 +1,9 @@
 package com.brandol.repository;
 
+import com.brandol.domain.Member;
 import com.brandol.domain.mapping.Community;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +17,6 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
 
     @Query("select c from Community c where c.brand.id = :brandId and c.communityType = com.brandol.domain.enums.CommunityType.FEEDBACK order by c.createdAt desc ")
     List<Community> findRecentFeedBackBoard(@Param("brandId") Long brandId,Pageable pageable);
+
+    Page<Community> findByMember(Member member, PageRequest pageRequest);
 }
