@@ -3,6 +3,7 @@ package com.brandol.domain.mapping;
 import com.brandol.domain.Fandom;
 import com.brandol.domain.Member;
 import com.brandol.domain.common.BaseEntity;
+import com.brandol.domain.enums.LikeStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,9 @@ public class FandomLikes extends BaseEntity {
     @Column(name="fandom_likes_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private LikeStatus likeStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -25,4 +29,8 @@ public class FandomLikes extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fandom_id", nullable = false)
     private Fandom fandom;
+
+    public void changeLikeStatus(LikeStatus likeStatus){
+        this.likeStatus = likeStatus;
+    }
 }

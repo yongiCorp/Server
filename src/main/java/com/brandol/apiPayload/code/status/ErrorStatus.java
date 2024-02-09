@@ -32,6 +32,7 @@ public enum ErrorStatus implements BaseCode {
 
     //팬덤
     _CANNOT_LOAD_FANDOM(HttpStatus.NOT_FOUND,"FANDOM404","팬덤 조회에 실패하였습니다."),
+    _CANNOT_LOAD_FANDOM_LIKE(HttpStatus.NOT_FOUND,"FANDOM-LIKE404","Fandom-Like 조회에 실패하였습니다."),
 
     //콘텐츠
     _CANNOT_LOAD_CONTENTS(HttpStatus.NOT_FOUND,"CONTENTS404","콘텐츠 조회에 실패하였습니다."),

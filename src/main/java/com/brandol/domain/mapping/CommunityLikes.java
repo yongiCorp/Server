@@ -2,6 +2,7 @@ package com.brandol.domain.mapping;
 
 import com.brandol.domain.Member;
 import com.brandol.domain.common.BaseEntity;
+import com.brandol.domain.enums.LikeStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +17,9 @@ public class CommunityLikes extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_likes_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private LikeStatus likeStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

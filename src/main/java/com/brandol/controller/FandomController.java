@@ -42,4 +42,18 @@ public class FandomController {
         FandomResponseDto.FandomDto dto = fandomService.showOneFandomArticle(fandomId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
+
+    @Operation(summary = "팬덤 게시글 좋아요 등록",description ="팬덤 게시글 좋아요 등록")
+    @GetMapping("/brands/fandoms/{fandomId}/like")
+    public ApiResponse<String> FandomLike(@PathVariable("fandomId")Long fandomId,@RequestParam("memberId")Long memberId){
+        Long fandomLikesId = fandomService.fandomLike(fandomId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"FandomLikesId: "+fandomLikesId);
+    }
+
+    @Operation(summary = "팬덤 게시글 좋아요 취소",description ="팬덤 게시글 좋아요 취소")
+    @GetMapping("/brands/fandoms/{fandomId}/like-cancel")
+    public ApiResponse<String> FandomLikeCancel(@PathVariable("fandomId")Long fandomId,@RequestParam("memberId")Long memberId){
+        Long fandomLikesId = fandomService.fandomLikeCancel(fandomId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"FandomLikesId: "+fandomLikesId);
+    }
 }
