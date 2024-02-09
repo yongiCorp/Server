@@ -8,6 +8,8 @@ import com.brandol.dto.response.MyItemResponseDto;
 import com.brandol.service.AvatarService;
 import com.brandol.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -54,10 +56,14 @@ public class ItemController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), memberAvatarItemListDto);
     }
 
-    @Operation(summary = "다른 회원이 작성한 글 조회", description = "다른 회원이 작성한 커뮤니티(자유 게시판, 피드백 게시판)의 글 목록 조회")
+    @Operation(summary = "다른 회원이 작성한 글 조회", description = "다른 회원이 작성한 커뮤니티(자유 게시판, 피드백 게시판)의 글 목록 조회합니다. 10개 씩 조회해오는 페이징을 포함합니다. query String 으로 page 번호를 주세요")
     @GetMapping("/{memberId}/community")
-    public ApiResponse<List<AvatarResponseDto.OtherMemberCommunityDto>> getOtherMemberCommunity(@PathVariable("memberId") Long memberId) {
-        List<AvatarResponseDto.OtherMemberCommunityDto> otherMemberCommunityListDto = avatarService.getOtherMemberCommunity(memberId);
+    @Parameters({
+            @Parameter(name = "memberId", description = "선택된 회원의 memberId 입니다."),
+            @Parameter(name = "page", description = "페이지 번호, 0번이 1 페이지 입니다."),
+    })
+    public ApiResponse<List<AvatarResponseDto.OtherMemberCommunityDto>> getOtherMemberCommunity(@PathVariable("memberId") Long memberId, @RequestParam(name = "page") Integer page) {
+        List<AvatarResponseDto.OtherMemberCommunityDto> otherMemberCommunityListDto = avatarService.getOtherMemberCommunity(memberId, page);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), otherMemberCommunityListDto);
     }
 }

@@ -7,6 +7,7 @@ import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -63,7 +64,7 @@ public class AvatarConverter {
                 .collect(Collectors.toList());
     }
 
-    public static List<AvatarResponseDto.OtherMemberCommunityDto> toOtherMemberCommunityListDto(List<Community> otherMemberCommunityList, List<CommunityImage> communityImages) {
+    public static List<AvatarResponseDto.OtherMemberCommunityDto> toOtherMemberCommunityListDto(/*List<Community>*/ Page<Community> otherMemberCommunityList, List<CommunityImage> communityImages) {
         return otherMemberCommunityList.stream()
                 .map(community -> AvatarResponseDto.OtherMemberCommunityDto.builder()
                         .writerId(community.getMember().getId())

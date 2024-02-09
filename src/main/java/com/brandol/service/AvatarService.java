@@ -11,7 +11,9 @@ import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,9 +43,9 @@ public class AvatarService {
         return AvatarConverter.toMemberAvatarItemListDto(memberAvatarItems);
     }
 
-    public List<AvatarResponseDto.OtherMemberCommunityDto> getOtherMemberCommunity(Long memberId) {
+    public List<AvatarResponseDto.OtherMemberCommunityDto> getOtherMemberCommunity(Long memberId, Integer page) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
-        List<Community> otherMemberCommunityList = communityRepository.findByMember(member);
+        Page<Community> otherMemberCommunityList = communityRepository.findByMember(member, PageRequest.of(page, 10,  Sort.by(Sort.Direction.DESC, "createdAt")));
         List<CommunityImage> communityImages = communityImageRepository.findByCommunityIdIn(
                 otherMemberCommunityList.stream()
                         .map(Community::getId)
