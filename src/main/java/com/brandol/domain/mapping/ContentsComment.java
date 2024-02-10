@@ -3,6 +3,7 @@ package com.brandol.domain.mapping;
 import com.brandol.domain.Contents;
 import com.brandol.domain.Member;
 import com.brandol.domain.common.BaseEntity;
+import com.brandol.domain.enums.LikeStatus;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -36,6 +37,8 @@ public class ContentsComment extends BaseEntity {
     @JoinColumn(name = "contents_id", nullable = false)
     private Contents contents;
 
+    @ColumnDefault("0")
+    private int likes;
     public void addParentId(Long parentId){
         this.parentId = parentId;
     }

@@ -33,13 +33,19 @@ public enum ErrorStatus implements BaseCode {
     //팬덤
     _CANNOT_LOAD_FANDOM(HttpStatus.NOT_FOUND,"FANDOM404","팬덤 조회에 실패하였습니다."),
     _CANNOT_LOAD_FANDOM_LIKES(HttpStatus.NOT_FOUND,"FANDOM-LIKES404","Fandom-Like 조회에 실패하였습니다."),
+    _CANNOT_LOAD_FANDOM_COMMENT(HttpStatus.NOT_FOUND,"FANDOM-COMMENT404","팬덤 댓글 조회에 실패하였습니다."),
+    _CANNOT_LOAD_FANDOM_COMMENT_LIKES(HttpStatus.NOT_FOUND,"FANDOM_COMMENT-LIKES404","Fandom-COMMENT-Like 조회에 실패하였습니다."),
 
     //콘텐츠
     _CANNOT_LOAD_CONTENTS(HttpStatus.NOT_FOUND,"CONTENTS404","콘텐츠 조회에 실패하였습니다."),
     _CANNOT_LOAD_CONTENTS_LIKES(HttpStatus.NOT_FOUND,"CONTENT-LIKES404","Contents-Like 조회에 실패하였습니다."),
+    _CANNOT_LOAD_CONTENTS_COMMENT(HttpStatus.NOT_FOUND,"CONTENTS-COMMENT404","콘텐츠 댓글 조회에 실패하였습니다."),
+    _CANNOT_LOAD_CONTENTS_COMMENT_LIKES(HttpStatus.NOT_FOUND,"CONTENTS_COMMENT-LIKES404","Contents-COMMENT-Like 조회에 실패하였습니다."),
     // 커뮤니티
     _CANNOT_LOAD_COMMUNITY(HttpStatus.NOT_FOUND,"COMMUNITY404","커뮤니티 조회에 실패하였습니다."),
     _CANNOT_LOAD_COMMUNITY_LIKES(HttpStatus.NOT_FOUND,"COMMUNITY-LIKES404","Community-Like 조회에 실패하였습니다."),
+    _CANNOT_LOAD_COMMUNITY_COMMENT(HttpStatus.NOT_FOUND,"COMMUNITY-COMMENT404","커뮤니티 댓글 조회에 실패하였습니다."),
+    _CANNOT_LOAD_COMMUNITY_COMMENT_LIKES(HttpStatus.NOT_FOUND,"COMMUNITY_COMMENT-LIKES404","Community-COMMENT-Like 조회에 실패하였습니다."),
     // 댓글
     _NOT_EXIST_COMMENT(HttpStatus.NOT_FOUND,"COMMENT404","존재하지 않는 댓글입니다."),
     //유저

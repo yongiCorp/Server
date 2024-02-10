@@ -29,6 +29,22 @@ public class CommentController {
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"FandomCommentId: "+ commentId);
     }
 
+    @Operation(summary = "팬덤 댓글 좋아요",description ="팬덤 게시판 댓글 좋어요 등록" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("fandom/comments/{commentId}/like")
+    public ApiResponse<String> fandomCommentLike(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
+        Long fandomLikeId = commentService.fandomCommentLike(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomLikeId);
+    }
+
+    @Operation(summary = "팬덤 댓글 좋아요 취소",description ="팬덤 게시판 댓글 좋어요 취소" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("fandom/comments/{commentId}/like-cancel")
+    public ApiResponse<String> fandomCommentLikeCancel(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
+        Long fandomLikeId = commentService.fandomCommentLikeCancel(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomLikeId);
+    }
+
     @Operation(summary = "콘텐츠 댓글 작성",description ="멤버가 콘텐츠 게시판 게시글에 댓글을 생성" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("contents/{contents_id}/comments/new")
