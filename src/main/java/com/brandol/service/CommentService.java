@@ -32,6 +32,7 @@ public class CommentService {
     private final ContentsCommentRepository contentsCommentRepository;
     private final CommunityCommentRepository communityCommentRepository;
     private final FandomCommentLikesRepository fandomCommentLikesRepository;
+    private final ContentsCommentLikesRepository contentsCommentLikesRepository;
 
     @Transactional
     public Long createFandomComment(CommentRequestDto.addComment dto, Long fandomId, Long memberId){
@@ -256,11 +257,52 @@ public class CommentService {
     public Long fandomCommentLikeCancel(Long fandomCommentId, Long memberId){
         List<FandomCommentLikes> fandomCommentLikesList = fandomCommentLikesRepository.findAllByFandomCommentIdAndMemberId(fandomCommentId,memberId);
         if(fandomCommentLikesList.size() >1){throw new ErrorHandler(ErrorStatus._DUPLICATE_DATABASE_ERROR);} // DB 예외 처리(중복 좋아요 조회가 발생한 경우)
-        if(fandomCommentLikesList.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_COMMENT);} //팬덤 코멘트 라이크 엔티티가 존재하지 않는 경우
+        if(fandomCommentLikesList.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_COMMENT_LIKES);} //팬덤 코멘트 라이크 엔티티가 존재하지 않는 경우
         FandomCommentLikes targetFandomCommentLikes = fandomCommentLikesList.get(0);
         targetFandomCommentLikes.changeLikeStatus(LikeStatus.Cancel); //더티 체킹 활용
         FandomComment fandomComment = fandomCommentRepository.findById(fandomCommentId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_COMMENT));
         fandomComment.updateLikes(fandomComment.getLikes()-1); // 팬덤 커멘트 좋아요 수 업데이트
         return targetFandomCommentLikes.getId();
+    }
+
+    @Transactional
+    public Long contentsCommentLike(Long contentsCommentId,Long memberId){
+        List<ContentsCommentLikes> contentsCommentLikesList = contentsCommentLikesRepository.findAllByContentsCommentIdAndMemberId(contentsCommentId,memberId);
+
+        if(contentsCommentLikesList.size()>1){throw new ErrorHandler(ErrorStatus._DUPLICATE_DATABASE_ERROR);} // DB 예외 처리(중복 좋아요 조회가 발생한 경우)
+
+        if(contentsCommentLikesList.isEmpty()){ // 기존에 좋아요를 누른 경우가 없는 경우
+
+            Member member = memberRepository.findById(memberId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+            ContentsComment contentsComment = contentsCommentRepository.findById(contentsCommentId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS_COMMENT));
+            ContentsCommentLikes contentsCommentLikes =ContentsCommentLikes.builder()
+                    .likeStatus(LikeStatus.Continue)
+                    .contentsComment(contentsComment)
+                    .member(member)
+                    .build();
+            contentsCommentLikesRepository.save(contentsCommentLikes);
+            contentsComment.updateLikes(contentsComment.getLikes()+1);
+            return contentsCommentLikes.getId();
+
+        }
+        else{//기존에 좋아요를 눌렀다가 취소하고 다시 누른 경우
+            ContentsCommentLikes contentsCommentLikes = contentsCommentLikesList.get(0);
+            contentsCommentLikes.changeLikeStatus(LikeStatus.Continue);
+            ContentsComment contentsComment = contentsCommentRepository.findById(contentsCommentId).orElseThrow(()-> new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_COMMENT));
+            contentsComment.updateLikes(contentsComment.getLikes()+1);
+            return contentsCommentLikes.getId();
+        }
+    }
+
+    @Transactional
+    public Long contentsCommentLikeCancel(Long contentsCommentId, Long memberId){
+        List<ContentsCommentLikes> contentsCommentLikesList = contentsCommentLikesRepository.findAllByContentsCommentIdAndMemberId(contentsCommentId,memberId);
+        if(contentsCommentLikesList.size() >1){throw new ErrorHandler(ErrorStatus._DUPLICATE_DATABASE_ERROR);} // DB 예외 처리(중복 좋아요 조회가 발생한 경우)
+        if(contentsCommentLikesList.isEmpty()){throw new ErrorHandler(ErrorStatus._CANNOT_LOAD_CONTENTS_COMMENT_LIKES);} //콘텐츠 코멘트 라이크 엔티티가 존재하지 않는 경우
+        ContentsCommentLikes targetContentsCommentLikes = contentsCommentLikesList.get(0);
+        targetContentsCommentLikes.changeLikeStatus(LikeStatus.Cancel); //더티 체킹 활용
+        ContentsComment contentsComment= contentsCommentRepository.findById(contentsCommentId).orElseThrow(()->new ErrorHandler(ErrorStatus._CANNOT_LOAD_FANDOM_COMMENT));
+        contentsComment.updateLikes(contentsComment.getLikes()-1); //콘텐츠  코멘트 좋아요 수 업데이트
+        return targetContentsCommentLikes.getId();
     }
 }

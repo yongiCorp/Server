@@ -29,4 +29,7 @@ public class ContentsCommentLikes  extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private LikeStatus likeStatus;
+    public void changeLikeStatus(LikeStatus likeStatus){
+        this.likeStatus = likeStatus;
+    }
 }

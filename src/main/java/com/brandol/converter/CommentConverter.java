@@ -41,7 +41,7 @@ public class CommentConverter {
                 .writerName(member.getName())
                 .writerProfile(member.getAvatar())
                 .content(fandomComment.getContent())
-                .likeCount(0)
+                .likeCount(fandomComment.getLikes())
                 .writtenDate(fandomComment.getCreatedAt())
                 .build();
     }
@@ -55,7 +55,7 @@ public class CommentConverter {
                 .writerName(member.getName())
                 .writerProfile(member.getAvatar())
                 .content(contentsComment.getContent())
-                .likeCount(0)
+                .likeCount(contentsComment.getLikes())
                 .writtenDate(contentsComment.getCreatedAt())
                 .build();
     }
@@ -95,7 +95,7 @@ public class CommentConverter {
                 .writerName(member.getName())
                 .writerProfile(member.getAvatar())
                 .content(communityComment.getContent())
-                .likeCount(0)
+                .likeCount(communityComment.getLikes())
                 .writtenDate(communityComment.getCreatedAt())
                 .build();
     }
