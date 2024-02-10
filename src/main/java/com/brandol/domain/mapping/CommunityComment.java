@@ -41,5 +41,6 @@ public class CommunityComment extends BaseEntity {
     public void addParentId(Long parentId){
         this.parentId = parentId;
     }
+    public void updateLikes(int number){this.likes = number;}
 
 }

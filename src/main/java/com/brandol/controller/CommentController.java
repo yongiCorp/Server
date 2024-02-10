@@ -33,16 +33,16 @@ public class CommentController {
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("/fandom/comments/{commentId}/like")
     public ApiResponse<String> fandomCommentLike(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
-        Long fandomLikeId = commentService.fandomCommentLike(commentId,memberId);
-        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomLikeId);
+        Long fandomCommentLikeId = commentService.fandomCommentLike(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomCommentLikeId);
     }
 
     @Operation(summary = "팬덤 댓글 좋아요 취소",description ="팬덤 게시판 댓글 좋어요 취소" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("/fandom/comments/{commentId}/like-cancel")
     public ApiResponse<String> fandomCommentLikeCancel(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
-        Long fandomLikeId = commentService.fandomCommentLikeCancel(commentId,memberId);
-        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomLikeId);
+        Long fandomCommentLikeId = commentService.fandomCommentLikeCancel(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "FandomCommentLikeId: "+fandomCommentLikeId);
     }
 
     @Operation(summary = "콘텐츠 댓글 작성",description ="멤버가 콘텐츠 게시판 게시글에 댓글을 생성" )
@@ -57,16 +57,16 @@ public class CommentController {
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("/contents/comments/{commentId}/like")
     public ApiResponse<String> contentsCommentLike(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
-        Long contentsLikeId = commentService.contentsCommentLike(commentId,memberId);
-        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "ContentsCommentLikeId: "+contentsLikeId);
+        Long contentsCommentLikeId = commentService.contentsCommentLike(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "ContentsCommentLikeId: "+contentsCommentLikeId);
     }
 
     @Operation(summary = "콘텐츠 댓글 좋아요 취소",description ="콘텐츠 게시판 댓글 좋어요 취소" )
     @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
     @PostMapping("/contents/comments/{commentId}/like-cancel")
     public ApiResponse<String> contentsCommentLikeCancel(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
-        Long contentsLikeId = commentService.contentsCommentLikeCancel(commentId,memberId);
-        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "ContentsCommentLikeId: "+contentsLikeId);
+        Long contentsCommentLikeId = commentService.contentsCommentLikeCancel(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "ContentsCommentLikeId: "+contentsCommentLikeId);
     }
 
     @Operation(summary = "커뮤니티 댓글 작성",description ="멤버가 커뮤니티 게시판 게시글에 댓글을 생성" )
@@ -75,6 +75,22 @@ public class CommentController {
     public ApiResponse<String> addNewCommunityComment(@RequestBody CommentRequestDto.addComment dto, @PathVariable("community_id")Long communityId,@RequestParam("memberId")Long memberId){
         Long commentId = commentService.createCommunityComment(dto,communityId,memberId);
         return  ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"CommunityCommentId: "+ commentId);
+    }
+
+    @Operation(summary = "커뮤니티 댓글 좋아요",description ="커뮤니티 게시판 댓글 좋어요 등록" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("/community/comments/{commentId}/like")
+    public ApiResponse<String> communityCommentLike(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
+        Long communityCommentLikeId = commentService.communityCommentLike(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "CommunityCommentLikeId: "+communityCommentLikeId);
+    }
+
+    @Operation(summary = "커뮤니티 댓글 좋아요 취소",description ="커뮤니티 게시판 댓글 좋어요 취소" )
+    @Parameter(name = "memberId",description = "[임시]유저를 구분하는 유저 ID로 이후 로그인 서비스 도입시 토큰 대체")
+    @PostMapping("/community/comments/{commentId}/like-cancel")
+    public ApiResponse<String> communityCommentLikeCancel(@PathVariable("commentId")Long commentId,@RequestParam("memberId")Long memberId){
+        Long contentsLikeId = commentService.communityCommentLikeCancel(commentId,memberId);
+        return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(), "CommunityCommentLikeId: "+contentsLikeId);
     }
 
     @Operation(summary = "팬덤 대댓글 작성",description ="멤버가 팬덤 게시판 게시글에 대댓글을 생성" )
