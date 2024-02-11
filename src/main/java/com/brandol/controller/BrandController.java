@@ -66,14 +66,16 @@ public class BrandController {
 
     @Operation(summary = "멤버 작성 글 조회",description ="2페이지 d 진입시 호출하는 API" )
     @GetMapping("/brands/{brandId}/my-written/articles")
-    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenArticle(@PathVariable("brandId")Long brandId,@RequestParam("memberId")Long memberId){
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenArticle(@PathVariable("brandId")Long brandId,Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
         MemberResponseDto.MemberWrittenMainDto dto = memberService.makeBrandMemberWrittenPage(memberId,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
 
     @Operation(summary = "멤버 작성 댓글 조회",description ="2페이지 d 진입시 호출하는 API" )
     @GetMapping("/brands/{brandId}/my-written/comments")
-    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenComment(@PathVariable("brandId")Long brandId,@RequestParam("memberId")Long memberId){
+    public ApiResponse<MemberResponseDto.MemberWrittenMainDto> memberWrittenComment(@PathVariable("brandId")Long brandId,Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
         MemberResponseDto.MemberWrittenMainDto dto = memberService.makeBrandMemberWrittenCommentPage(memberId,brandId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
@@ -83,9 +85,9 @@ public class BrandController {
     @PostMapping(value = "/brands/{brandId}/community/new",consumes = "multipart/form-data")
     public ApiResponse<String> crateBrandCommunity(@ModelAttribute BrandRequestDto.addCommunity communityDto,
                                                    @PathVariable("brandId")Long brandId,
-                                                   @RequestParam("memberId") Long memberID
+                                                   Authentication authentication
                                                    ){
-        Long memberId = memberID;
+        Long memberId = Long.parseLong(authentication.getName());
         Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
     }
