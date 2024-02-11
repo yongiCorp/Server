@@ -43,4 +43,6 @@ public class Community extends BaseEntity {
     private Brand brand;
 
     public void updateComments(int number){this.comments=number;}
+
+    public void updateLikes(int number){this.likes = number;}
 }

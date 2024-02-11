@@ -12,24 +12,23 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class CommunityLikes extends BaseEntity {
+public class FandomCommentLikes extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "community_likes_id")
+    @Column(name = "fandom_comment_likes_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fandom_comment_id",nullable = false)
+    private FandomComment fandomComment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id",nullable = false)
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private LikeStatus likeStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="community_id", nullable = false)
-    private Community community;
-
-    public void changeLikeStatus(LikeStatus likeStatus){
-        this.likeStatus = likeStatus;
-    }
+    public void changeLikeStatus(LikeStatus likeStatus){this.likeStatus = likeStatus;}
 }
