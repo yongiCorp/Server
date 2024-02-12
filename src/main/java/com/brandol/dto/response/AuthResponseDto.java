@@ -21,4 +21,12 @@ public class AuthResponseDto {
         private boolean signUp;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateNickname {
+        private Long memberId;
+        private String nickname;
+    }
 }

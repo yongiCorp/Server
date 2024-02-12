@@ -54,4 +54,9 @@ public class AuthRequestDto {
         private Integer age;
     }
 
+    @Getter
+    public static class UpdateNicknameDto {
+        private String nickname;
+    }
+
 }

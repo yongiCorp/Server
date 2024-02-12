@@ -56,4 +56,12 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), inactivateMember);
     }
 
+    @Operation(summary = "닉네임 수정", description = "현재 로그인한 사용자의 닉네임 수정, 닉네임은 10자 이하")
+    @PatchMapping("/nickname")
+    public ApiResponse<AuthResponseDto.UpdateNickname> updateNickname(Authentication authentication, @RequestBody AuthRequestDto.UpdateNicknameDto updateNicknameDto) {
+        Long memberId = Long.parseLong(authentication.getName());
+        AuthResponseDto.UpdateNickname updateNicknameResDto = authService.updateNickname(memberId, updateNicknameDto.getNickname());
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), updateNicknameResDto);
+    }
+
 }

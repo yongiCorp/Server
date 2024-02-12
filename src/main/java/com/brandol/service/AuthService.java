@@ -112,4 +112,12 @@ public class AuthService {
         member.inactivate(UserStatus.INACTIVE);
         return "탈퇴 성공";
     }
+
+    // 닉네임 변경
+    @Transactional
+    public AuthResponseDto.UpdateNickname updateNickname(Long memberId, String nickname) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        member.updateNickname(nickname);
+        return MemberConverter.toUpdateNicknameDto(member.getId(), member.getNickname());
+    }
 }
