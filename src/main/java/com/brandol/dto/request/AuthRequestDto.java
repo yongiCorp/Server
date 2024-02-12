@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class AuthRequestDto {
@@ -55,7 +56,11 @@ public class AuthRequestDto {
     }
 
     @Getter
+    @Setter
     public static class UpdateNicknameDto {
+        @NotBlank(message = "닉네임을 입력해주세요.")
+        @Size(min = 1, max = 10, message = "닉네임은 1자 이상 10자 이하로 입력해주세요.")
+        @ExistNickname
         private String nickname;
     }
 
