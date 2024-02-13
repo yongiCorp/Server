@@ -65,7 +65,7 @@ public class AuthController {
     }
 
     @Operation(summary = "마이페이지 회원 정보 조회", description = "마이페이지 회원 정보(아바타, 닉네임, 포인트) 조회")
-    @PatchMapping("/info")
+    @GetMapping("/info")
     public ApiResponse<AuthResponseDto.MemberInfo> getMyPageInfo(Authentication authentication) {
         Long memberId = Long.parseLong(authentication.getName());
         AuthResponseDto.MemberInfo memberInfo = authService.getMemberInfo(memberId);
