@@ -27,6 +27,7 @@ public class AvatarConverter {
                 .part(myItem.getItems().getItemPart().toString())
                 .description(myItem.getItems().getDescription())
                 .image(myItem.getItems().getImage())
+                .wearingImage(myItem.getItems().getWearingImage())
                 .brandId(myItem.getItems().getBrand().getId())
                 .brandName(myItem.getItems().getBrand().getName())
                 .price(myItem.getItems().getPrice())
