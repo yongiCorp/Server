@@ -3,6 +3,7 @@ package com.brandol.domain;
 import com.brandol.domain.common.BaseEntity;
 import com.brandol.domain.enums.ContentsType;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -31,8 +32,10 @@ public class Contents extends BaseEntity {
     @JoinColumn(name = "brand_id",nullable = false)
     private Brand brand;
 
+    @ColumnDefault("0")
     private int likes;
 
+    @ColumnDefault("0")
     private int comments;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,4 +46,5 @@ public class Contents extends BaseEntity {
         this.file = fileURL;
     }
     public void updateComments(int number){this.comments=number;}
+    public void updateLikes(int number){this.likes = number;}
 }

@@ -89,4 +89,11 @@ public class MemberConverter {
                 .build();
     }
 
+    public static AuthResponseDto.UpdateNickname toUpdateNicknameDto(Long memberId, String nickname) {
+        return AuthResponseDto.UpdateNickname.builder()
+                .memberId(memberId)
+                .nickname(nickname)
+                .build();
+    }
+
 }
