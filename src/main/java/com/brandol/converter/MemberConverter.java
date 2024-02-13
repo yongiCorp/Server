@@ -96,4 +96,12 @@ public class MemberConverter {
                 .build();
     }
 
+    public static AuthResponseDto.MemberInfo toMemberInfoDto(Member member) {
+        return AuthResponseDto.MemberInfo.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .avatar(member.getAvatar())
+                .point(member.getPoint())
+                .build();
+    }
 }
