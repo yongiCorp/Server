@@ -1,11 +1,14 @@
 package com.brandol.converter;
 
 import com.brandol.domain.Mission;
+import com.brandol.domain.SurveyExample;
+import com.brandol.domain.SurveyQuestion;
 import com.brandol.domain.mapping.MemberMission;
 import com.brandol.dto.response.MemberMissionResponseDto;
 import com.brandol.dto.response.MemberResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MemberMissionConverter {
@@ -46,5 +49,36 @@ public class MemberMissionConverter {
                 .Id(memberMission.getId())
                 .missionSuccess(result)
                 .build();
+    }
+
+    public static MemberMissionResponseDto.SurveyMissionChallengeDto toSurveyMissionChallengeDto(Long missionId, List<SurveyQuestion> surveyQuestionList) {
+        return MemberMissionResponseDto.SurveyMissionChallengeDto.builder()
+                .missionId(missionId)
+                .survey(toSurveyPreviews(surveyQuestionList))
+                .build();
+
+    }
+
+    public static List<MemberMissionResponseDto.SurveyMissionPreviewDto> toSurveyPreviews(List<SurveyQuestion> surveyQuestionList) {
+        return surveyQuestionList.stream()
+                .map(question -> {
+                    return MemberMissionResponseDto.SurveyMissionPreviewDto.builder()
+                        .surveyQuestionId(question.getId())
+                        .surveyQuestion(question.getQuestion())
+                        .surveyQuestionType(question.getQuestionType())
+                        .surveyExamples(toSurveyExample(question))
+                        .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static List<MemberMissionResponseDto.SurveyExamplePreviewDto> toSurveyExample(SurveyQuestion surveyQuestion){
+        return surveyQuestion.getSurveyExampleList().stream()
+                .map(surveyExample ->
+                        MemberMissionResponseDto.SurveyExamplePreviewDto.builder()
+                                .surveyExample(surveyExample.getExample())
+                                .surveyExampleId(surveyExample.getId())
+                                .build())
+                .collect(Collectors.toList());
     }
 }
