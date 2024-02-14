@@ -7,6 +7,7 @@ import com.brandol.converter.AvatarConverter;
 import com.brandol.domain.Member;
 import com.brandol.converter.ItemConverter;
 import com.brandol.domain.Items;
+import com.brandol.domain.PointHistory;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.MyItemRequestDto;
 import com.brandol.dto.response.ItemResponseDto;
@@ -14,6 +15,7 @@ import com.brandol.dto.response.MyItemResponseDto;
 import com.brandol.repository.ItemsRepository;
 import com.brandol.repository.MemberRepository;
 import com.brandol.repository.MyItemRepository;
+import com.brandol.repository.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +35,7 @@ public class ItemService {
     private final ItemsRepository itemsRepository;
     private final MemberRepository memberRepository;
     private final AmazonS3Manager s3Manager;
+    private final PointHistoryRepository pointHistoryRepository;
 
     public List<MyItemResponseDto.MyItemDto> getMyItemList(Long memberId) {
 
@@ -123,5 +127,14 @@ public class ItemService {
         return ItemConverter.toAvatarStoreBodyAllDto(AvatarStore_Body_DtoList);
 
 
+    }
+    @Transactional
+    public MyItem purchaseItem(Long memberId, Long itemId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        Items items = itemsRepository.findById(itemId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_ITEM));
+        if(member.getPoint() - items.getPrice() < 0) throw new ErrorHandler(ErrorStatus._MEMBER_NOT_ENOUGH_POINT);
+        member.updatePoint(-items.getPrice());
+        MyItem myItem = MyItem.builder().items(items).member(member).isWearing(false).build();
+        return myItemRepository.save(myItem);
     }
 }

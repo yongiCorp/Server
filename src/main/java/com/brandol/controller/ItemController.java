@@ -2,12 +2,15 @@ package com.brandol.controller;
 
 import com.brandol.apiPayload.ApiResponse;
 import com.brandol.apiPayload.code.status.SuccessStatus;
+import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.MyItemRequestDto;
 import com.brandol.dto.response.AvatarResponseDto;
 import com.brandol.dto.response.MyItemResponseDto;
 import com.brandol.service.AvatarService;
 import com.brandol.dto.response.ItemResponseDto;
 import com.brandol.service.ItemService;
+import com.brandol.service.MemberService;
+import com.brandol.service.PointHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -26,6 +29,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final AvatarService avatarService;
+    private final PointHistoryService pointHistoryService;
 
     @Operation(summary = "아바타 구매 아이템 조회",description = "내가 구매한 아이템, 아이템의 상세 정보, 아이템의 착용여부를 조회합니다. 응답의 image: 착용 전 아이템(보유아이템 목록) 이미지, wearingImage: 아바타 착용 아이템 이미지")
     @GetMapping("/myitems")
@@ -81,5 +85,14 @@ public class ItemController {
         Long memberId = Long.parseLong(authentication.getName());
         String myAvatar = avatarService.getMyAvatar(memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), myAvatar);
+    }
+
+    @Operation(summary = "아이템 구매")
+    @PostMapping("/items/{itemId}")
+    public ApiResponse<?> purchaseItem(@PathVariable("itemId") Long itemId, Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
+        MyItem myItem = itemService.purchaseItem(memberId, itemId);
+        pointHistoryService.makePurchaseHistory(myItem);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),null);
     }
 }
