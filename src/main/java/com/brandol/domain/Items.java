@@ -27,7 +27,10 @@ public class Items extends BaseEntity {
     private String description;
 
     @Column(columnDefinition = "TEXT")
-    private String image;
+    private String image; // 착용 전 보유 이미지
+
+    @Column(columnDefinition = "TEXT")
+    private String wearingImage; // 아바타에 직접 착용되는 이미지
 
     @Column(nullable = false)
     private int price;

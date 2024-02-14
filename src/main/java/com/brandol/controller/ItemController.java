@@ -27,7 +27,7 @@ public class ItemController {
     private final ItemService itemService;
     private final AvatarService avatarService;
 
-    @Operation(summary = "구매 아이템 조회",description = "내가 구매한 아이템, 아이템의 상세 정보, 아이템의 착용여부 조회")
+    @Operation(summary = "아바타 구매 아이템 조회",description = "내가 구매한 아이템, 아이템의 상세 정보, 아이템의 착용여부를 조회합니다. 응답의 image: 착용 전 아이템(보유아이템 목록) 이미지, wearingImage: 아바타 착용 아이템 이미지")
     @GetMapping("/myitems")
     public ApiResponse<List<MyItemResponseDto.MyItemDto>> getMyItems(Authentication authentication) {
         Long memberId = Long.parseLong(authentication.getName());
