@@ -9,6 +9,9 @@ import java.util.List;
 public class MyItemRequestDto {
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class wearItemsDto {
         @Schema(description = "구매한 아이템들 중 착용할 아이템의 id 리스트")
         //@NotNull
