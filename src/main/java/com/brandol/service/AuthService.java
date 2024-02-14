@@ -120,4 +120,10 @@ public class AuthService {
         member.updateNickname(nickname);
         return MemberConverter.toUpdateNicknameDto(member.getId(), member.getNickname());
     }
+
+    // 회원정보(아바타, 닉네임, 포인트) 조회
+    public AuthResponseDto.MemberInfo getMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        return MemberConverter.toMemberInfoDto(member);
+    }
 }

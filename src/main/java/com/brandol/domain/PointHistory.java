@@ -1,6 +1,7 @@
 package com.brandol.domain;
 
 import com.brandol.domain.common.BaseEntity;
+import com.brandol.domain.enums.HistoryType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,8 +20,8 @@ public class PointHistory extends BaseEntity {
     @Column(nullable = false)
     private int amount;
 
-    @Column(nullable = false)
-    private String history;
+    @Enumerated(EnumType.STRING)
+    private HistoryType history;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

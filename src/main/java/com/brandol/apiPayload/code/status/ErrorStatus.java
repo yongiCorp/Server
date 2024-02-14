@@ -52,6 +52,7 @@ public enum ErrorStatus implements BaseCode {
     _NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST,"MEMBER400","존재하지 않는 회원입니다."),
     _MEMBER_SIGNUP_REQUIRED(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
     _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
+    _MEMBER_NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "MEMBER403", "포인트가 부족합니다."),
 
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
@@ -67,6 +68,7 @@ public enum ErrorStatus implements BaseCode {
 
     // 아이템
     _NOT_EXIST_MY_ITEM(HttpStatus.NOT_FOUND,"MYITEM400","내 아이템이 존재하지 않습니다."),
+    _NOT_EXIST_ITEM(HttpStatus.NOT_FOUND,"ITEM400","아이템이 존재하지 않습니다"),
 
     // 이용약관
     _TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "TERMS400", "이용약관이 존재하지 않습니다." ),

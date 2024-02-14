@@ -29,4 +29,15 @@ public class AuthResponseDto {
         private Long memberId;
         private String nickname;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberInfo {
+        private Long memberId;
+        private String nickname;
+        private String avatar;
+        private int point;
+    }
 }
