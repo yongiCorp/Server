@@ -2,6 +2,7 @@ package com.brandol.service;
 
 import com.brandol.domain.PointHistory;
 import com.brandol.domain.enums.HistoryType;
+import com.brandol.domain.mapping.MemberMission;
 import com.brandol.domain.mapping.MyItem;
 import com.brandol.repository.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,16 @@ public class PointHistoryService {
                 .amount(-myItem.getItems().getPrice())
                 .history(HistoryType.ITEM)
                 .member(myItem.getMember())
+                .build();
+        pointHistoryRepository.save(pointHistory);
+    }
+
+    @Transactional
+    public void makeSuccessHistory(MemberMission memberMission) {
+        PointHistory pointHistory = PointHistory.builder()
+                .member(memberMission.getMember())
+                .history(HistoryType.MISSION)
+                .amount(memberMission.getMission().getPoints())
                 .build();
         pointHistoryRepository.save(pointHistory);
     }

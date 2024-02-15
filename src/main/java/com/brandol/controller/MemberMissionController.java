@@ -7,8 +7,10 @@ import com.brandol.converter.MemberMissionConverter;
 import com.brandol.domain.Member;
 import com.brandol.domain.SurveyQuestion;
 import com.brandol.domain.mapping.MemberMission;
+import com.brandol.dto.request.MemberMissionRequestDto;
 import com.brandol.dto.response.MemberMissionResponseDto;
 import com.brandol.service.MemberMissionService;
+import com.brandol.service.PointHistoryService;
 import com.brandol.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +27,7 @@ import java.util.List;
 public class MemberMissionController {
     private final MemberMissionService memberMissionService;
     private final SurveyService surveyService;
+    private final PointHistoryService pointHistoryService;
     @Operation(summary = "포인트 미션 목록")
     @GetMapping("/missions")
     public ApiResponse<MemberMissionResponseDto.GetMemberMissionDto> missionList(Authentication authentication) {
@@ -43,9 +46,9 @@ public class MemberMissionController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),MemberMissionConverter.toMissionChallengeDto(memberMission, result));
     }
 
-    @Operation(summary = "포인트 미션 성공")
-    @PatchMapping("/missions/{missionId}/success")
-    public ApiResponse<?> missionSuccess(Authentication authentication, @PathVariable("missionId")Long missionId) {
+    @Operation(summary = "브랜드 추가 미션 성공")
+    @PatchMapping("/missions/{missionId}/add/success")
+    public ApiResponse<?> addMissionSuccess(Authentication authentication, @PathVariable("missionId")Long missionId) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         Member member = principalDetails.getMember();
         memberMissionService.successMission(member.getId(), missionId);
@@ -60,5 +63,19 @@ public class MemberMissionController {
         List<SurveyQuestion> surveyQuestions = surveyService.getSurveyQuestions(missionId);
         MemberMissionResponseDto.SurveyMissionChallengeDto surveyMissionChallengeDto = MemberMissionConverter.toSurveyMissionChallengeDto(missionId, surveyQuestions);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),surveyMissionChallengeDto);
+    }
+    @Operation(summary="설문지 미션 성공")
+    @PatchMapping("/missions/{missionId}/survey/success")
+    public ApiResponse<?> surveyMissionSuccess(
+            Authentication authentication,
+            @PathVariable("missionId") Long missionId,
+            @RequestBody MemberMissionRequestDto.addMemberBrand request
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        surveyService.submitAnswer(memberId,missionId, request);
+        MemberMission memberMission = memberMissionService.successMission(memberId, missionId);
+        pointHistoryService.makeSuccessHistory(memberMission);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),null);
+
     }
 }
