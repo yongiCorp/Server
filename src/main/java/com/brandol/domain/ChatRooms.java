@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class ChatRooms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatrooms_id")
+    @Column(name = "chat_rooms_id")
     private Long id;
     //사용자A
     @ManyToOne(fetch = FetchType.LAZY)

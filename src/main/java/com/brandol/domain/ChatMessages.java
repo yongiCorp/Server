@@ -12,23 +12,43 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ChatMessages extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="chatmessages_id")
+    @Column(name="chat_messages_id")
     private Long id;
 
-    //보낸 사람Id
-    @Column(nullable = false)
-    private Long sender;
+
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
+
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="chatrooms_id", nullable = false)
+    @JoinColumn(name = "chat_rooms_id",nullable = false)
     private ChatRooms chatRooms;
 
-    @Column(nullable = false)//읽음표시추가
-    @ColumnDefault("0")
-    private boolean isRead;
+
+    @Column(name = "sender_id",nullable = false)
+    private Long sender;
+
+
+    @Column(name = "sended_id",nullable = false)
+    private Long sended_id;
+
+    @ColumnDefault("false")
+    private boolean isRead; // 읽음표시
+
+
+
+
+
+    @Column(name="send_time", nullable = false)
+    private String sendTime;
+
+
+
 }
