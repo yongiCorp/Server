@@ -15,20 +15,20 @@ public interface BrandRepository extends JpaRepository<Brand,Long> {
     Brand findOneById(@Param("id") Long id);
 
 
-    @Query(value = "select * from Brand b order by created_at DESC LIMIT :cnt ",nativeQuery = true)
+    @Query(value = "select * from brand b order by created_at DESC LIMIT :cnt ",nativeQuery = true)
     List<Brand> findRecentBrands(@Param("cnt") int cnt);
 
     @Query(value = "select b from Brand b WHERE b.name = :name")
     Brand findOneByName(@Param("name") String name);
 
 
-    @Query(value ="select * from Brand b where b.name not like :name order by created_at DESC LIMIT :cnt",nativeQuery = true)
+    @Query(value ="select * from brand b where b.name not like :name order by created_at DESC LIMIT :cnt",nativeQuery = true)
     List<Brand> findRecentBrandsExceptForOne(@Param("name")String name,@Param("cnt")int cnt);
 
-    @Query(value = "SELECT * FROM Brand  ORDER BY RAND() limit 3",nativeQuery = true)
+    @Query(value = "SELECT * FROM brand ORDER BY RAND() limit 3",nativeQuery = true)
     List<Brand> findThreeByRandom();
 
-    @Query(value = "SELECT * FROM Brand  ORDER BY RAND() ",nativeQuery = true)
+    @Query(value = "SELECT * FROM brand ORDER BY RAND() ",nativeQuery = true)
     List<Brand> findAllByRandom();
     boolean existsById(Long id);
 }
