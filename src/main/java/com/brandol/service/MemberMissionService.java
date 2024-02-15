@@ -9,6 +9,7 @@ import com.brandol.domain.enums.MissionStatus;
 import com.brandol.domain.enums.MissionType;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MemberMission;
+import com.brandol.dto.request.MemberMissionRequestDto;
 import com.brandol.dto.response.MemberMissionResponseDto;
 import com.brandol.repository.MemberBrandRepository;
 import com.brandol.repository.MemberMissionRepository;
@@ -64,11 +65,13 @@ public class MemberMissionService {
     }
 
     @Transactional
-    public void successMission(Long memberId, Long missionId) {
+    public MemberMission successMission(Long memberId, Long missionId) {
         MemberMission memberMission = memberMissionRepository.findAllByMemberIdAndMissionId(memberId, missionId);
         if(memberMission == null) throw new ErrorHandler(ErrorStatus._NOT_CHALLENGING_MISSION);
         if(memberMission.getMissionStatus() == MissionStatus.ENDED) throw new ErrorHandler(ErrorStatus._ALREADY_COMPLETED_MISSION);
         memberMission.changeStatus(MissionStatus.ENDED);
         memberMission.getMember().updatePoint(memberMission.getMission().getPoints());
+        return memberMission;
     }
+
 }

@@ -1,10 +1,14 @@
 package com.brandol.dto.response;
 
+import com.brandol.domain.SurveyExample;
 import com.brandol.domain.enums.MissionStatus;
 import com.brandol.domain.enums.MissionType;
+import com.brandol.domain.enums.QuestionType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MemberMissionResponseDto {
 
@@ -51,5 +55,32 @@ public class MemberMissionResponseDto {
         private boolean missionSuccess;
     }
 
+    @Builder
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SurveyMissionPreviewDto {
+        private Long surveyQuestionId;
+        private String surveyQuestion;
+        private QuestionType surveyQuestionType;
+        private List<SurveyExamplePreviewDto> surveyExamples;
+    }
+
+    @Builder
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SurveyMissionChallengeDto {
+        private Long missionId;
+        private List<SurveyMissionPreviewDto> survey;
+    }
+    @Builder
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class SurveyExamplePreviewDto {
+        private Long surveyExampleId;
+        private String surveyExample;
+    }
 
 }
