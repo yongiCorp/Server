@@ -7,6 +7,7 @@ import com.brandol.dto.request.BrandRequestDto;
 import com.brandol.dto.response.BrandResponseDto;
 import com.brandol.dto.response.MemberResponseDto;
 import com.brandol.service.BrandService;
+import com.brandol.service.MemberMissionService;
 import com.brandol.service.MemberService;
 import com.brandol.validation.annotation.ExistBrand;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ public class BrandController {
 
     private final BrandService brandService;
     private final MemberService memberService;
+    private final MemberMissionService memberMissionService;
 
 
     @Operation(summary = "브랜드 생성",description ="브랜돌 서비스에 브랜드를 신규 등록하는 함수",hidden = false ) // 테스트 해야함
@@ -89,6 +91,7 @@ public class BrandController {
                                                    ){
         Long memberId = Long.parseLong(authentication.getName());
         Long communityId = brandService.createCommunity(communityDto,brandId,memberId);
+        memberMissionService.checkCommunityMission(memberId, brandId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"article-id: "+communityId);
     }
 }

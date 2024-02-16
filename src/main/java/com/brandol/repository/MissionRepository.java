@@ -1,6 +1,8 @@
 package com.brandol.repository;
 
+import com.brandol.domain.Brand;
 import com.brandol.domain.Mission;
+import com.brandol.domain.enums.MissionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +17,8 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
 
     Optional<Mission> findById(Long missionId);
 
-    Optional<Mission> findByBrand_Id(Long brandId);
+    Optional<Mission> findByBrandAndMissionType(Brand brand, MissionType missionType);
+
+    List<Mission> findAllByBrand(Brand brand);
+
 }
