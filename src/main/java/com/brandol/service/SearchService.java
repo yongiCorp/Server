@@ -36,7 +36,7 @@ public class SearchService {
 
 
         // 브랜드 리스트
-        List<Brand> searchmainbrandList = brandRepository.findThreeByRandom();
+        List<Brand> searchmainbrandList = brandRepository.findByRandom();//0216 수정
 
         // 멤버 리스트
         List<Member> searchmainuserList = memberRepository.findThreeByRandom();
@@ -94,7 +94,7 @@ public class SearchService {
 
 
         // 브랜드 리스트
-        List<Brand> searchdetailbrandList = brandRepository.findAllByRandom();
+        List<Brand> searchdetailbrandList = brandRepository.findByRandom();//0216 수정
 
 
 
