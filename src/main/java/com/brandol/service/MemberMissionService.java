@@ -3,18 +3,17 @@ package com.brandol.service;
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.MemberMissionConverter;
+import com.brandol.domain.Brand;
 import com.brandol.domain.Member;
 import com.brandol.domain.Mission;
 import com.brandol.domain.enums.MissionStatus;
 import com.brandol.domain.enums.MissionType;
+import com.brandol.domain.mapping.Community;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MemberMission;
 import com.brandol.dto.request.MemberMissionRequestDto;
 import com.brandol.dto.response.MemberMissionResponseDto;
-import com.brandol.repository.MemberBrandRepository;
-import com.brandol.repository.MemberMissionRepository;
-import com.brandol.repository.MemberRepository;
-import com.brandol.repository.MissionRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,7 @@ public class MemberMissionService {
     private final MissionRepository missionRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final MemberRepository memberRepository;
+    private final CommunityRepository communityRepository;
     public MemberMissionResponseDto.GetMemberMissionDto getMemberMission(Long memberId) {
         List<MemberMission> memberMissionList = memberMissionRepository.findByMemberId(memberId);
         List<Mission> missionList = missionRepository.findMissionNotBelongingToMember(memberId);
@@ -48,10 +48,6 @@ public class MemberMissionService {
                             return true;
                         }).orElse(false))
                 .orElse(false);
-        //멤버 브랜드 리스트에 브랜드가 존재하는지 확인하지 않아서 오류 발생 <- 이거 해야됨
-        //위 코드는 브랜드Id에 해당하는 미션 존애 유무 확인
-        //memberId와 미션id로 사용자가 미션을 도전중이지 확인 -> 도전 중이면 true 반환 -> 틀렸음
-        //
     }
 
 
@@ -72,6 +68,18 @@ public class MemberMissionService {
         memberMission.changeStatus(MissionStatus.ENDED);
         memberMission.getMember().updatePoint(memberMission.getMission().getPoints());
         return memberMission;
+    }
+
+    @Transactional
+    public boolean checkCommunityMission(MemberMission memberMission){
+        Brand brand = memberMission.getMission().getBrand();
+        Member member = memberMission.getMember();
+        Optional<Community> community = communityRepository.findByMemberAndBrand(member, brand);
+        if(community.isPresent()) {
+            memberMission.changeStatus(MissionStatus.COMPLETED);
+            return true;
+        }
+        return false;
     }
 
 }
