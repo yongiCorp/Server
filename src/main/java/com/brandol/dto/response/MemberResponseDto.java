@@ -43,6 +43,7 @@ public class MemberResponseDto {
         private Long brandId;
         private String brandName;
         private String profileImage;
+        private String brandDescription;//0216 추가
         private Long sequence;
     }
 

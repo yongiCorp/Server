@@ -22,3 +22,6 @@ logging.level:
   org.hibernate.type : trace
 jwt:
   secret: ${JWT_SECRET}
+defaultItemIds:
+  male: ${DEFAULT_ITEM_MALE}
+  female: ${DEFAULT_ITEM_FEMALE}

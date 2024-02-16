@@ -25,10 +25,11 @@ public interface BrandRepository extends JpaRepository<Brand,Long> {
     @Query(value ="select * from brand b where b.name not like :name order by created_at DESC LIMIT :cnt",nativeQuery = true)
     List<Brand> findRecentBrandsExceptForOne(@Param("name")String name,@Param("cnt")int cnt);
 
-    @Query(value = "SELECT * FROM brand ORDER BY RAND() limit 3",nativeQuery = true)
-    List<Brand> findThreeByRandom();
+    @Query(value = "SELECT * FROM brand WHERE brand.brand_id not like 3 ORDER BY RAND() ",nativeQuery = true)
+    List<Brand> findByRandom(); //0216 수정(특정브랜드제외)
 
-    @Query(value = "SELECT * FROM brand ORDER BY RAND() ",nativeQuery = true)
-    List<Brand> findAllByRandom();
+    //@Query(value = "SELECT * FROM brand WHERE brand.brand_id not like 3 ORDER BY RAND() ",nativeQuery = true)
+    //List<Brand> findAllByRandom();
+
     boolean existsById(Long id);
 }

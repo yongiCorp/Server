@@ -56,6 +56,7 @@ public class MemberConverter {
                 .brandId(memberBrandList.getBrand().getId())
                 .brandName(memberBrandList.getBrand().getName())
                 .profileImage(memberBrandList.getBrand().getProfileImage())
+                .brandDescription(memberBrandList.getBrand().getDescription())// 0216 추가
                 .sequence(memberBrandList.getSequence())
                 .build();
     }
