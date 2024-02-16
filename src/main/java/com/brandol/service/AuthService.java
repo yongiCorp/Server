@@ -6,17 +6,18 @@ import com.brandol.config.security.JwtProvider;
 import com.brandol.config.security.TokenDto;
 import com.brandol.converter.AgreementConverter;
 import com.brandol.converter.MemberConverter;
+import com.brandol.domain.Items;
 import com.brandol.domain.Member;
 import com.brandol.domain.Term;
 import com.brandol.domain.enums.Gender;
 import com.brandol.domain.enums.TermType;
 import com.brandol.domain.enums.UserStatus;
+import com.brandol.domain.mapping.MyItem;
 import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
-import com.brandol.repository.AgreementRepository;
-import com.brandol.repository.MemberRepository;
-import com.brandol.repository.TermRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,15 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final TermRepository termRepository;
     private final AgreementRepository agreementRepository;
+    private final ItemsRepository itemsRepository;
+    private final MyItemRepository myItemRepository;
     private final JwtProvider jwtProvider;
+
+    @Value("${defaultItemIds.male}")
+    private List<Long> maleDefaultItemIds;
+
+    @Value("${defaultItemIds.female}")
+    private List<Long> femaleDefaultItemIds;
 
     @Transactional
     public TokenDto login(AuthRequestDto.KakaoLoginRequest request) {
@@ -66,7 +75,28 @@ public class AuthService {
     public AuthResponseDto.SignUpDto signUp(AuthRequestDto.SignUpDto request) {
         AuthResponseDto.AgreeTermsDto agreeTermsResponse = agreeTerms(request);
         Member member = setProfile(request);
+        wearDefaultAvatarItems(member);// 성별에 따라 아바타 기본 아이템 장착
         return MemberConverter.signUpResDto(member.getId());
+    }
+
+    // 아바타 기본 아이템을 MyItem에 isWearing = true로 저장
+    @Transactional
+    public void wearDefaultAvatarItems(Member member) {
+        List<Long> defaultItemIds;
+        if (member.getGender() == Gender.MALE) {
+            defaultItemIds = maleDefaultItemIds;
+        } else {
+            defaultItemIds = femaleDefaultItemIds;
+        }
+        List<Items> defaultItems = itemsRepository.findAllById(defaultItemIds);
+        for (Items item : defaultItems) {
+            MyItem myItem = MyItem.builder()
+                    .member(member)
+                    .items(item)
+                    .isWearing(true)
+                    .build();
+            myItemRepository.save(myItem);
+        }
     }
 
     // 이용약관 동의
