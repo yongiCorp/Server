@@ -13,6 +13,9 @@ public interface ContentsRepository extends JpaRepository<Contents,Long> {
     @Query(value = "select * from contents c order by created_at desc LIMIT :cnt ",nativeQuery = true)
     List<Contents> findRecentBrands(@Param("cnt") int cnt);
 
+    @Query(value = "select c from Contents c where c.contentsType =com.brandol.domain.enums.ContentsType.EVENTS order by c.createdAt desc")
+    List<Contents>findRecentBrandEventsForSubBanner(Pageable pageable);
+
     @Query(value = "select  c from  Contents c where c.brand.id= :brandId and c.contentsType =com.brandol.domain.enums.ContentsType.EVENTS order by c.createdAt desc ")
     List<Contents>findRecentEvents(@Param("brandId")Long brandId, Pageable pageable);
 
