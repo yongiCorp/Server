@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,5 +35,9 @@ public class PointHistoryService {
                 .amount(memberMission.getMission().getPoints())
                 .build();
         pointHistoryRepository.save(pointHistory);
+    }
+
+    public List<PointHistory> getPointHistory(Long memberId){
+        return pointHistoryRepository.findAllByMemberIdOrderByCreatedAt(memberId);
     }
 }
