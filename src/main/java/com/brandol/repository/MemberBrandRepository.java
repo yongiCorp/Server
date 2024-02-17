@@ -35,4 +35,5 @@ public interface MemberBrandRepository extends JpaRepository<MemberBrandList,Lon
 
     @Query("select count(mbl) from MemberBrandList mbl where mbl.memberListStatus = com.brandol.domain.enums.MemberListStatus.SUBSCRIBED")
     int getRecentSubscriberCount();
+
 }
