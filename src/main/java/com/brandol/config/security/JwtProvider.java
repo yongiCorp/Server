@@ -1,7 +1,5 @@
 package com.brandol.config.security;
 
-import com.brandol.apiPayload.code.status.ErrorStatus;
-import com.brandol.apiPayload.exception.ErrorHandler;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -91,7 +89,6 @@ public class JwtProvider implements InitializingBean {
         // 이메일 -> id로 변경
         String memberId = getClaims(token).get("id").toString();
         UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId); // 이메일 -> id로 변경
-        // System.out.println("getAuthentication() 실행: userDetails : " + userDetails.getUsername()+ userDetails.getPassword() + userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 
@@ -109,17 +106,16 @@ public class JwtProvider implements InitializingBean {
             return true;
         } catch (ExpiredJwtException e) { // accessToken 만료여도 일단 true, refreshToken 확인 후 재발급
             log.info("만료된 토큰");
-//            return false;
-            throw new ErrorHandler(ErrorStatus.EXPIRED_TOKEN);
+            throw new JwtException("Expired Token Exception");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 토큰");
-            throw new ErrorHandler(ErrorStatus.INVALID_TOKEN);
+            throw new JwtException("Invalid Token Exception");
         }catch (SecurityException | MalformedJwtException e) {
             log.info("잘린 토큰");
-            throw new ErrorHandler(ErrorStatus.INVALID_TOKEN);
+            throw new JwtException("Invalid Token Exception");
         }  catch (NullPointerException e) {
             log.info("토큰 없음");
-            throw new ErrorHandler(ErrorStatus.INVALID_TOKEN);
+            throw new JwtException("Invalid Token Exception");
         }  catch (Exception e) {
             return false;
         }
