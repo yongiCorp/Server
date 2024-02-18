@@ -53,6 +53,7 @@ public enum ErrorStatus implements BaseCode {
     _MEMBER_SIGNUP_REQUIRED(HttpStatus.NOT_FOUND, "MEMBER401", "회원가입을 진행해주세요."),
     _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
     _MEMBER_NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "MEMBER403", "포인트가 부족합니다."),
+    _INACTIVE_MEMBER(HttpStatus.NOT_FOUND, "MEMBER404", "비활성화된 회원입니다."),
 
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),

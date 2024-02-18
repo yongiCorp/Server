@@ -49,6 +49,10 @@ public class AuthService {
         // 로그인
         if (member != null && member.isSignUp()) { // 해당 이메일로 가입O, 회원가입도 완료된 회원이 있으면 로그인 진행
 
+            if (member.getUserStatus() == UserStatus.INACTIVE) {
+                throw new ErrorHandler(ErrorStatus._INACTIVE_MEMBER);
+            }
+
             // 토큰 생성 - ATK
             TokenDto tokenDto = jwtProvider.createToken(member.getEmail(),member.getId(), member.getRole().toString());
             System.out.println("토큰 생성: ");
