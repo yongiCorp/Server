@@ -12,6 +12,7 @@ public enum ErrorStatus implements BaseCode {
 
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
+    _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증되지 않은 사용자입니다."),
 
     // Jwt 관련
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "JWT400", "유효하지 않은 토큰입니다."),
