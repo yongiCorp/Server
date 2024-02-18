@@ -53,8 +53,10 @@ public class MemberMissionService {
 
     @Transactional
     public MemberMission challengeMission(Long memberId, Long missionId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        Member member = memberRepository.findOneById(memberId);
         Mission mission = missionRepository.findById(missionId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_MISSION));
+        Optional<MemberMission> exist = memberMissionRepository.findByMemberIdAndMissionId(memberId, missionId);
+        if(exist.isPresent()) throw new ErrorHandler(ErrorStatus._ALREADY_CHALLENGING_MISSION);
         MemberMission memberMission = MemberMission.builder().member(member).mission(mission).missionStatus(MissionStatus.CHALLENGING).build();
         memberMissionRepository.save(memberMission);
         return memberMission;
