@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,19 +22,22 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/chat/room")
-    public ApiResponse<String> createChatRoom(@RequestParam Long sender, @RequestParam Long receiver){
-       Long roomId = chatService.makeChatRoom(sender,receiver);
+    public ApiResponse<String> createChatRoom(@RequestParam Long receiver, Authentication authentication){
+        Long senderId = Long.parseLong(authentication.getName());
+        Long roomId = chatService.makeChatRoom(senderId,receiver);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(),SuccessStatus._CREATED.getMessage(),"chatRoomId: "+roomId);
     }
 
     @PostMapping("/chat/room/{roomId}")
-    public ApiResponse<String> sendMessage(@RequestBody ChatMessageRequestDto.sendMessage dto, @PathVariable("roomId")Long roomId, @RequestParam("senderId")Long senderId){
+    public ApiResponse<String> sendMessage(@RequestBody ChatMessageRequestDto.sendMessage dto, @PathVariable("roomId")Long roomId, Authentication authentication){
+        Long senderId = Long.parseLong(authentication.getName());
         Long messageId = chatService.sendMessage(dto,roomId,senderId);
         return ApiResponse.onSuccess(SuccessStatus._CREATED.getCode(), SuccessStatus._CREATED.getMessage(),"messageId: " +messageId);
     }
 
     @GetMapping("/chat/room/{roomId}")
-    public ApiResponse<ChatResponseDto.ChatMessagesDto> getNewMessages(@RequestParam("memberId")Long memberId,@PathVariable("roomId")Long roomId,@RequestParam("lastIndex")Long lastIndex){
+    public ApiResponse<ChatResponseDto.ChatMessagesDto> getNewMessages(@PathVariable("roomId")Long roomId,@RequestParam("lastIndex")Long lastIndex,Authentication authentication){
+        Long memberId = Long.parseLong(authentication.getName());
         ChatResponseDto.ChatMessagesDto dto = chatService.getNewMessages(roomId,lastIndex,memberId);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), dto);
     }
