@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
     @Column(length = 45, unique = true)
     private String nickname;
 
-    @ColumnDefault("0")
+    @ColumnDefault("1000")
     private int point;
 
     @Enumerated(EnumType.STRING)

@@ -71,6 +71,14 @@ public class SearchController {
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(), searchDetailAvatarStoreBodyDto);
     }
 
+    @Operation(summary = "직접 검색",description ="직접 검색" )
+    @Parameter(name = "searchContents",description = "검색어")
+    @GetMapping(value = "/search")
+    public ApiResponse<SearchResponseDto.SearchMainAllDto> searchTextPage(@RequestParam("searchContents") String searchContents) {
+        SearchResponseDto.SearchMainAllDto searchcontents = searchService.searchText(searchContents);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), searchcontents);
+    }
+
 
 
 
