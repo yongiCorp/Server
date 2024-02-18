@@ -28,7 +28,7 @@ public class JwtProvider implements InitializingBean {
     private Key key;
 
     private static final String AUTHORITIES_KEY = "role";
-    private final long accessTokenValidTime = 1000L * 60 * 60; // 1시간
+    private final long accessTokenValidTime = 1000L * 60 * 60 * 48; // 48시간
     private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 14; // 14일
 
     @Override
