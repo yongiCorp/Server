@@ -17,7 +17,7 @@ public class ChatMessages extends BaseEntity {
     private Long id;
 
     //보낸 사람Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member sender;
 

@@ -56,7 +56,7 @@ public enum ErrorStatus implements BaseCode {
 
     //채팅
     _IS_ALREADY_EXIST_CHAT_ROOM(HttpStatus.BAD_REQUEST,"CHAT400","이미 채팅방이 존재합니다."),
-    _NOT_A_MEMBER_OF_THIS_ROOM(HttpStatus.BAD_REQUEST,"CHAT401","해당 채팅방에 전송 권한이 없습니다."),
+    _NOT_A_MEMBER_OF_THIS_ROOM(HttpStatus.BAD_REQUEST,"CHAT401","해당 채팅방 접근 권한이 없습니다."),
 
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),

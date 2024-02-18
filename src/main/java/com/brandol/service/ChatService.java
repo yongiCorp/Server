@@ -2,18 +2,23 @@ package com.brandol.service;
 
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
+import com.brandol.converter.ChatConverter;
 import com.brandol.domain.ChatMessages;
 import com.brandol.domain.ChatRooms;
 import com.brandol.domain.Member;
 import com.brandol.dto.request.ChatMessageRequestDto;
+import com.brandol.dto.response.ChatResponseDto;
 import com.brandol.repository.ChatMessageRepository;
 import com.brandol.repository.ChatRoomsRepository;
 import com.brandol.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +66,23 @@ public class ChatService {
         chatMessageRepository.save(chatMessages);
         return chatMessages.getId();
 
+    }
+
+    public ChatResponseDto.ChatMessagesDto getNewMessages(Long chatRoomId, Long lastMessageId,Long memberId){
+
+        if(chatRoomsRepository.findChatRoomsByUserAId(memberId).isEmpty() && chatRoomsRepository.findChatRoomsByUserBId(memberId).isEmpty()){
+            throw new ErrorHandler(ErrorStatus._NOT_A_MEMBER_OF_THIS_ROOM);
+        }
+        // 마지막 id 이후 인덱스 범위에서 최근 메시지 30개 조회 -> 중복 조회 방지 목적
+        List<ChatMessages> chatMessagesList = chatMessageRepository.getNewMessages(chatRoomId,lastMessageId, PageRequest.of(0,30));
+        List<ChatResponseDto.ChatSingleMessageDto> chatMessagesDtos = new ArrayList<>();
+        for (ChatMessages chatMessages : chatMessagesList) {
+            ChatResponseDto.ChatSingleMessageDto dto = ChatConverter.toChatSingleMessageDto(chatMessages);
+            chatMessagesDtos.add(dto);
+        }
+        Long lastIndex = chatMessagesList.get(chatMessagesList.size()-1).getId(); // 배열에서 마지막 인덱스 가져오기
+
+        return ChatConverter.toChatMessagesDto(chatMessagesDtos,lastIndex);
 
     }
 }
