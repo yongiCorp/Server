@@ -22,7 +22,7 @@ public interface BrandRepository extends JpaRepository<Brand,Long> {
     Brand findOneByName(@Param("name") String name);
 
 
-    @Query(value ="select * from brand b where b.name not like :name order by created_at DESC LIMIT :cnt",nativeQuery = true)
+    @Query(value ="select * from brand b where b.name not like :name and b.name not like '일반' order by created_at DESC LIMIT :cnt",nativeQuery = true)
     List<Brand> findRecentBrandsExceptForOne(@Param("name")String name,@Param("cnt")int cnt);
 
     @Query(value = "SELECT * FROM brand WHERE brand.brand_id not like 3 ORDER BY RAND() ",nativeQuery = true)
