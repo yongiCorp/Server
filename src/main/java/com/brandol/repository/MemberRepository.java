@@ -18,9 +18,12 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     @Query(value = "SELECT * FROM member ORDER BY RAND() ",nativeQuery = true)
     List<Member> findAllByRandom();
 
+
     Optional<Member> findByEmail(String email);
 
     boolean existsByNickname(String nickname);
 
     Optional<Member> findById(Long id);
+
+    List<Member> findByNameContaining(String searchContetns);
 }
