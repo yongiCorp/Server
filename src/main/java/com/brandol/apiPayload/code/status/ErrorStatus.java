@@ -54,6 +54,10 @@ public enum ErrorStatus implements BaseCode {
     _MEMBER_NICKNAME_DUPLICATE(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
     _MEMBER_NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "MEMBER403", "포인트가 부족합니다."),
 
+    //채팅
+    _IS_ALREADY_EXIST_CHAT_ROOM(HttpStatus.BAD_REQUEST,"CHAT400","이미 채팅방이 존재합니다."),
+    _NOT_A_MEMBER_OF_THIS_ROOM(HttpStatus.BAD_REQUEST,"CHAT401","해당 채팅방에 전송 권한이 없습니다."),
+
     //미션
     _NOT_EXIST_MISSION(HttpStatus.NOT_FOUND, "MISSION400", "존재하지 않는 미션입니다."),
     _NOT_CHALLENGING_MISSION(HttpStatus.NOT_FOUND, "MISSION401", "도전 중인 미션이 아닙니다."),
