@@ -40,7 +40,6 @@ public class MemberMissionController {
     @PostMapping("/missions/{missionId}/add")
     public ApiResponse<MemberMissionResponseDto.MissionChallengeDto> addMissionChallenge(Authentication authentication, @PathVariable("missionId")Long missionId) {
         Long memberId = Long.parseLong(authentication.getName());
-        Object details = authentication.getDetails();
         MemberMission memberMission = memberMissionService.challengeMission(memberId, missionId);
         boolean result = memberMissionService.checkBrandMission(memberId, memberMission.getMission().getBrand().getId());
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),MemberMissionConverter.toMissionChallengeDto(memberMission, result));
@@ -51,7 +50,8 @@ public class MemberMissionController {
     public ApiResponse<?> addMissionSuccess(Authentication authentication, @PathVariable("missionId")Long missionId) {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         Member member = principalDetails.getMember();
-        memberMissionService.successMission(member.getId(), missionId);
+        MemberMission memberMission = memberMissionService.successMission(member.getId(), missionId);
+        pointHistoryService.makeSuccessHistory(memberMission);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),null);
     }
 
@@ -77,5 +77,29 @@ public class MemberMissionController {
         pointHistoryService.makeSuccessHistory(memberMission);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),null);
 
+    }
+
+    @Operation(summary = "게시판 미션 도전", description = "missionSuccess가 true이면 미션 완료, false이면 미션 도전 중으로 해주시면 됩니다.")
+    @PostMapping("/missions/{missionId}/community")
+    public ApiResponse<MemberMissionResponseDto.MissionChallengeDto> communityMissionChallenge(
+            Authentication authentication,
+            @PathVariable("missionId") Long missionId
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        MemberMission memberMission = memberMissionService.challengeMission(memberId, missionId);
+        boolean result = memberMissionService.checkCommunityMission(memberId, memberMission.getMission().getBrand().getId());
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(),MemberMissionConverter.toMissionChallengeDto(memberMission, result));
+    }
+
+    @Operation(summary = "게시판 미션 성공")
+    @PatchMapping("/missions/{missionId}/community/success")
+    public ApiResponse<?> communityMissionSuccess(
+            Authentication authentication,
+            @PathVariable("missionId") Long missionId
+    ) {
+        Long memberId = Long.parseLong(authentication.getName());
+        MemberMission memberMission = memberMissionService.successMission(memberId, missionId);
+        pointHistoryService.makeSuccessHistory(memberMission);
+        return ApiResponse.onSuccess(SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),null);
     }
 }

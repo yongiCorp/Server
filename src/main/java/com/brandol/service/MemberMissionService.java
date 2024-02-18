@@ -3,18 +3,17 @@ package com.brandol.service;
 import com.brandol.apiPayload.code.status.ErrorStatus;
 import com.brandol.apiPayload.exception.ErrorHandler;
 import com.brandol.converter.MemberMissionConverter;
+import com.brandol.domain.Brand;
 import com.brandol.domain.Member;
 import com.brandol.domain.Mission;
 import com.brandol.domain.enums.MissionStatus;
 import com.brandol.domain.enums.MissionType;
+import com.brandol.domain.mapping.Community;
 import com.brandol.domain.mapping.MemberBrandList;
 import com.brandol.domain.mapping.MemberMission;
 import com.brandol.dto.request.MemberMissionRequestDto;
 import com.brandol.dto.response.MemberMissionResponseDto;
-import com.brandol.repository.MemberBrandRepository;
-import com.brandol.repository.MemberMissionRepository;
-import com.brandol.repository.MemberRepository;
-import com.brandol.repository.MissionRepository;
+import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,8 @@ public class MemberMissionService {
     private final MissionRepository missionRepository;
     private final MemberBrandRepository memberBrandRepository;
     private final MemberRepository memberRepository;
+    private final CommunityRepository communityRepository;
+    private final BrandRepository brandRepository;
     public MemberMissionResponseDto.GetMemberMissionDto getMemberMission(Long memberId) {
         List<MemberMission> memberMissionList = memberMissionRepository.findByMemberId(memberId);
         List<Mission> missionList = missionRepository.findMissionNotBelongingToMember(memberId);
@@ -39,25 +40,20 @@ public class MemberMissionService {
     }
     @Transactional
     public boolean checkBrandMission(Long memberId, Long brandId) {
-        List<MemberBrandList> oneByMemberIdAndBrandId = memberBrandRepository.findOneByMemberIdAndBrandId(memberId, brandId);
-        if(oneByMemberIdAndBrandId.isEmpty()) return false;
-        return missionRepository.findByBrand_Id(brandId)
-                .map(mission -> memberMissionRepository.findByMemberIdAndMissionId(memberId, mission.getId())
-                        .map(memberMission -> {
-                            memberMission.changeStatus(MissionStatus.COMPLETED);
-                            return true;
-                        }).orElse(false))
-                .orElse(false);
-        //멤버 브랜드 리스트에 브랜드가 존재하는지 확인하지 않아서 오류 발생 <- 이거 해야됨
-        //위 코드는 브랜드Id에 해당하는 미션 존애 유무 확인
-        //memberId와 미션id로 사용자가 미션을 도전중이지 확인 -> 도전 중이면 true 반환 -> 틀렸음
-        //
+        Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND));
+        //미션 존재 여부 확인
+        Mission mission = missionRepository.findByBrandAndMissionType(brand, MissionType.ADD).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MISSION));
+        List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId, brandId);
+        if(memberBrandLists.isEmpty()) return false;
+        Optional<MemberMission> memberMission = memberMissionRepository.findByMemberIdAndMissionId(memberId, mission.getId());
+        memberMission.ifPresent(value -> value.changeStatus(MissionStatus.COMPLETED));
+        return memberMission.isPresent();
     }
 
 
     @Transactional
     public MemberMission challengeMission(Long memberId, Long missionId) {
-        Member member = memberRepository.findOneById(memberId);
+        Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
         Mission mission = missionRepository.findById(missionId).orElseThrow(()-> new ErrorHandler(ErrorStatus._NOT_EXIST_MISSION));
         MemberMission memberMission = MemberMission.builder().member(member).mission(mission).missionStatus(MissionStatus.CHALLENGING).build();
         memberMissionRepository.save(memberMission);
@@ -68,10 +64,24 @@ public class MemberMissionService {
     public MemberMission successMission(Long memberId, Long missionId) {
         MemberMission memberMission = memberMissionRepository.findAllByMemberIdAndMissionId(memberId, missionId);
         if(memberMission == null) throw new ErrorHandler(ErrorStatus._NOT_CHALLENGING_MISSION);
-        if(memberMission.getMissionStatus() == MissionStatus.ENDED) throw new ErrorHandler(ErrorStatus._ALREADY_COMPLETED_MISSION);
-        memberMission.changeStatus(MissionStatus.ENDED);
+        if(memberMission.getMissionStatus() == MissionStatus.CHALLENGING) throw new ErrorHandler(ErrorStatus._NOT_COMPLETED_MISSION);
+        else {
+            memberMission.changeStatus(MissionStatus.COMPLETED);
+        }
         memberMission.getMember().updatePoint(memberMission.getMission().getPoints());
         return memberMission;
+    }
+
+    @Transactional
+    public boolean checkCommunityMission(Long memberId, Long brandId){
+        Member member = memberRepository.findById(memberId).orElseThrow(()->new ErrorHandler(ErrorStatus._NOT_EXIST_MEMBER));
+        Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND));
+        Mission mission = missionRepository.findByBrandAndMissionType(brand, MissionType.COMMUNITY).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MISSION));
+        Optional<Community> community = communityRepository.findByMemberAndBrand(member, brand);
+        if(community.isEmpty()) return false;
+        Optional<MemberMission> memberMission = memberMissionRepository.findByMemberIdAndMissionId(memberId, mission.getId());
+        memberMission.ifPresent(value -> value.changeStatus(MissionStatus.COMPLETED));
+        return true;
     }
 
 }

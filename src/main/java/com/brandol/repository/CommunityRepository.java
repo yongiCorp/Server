@@ -1,5 +1,6 @@
 package com.brandol.repository;
 
+import com.brandol.domain.Brand;
 import com.brandol.domain.Member;
 import com.brandol.domain.mapping.Community;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 public interface CommunityRepository extends JpaRepository<Community,Long> {
 
@@ -19,4 +21,6 @@ public interface CommunityRepository extends JpaRepository<Community,Long> {
     List<Community> findRecentFeedBackBoard(@Param("brandId") Long brandId,Pageable pageable);
 
     Page<Community> findByMember(Member member, PageRequest pageRequest);
+
+    Optional<Community> findByMemberAndBrand(Member member, Brand brand);
 }

@@ -9,6 +9,7 @@ import com.brandol.domain.mapping.*;
 import com.brandol.dto.response.MemberResponseDto;
 import com.brandol.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +74,7 @@ public class MemberService {
         brandList.add(0,brandol);
 
         //서브배너에 들어갈 콘텐츠 리스트
-        List<Contents> contentsList = contentsRepository.findRecentBrands(10);
+        List<Contents> contentsList = contentsRepository.findRecentBrandEventsForSubBanner(PageRequest.of(0,10));
 
         //브랜드리스트에 들어갈 멤버-브랜드-리스트 타입의 리스트
         List<MemberBrandList> memberBrandLists = memberBrandRepository.findAllSubscribedByMemberId(memberId);

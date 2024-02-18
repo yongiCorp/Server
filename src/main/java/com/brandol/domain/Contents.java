@@ -24,9 +24,11 @@ public class Contents extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String file; //이미지 외의 첩부파일
 
-    private String title; // 2014-01-19 누락 필드 추가
+    @Column(nullable = false, length = 45)
+    private String title;
 
-    private String content; // 2014-01-19 누락 필드 추가
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id",nullable = false)
