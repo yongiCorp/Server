@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,6 +210,64 @@ public class SearchService {
 
 
         return SearchConverter.tosearchDetailAvatarStoreBodyAllDto(search_Detail_AvatarStore_Body_DtoList);
+
+
+    }
+
+    //직접 검색
+    public SearchResponseDto.SearchMainAllDto searchText(String searchContents){
+
+
+
+        // 브랜드 리스트
+        List<Brand> searchmainbrandList = brandRepository.findByNameContaining(searchContents);
+
+        // 멤버 리스트
+        List<Member> searchmainuserList = memberRepository.findByNameContaining(searchContents);
+
+        // 컨텐츠 리스트
+        List<Contents> searchmaincontentList = contentsRepository.findByTitleContaining(searchContents);
+
+
+        // 아바타스토어 리스트
+        List<Items> searchmainitemList = itemsRepository.findByNameContaining(searchContents);
+
+
+
+
+
+        List<SearchResponseDto.SearchMainBrandDto> searchMainBrandDtoList = new ArrayList<>();
+        for(int i=0; i< searchmainbrandList.size();i++){
+            SearchResponseDto.SearchMainBrandDto dto = SearchConverter.toSearchMainBrandDto(searchmainbrandList.get(i));
+            searchMainBrandDtoList.add(dto);
+        }
+
+        List<SearchResponseDto.SearchMainUserDto> searchMainUserDtoList = new ArrayList<>();
+        for(int i=0; i<searchmainuserList.size();i++){
+            SearchResponseDto.SearchMainUserDto dto = SearchConverter.toSearchMainUserDto(searchmainuserList.get(i));
+            searchMainUserDtoList.add(dto);
+        }
+
+        List<SearchResponseDto.SearchMainContentsDto> searchMainContentsDtoList = new ArrayList<>();
+        for(int i=0; i<searchmaincontentList.size();i++){
+            List<ContentsImage> searchcontentsImages = contentImageRepository.findAllByContentsId(searchmaincontentList.get(i).getId());
+            List<String> searchcontentsImageUrlList = searchcontentsImages.stream().map(ContentsImage::getImage).collect(Collectors.toList());
+            SearchResponseDto.SearchMainContentsDto dto = SearchConverter.toSearchMainContentsDto(searchmaincontentList.get(i),searchcontentsImageUrlList);
+            searchMainContentsDtoList.add(dto);
+        }
+
+        List<SearchResponseDto.SearchMainAvatarStoreDto> searchMainAvatarStoreDtoList = new ArrayList<>();
+        for(int i=0; i<searchmainitemList.size();i++){
+            SearchResponseDto.SearchMainAvatarStoreDto dto = SearchConverter.toSearchMainAvatarStoreDto(searchmainitemList.get(i));
+            searchMainAvatarStoreDtoList.add(dto);
+        }
+
+
+
+
+
+
+        return SearchConverter.tosearchMainAllDto(searchMainBrandDtoList,searchMainUserDtoList,searchMainContentsDtoList,searchMainAvatarStoreDtoList);
 
 
     }

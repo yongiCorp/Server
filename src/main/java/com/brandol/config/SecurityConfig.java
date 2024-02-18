@@ -31,10 +31,6 @@ public class SecurityConfig {
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-resources/**",
-                "/auth/login/kakao",
-                "/auth/signup",
-                "/auth/nickname/exist",
-                "/health",
                 "/");
     }
 
@@ -58,7 +54,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 //.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger 허용
-                //.antMatchers("/auth/login/kakao", "/auth/signup", "/auth/nickname/exist").permitAll()// url 접근을 모든 사용자에게 허용
+                .antMatchers("/auth/login/kakao", "/auth/signup").permitAll()// url 접근을 모든 사용자에게 허용
                 .anyRequest().authenticated();// 나머지 요청은 모두 인증된 사용자만 접근 가능
 
         return http.build();

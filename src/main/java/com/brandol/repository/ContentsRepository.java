@@ -30,4 +30,6 @@ public interface ContentsRepository extends JpaRepository<Contents,Long> {
     List<Contents> findThreeByRandom();
     @Query(value = "SELECT * FROM contents  ORDER BY RAND()",nativeQuery = true)
     List<Contents> findAllByRandom();
+
+    List<Contents> findByTitleContaining(String searchContents);
 }

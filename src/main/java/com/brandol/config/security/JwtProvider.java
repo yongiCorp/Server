@@ -28,7 +28,7 @@ public class JwtProvider implements InitializingBean {
     private Key key;
 
     private static final String AUTHORITIES_KEY = "role";
-    private final long accessTokenValidTime = 1000L * 60 * 60; // 1시간
+    private final long accessTokenValidTime = 1000L * 60 * 60 * 48; // 48시간
     private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 14; // 14일
 
     @Override
@@ -89,7 +89,6 @@ public class JwtProvider implements InitializingBean {
         // 이메일 -> id로 변경
         String memberId = getClaims(token).get("id").toString();
         UserDetails userDetails = principalDetailsService.loadUserByUsername(memberId); // 이메일 -> id로 변경
-        // System.out.println("getAuthentication() 실행: userDetails : " + userDetails.getUsername()+ userDetails.getPassword() + userDetails.getAuthorities());
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 
@@ -106,9 +105,20 @@ public class JwtProvider implements InitializingBean {
                     .parseClaimsJws(accessToken);
             return true;
         } catch (ExpiredJwtException e) { // accessToken 만료여도 일단 true, refreshToken 확인 후 재발급
-            return true;
-        } catch (Exception e) {
+            log.info("만료된 토큰");
+            throw new JwtException("Expired Token Exception");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 토큰");
+            throw new JwtException("Invalid Token Exception");
+        }catch (SecurityException | MalformedJwtException e) {
+            log.info("잘린 토큰");
+            throw new JwtException("Invalid Token Exception");
+        }  catch (NullPointerException e) {
+            log.info("토큰 없음");
+            throw new JwtException("Invalid Token Exception");
+        }  catch (Exception e) {
             return false;
         }
     }
+
 }

@@ -28,8 +28,8 @@ public interface BrandRepository extends JpaRepository<Brand,Long> {
     @Query(value = "SELECT * FROM brand WHERE brand.brand_id not like 3 ORDER BY RAND() ",nativeQuery = true)
     List<Brand> findByRandom(); //0216 수정(특정브랜드제외)
 
-    //@Query(value = "SELECT * FROM brand WHERE brand.brand_id not like 3 ORDER BY RAND() ",nativeQuery = true)
-    //List<Brand> findAllByRandom();
+
+    List<Brand> findByNameContaining(String searchKeyword);
 
     boolean existsById(Long id);
 }
