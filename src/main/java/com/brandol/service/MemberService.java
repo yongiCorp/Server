@@ -49,7 +49,7 @@ public class MemberService {
             return memberBrand.getId();
         }
 
-        Optional<MemberBrandList> allByBrand = memberBrandRepository.getAllByBrand(brand);
+        Optional<MemberBrandList> allByBrand = memberBrandRepository.findTopByBrandOrderByCreatedAt(brand);
         Long count = allByBrand.stream().count();
         MemberBrandList build = MemberBrandList.builder()
                 .memberListStatus(MemberListStatus.SUBSCRIBED)
