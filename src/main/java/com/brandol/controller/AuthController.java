@@ -7,6 +7,7 @@ import com.brandol.config.security.TokenDto;
 import com.brandol.dto.request.AuthRequestDto;
 import com.brandol.dto.response.AuthResponseDto;
 import com.brandol.service.AuthService;
+import com.brandol.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final MemberService memberService;
 
     // 로그인
     @PostMapping("/login/kakao")
@@ -35,6 +37,8 @@ public class AuthController {
     @PostMapping("/signup")
     public ApiResponse<AuthResponseDto.SignUpDto> signUp(@RequestBody @Valid AuthRequestDto.SignUpDto request) {
         AuthResponseDto.SignUpDto signUpDto = authService.signUp(request);
+        memberService.addMemberBrandList(signUpDto.getMemberId(),1L);
+        memberService.addMemberBrandList(signUpDto.getMemberId(),2L);
         return ApiResponse.onSuccess(SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), signUpDto);
     }
 
