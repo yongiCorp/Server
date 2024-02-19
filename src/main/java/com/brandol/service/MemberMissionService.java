@@ -42,7 +42,9 @@ public class MemberMissionService {
     public boolean checkBrandMission(Long memberId, Long brandId) {
         Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_BRAND));
         //미션 존재 여부 확인
-        Mission mission = missionRepository.findByBrandAndMissionType(brand, MissionType.ADD).orElseThrow(() -> new ErrorHandler(ErrorStatus._NOT_EXIST_MISSION));
+        Optional<Mission> byBrandAndMissionType = missionRepository.findByBrandAndMissionType(brand, MissionType.ADD);
+        if(byBrandAndMissionType.isEmpty()) return false;
+        Mission mission = byBrandAndMissionType.get();
         List<MemberBrandList> memberBrandLists = memberBrandRepository.findOneByMemberIdAndBrandId(memberId, brandId);
         if(memberBrandLists.isEmpty()) return false;
         Optional<MemberMission> memberMission = memberMissionRepository.findByMemberIdAndMissionId(memberId, mission.getId());
