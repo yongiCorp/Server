@@ -81,8 +81,6 @@ public class AuthService {
         AuthResponseDto.AgreeTermsDto agreeTermsResponse = agreeTerms(request);
         Member member = setProfile(request);
         wearDefaultAvatarItems(member);// 성별에 따라 아바타 기본 아이템 장착
-        memberService.addMemberBrandList(member.getId(), 1L);
-        memberService.addMemberBrandList(member.getId(), 2L);
         return MemberConverter.signUpResDto(member.getId());
     }
 
