@@ -28,7 +28,7 @@ public class MemberConverter {
                 .role(Role.ROLE_USER)
                 .userStatus(UserStatus.ACTIVE)
                 .provider(Provider.KAKAO)
-                .point(1000)
+                .point(100000)
                 .build();
     }
 
