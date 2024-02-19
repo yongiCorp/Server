@@ -35,6 +35,7 @@ public class AuthService {
     private final ItemsRepository itemsRepository;
     private final MyItemRepository myItemRepository;
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
 
     @Value("${defaultItemIds.male}")
     private List<Long> maleDefaultItemIds;
@@ -80,6 +81,8 @@ public class AuthService {
         AuthResponseDto.AgreeTermsDto agreeTermsResponse = agreeTerms(request);
         Member member = setProfile(request);
         wearDefaultAvatarItems(member);// 성별에 따라 아바타 기본 아이템 장착
+        memberService.addMemberBrandList(member.getId(), 1L);
+        memberService.addMemberBrandList(member.getId(), 2L);
         return MemberConverter.signUpResDto(member.getId());
     }
 
